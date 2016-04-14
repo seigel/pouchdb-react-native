@@ -1,0 +1,30 @@
+{
+  "name": "pouchdb-asyncstorage-down",
+  "version": "0.3.3",
+  "description": "pouchdb with asyncstorage-down adapter",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stockulus/pouchdb-asyncstorage-down.git"
+  },
+  "keywords": [
+    "pouchdb",
+    "react-native",
+    "asyncstorage"
+  ],
+  "author": "Christoph Stock",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stockulus/pouchdb-asyncstorage-down/issues"
+  },
+  "homepage": "https://github.com/stockulus/pouchdb-asyncstorage-down#readme",
+  "dependencies": {
+    "asyncstorage-down": "2.4.0",
+    "buffer": "4.5.1",
+    "events": "1.1.0",
+    "pouchdb": "5.3.1"
+  }
+}
