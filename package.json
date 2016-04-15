@@ -1,7 +1,7 @@
 {
   "name": "pouchdb-asyncstorage-down",
-  "version": "0.3.3",
-  "description": "pouchdb with asyncstorage-down adapter",
+  "version": "0.4.0",
+  "description": "asyncstorage-down adapter for PouchDB",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -22,9 +22,10 @@
   },
   "homepage": "https://github.com/stockulus/pouchdb-asyncstorage-down#readme",
   "dependencies": {
-    "asyncstorage-down": "2.4.0",
-    "buffer": "4.5.1",
-    "events": "1.1.0",
-    "pouchdb": "5.3.1"
-  }
+    "asyncstorage-down": "2.4.0"
+  },
+  "peerDependencies": {
+    "react-native": "^0.20.0",
+    "pouchdb": "^5.0.0"
+  },
 }
