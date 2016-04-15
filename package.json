@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-asyncstorage-down",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "asyncstorage-down adapter for PouchDB",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
     "asyncstorage-down": "2.4.0",
     "buffer": "4.5.1",
     "core-util-is": "1.0.2",
-    "double-ended-queue": "2.0.0-0",
+    "double-ended-queue": "2.1.0-0",
     "events": "1.1.0",
     "fs": "0.0.2",
     "inherits": "2.0.1",

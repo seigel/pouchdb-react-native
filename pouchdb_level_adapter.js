@@ -3158,4 +3158,4 @@ function pluginBase(adapterConfig, downAdapter) {
   }
 }
 
-module.export = pluginBase;
+module.exports = pluginBase;
