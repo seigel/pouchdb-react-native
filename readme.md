@@ -1,6 +1,8 @@
 pouchdb-asyncstorage-down
 ====
 
+Adds an async storage Adapter to the PouchDB + Polifills core-js the PouchDB is running in reacti-native
+
 Usage
 ---
 
@@ -12,7 +14,7 @@ Then require it after PouchDB:
 
 ```js
 const PouchDB = require('pouchdb')
-require('pouchdb-async-storage')
+require('pouchdb-asyncstorage-down')
 
 const db = new PouchDB('mydb', {adapter: 'asyncstorage'})
 ```
