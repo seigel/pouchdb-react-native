@@ -17,8 +17,20 @@ const PouchDB = require('pouchdb')
 require('pouchdb-asyncstorage-down')
 
 const db = new PouchDB('mydb', {adapter: 'asyncstorage'})
+
+or
+
+import PouchDB from 'pouchdb'
+import 'pouchdb-asyncstorage-down'
+
+const db = new PouchDB('mydb', {adapter: 'asyncstorage'})
 ```
 
 Tests
 ---
 Currently done manually by me, not sure how to easy simulate a running IOS / Android device
+
+Contact
+---
+Feedback welcome:
+Twitter: @stockulus
