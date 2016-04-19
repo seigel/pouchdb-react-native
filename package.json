@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-asyncstorage-down",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "asyncstorage-down adapter for PouchDB",
   "main": "index.js",
   "scripts": {
@@ -41,7 +41,7 @@
     "vuvuzela": "1.0.2"
   },
   "peerDependencies": {
-    "react-native": "^0.23.0",
+    "react-native": ">=0.20.0",
     "pouchdb": "^5.0.0"
   }
 }
