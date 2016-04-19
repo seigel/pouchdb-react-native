@@ -41,7 +41,7 @@
     "vuvuzela": "1.0.2"
   },
   "peerDependencies": {
-    "react-native": "^0.23.0",
+    "react-native": "^0.24.0",
     "pouchdb": "^5.0.0"
   }
 }
