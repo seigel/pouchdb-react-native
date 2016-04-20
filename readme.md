@@ -8,7 +8,7 @@ Usage
 
 You should be able to just do:
 
-    npm install --save pouchdb-asyncstorage-down
+    npm install pouchdb-asyncstorage-down --save
 
 Then require it after PouchDB:
 
@@ -18,7 +18,7 @@ require('pouchdb-asyncstorage-down')
 
 const db = new PouchDB('mydb', {adapter: 'asyncstorage'})
 
-or
+// or import style
 
 import PouchDB from 'pouchdb'
 import 'pouchdb-asyncstorage-down'
