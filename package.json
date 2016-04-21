@@ -43,6 +43,6 @@
   },
   "peerDependencies": {
     "react-native": ">=0.20.0",
-    "pouchdb": "^5.0.0"
+    "pouchdb": "^5.3.2"
   }
 }
