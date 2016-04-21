@@ -13,7 +13,8 @@
   "keywords": [
     "pouchdb",
     "react-native",
-    "asyncstorage"
+    "asyncstorage",
+    "offlinefirst"
   ],
   "author": "Christoph Stock",
   "license": "MIT",
