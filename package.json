@@ -4,7 +4,7 @@
   "description": "asyncstorage-down adapter for PouchDB",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./node_modules/standard/bin/cmd.js"
   },
   "repository": {
     "type": "git",
@@ -41,8 +41,17 @@
     "through2": "2.0.1",
     "vuvuzela": "1.0.3"
   },
+  "devDependencies": {
+    "standard": "7.0.0"
+  },
   "peerDependencies": {
     "react-native": ">=0.20.0",
     "pouchdb": ">=5.0.0"
+  },
+  "standard": {
+    "ignore": [
+      "node_modules/**",
+      "pouchdb_level_adapter.js"
+    ]
   }
 }
