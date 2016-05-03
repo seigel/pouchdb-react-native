@@ -1,7 +1,7 @@
 pouchdb-asyncstorage-down
 ====
 
-Adds an async storage Adapter to the PouchDB + Polifills core-js that PouchDB with leveldown Adapter is running in reacti-native
+Adds an async storage Adapter to the PouchDB + Polifills core-js that PouchDB with leveldown Adapter is running with react-native
 
 Usage
 ---
