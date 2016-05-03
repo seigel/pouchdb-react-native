@@ -4,7 +4,7 @@
   "description": "asyncstorage-down adapter for PouchDB",
   "main": "index.js",
   "scripts": {
-    "test": "node ./node_modules/standard/bin/cmd.js"
+    "test": "./node_modules/standard/bin/cmd.js && ./node_modules/tape/bin/tape ./tests/**/*.js | ./node_modules/faucet/bin/cmd.js"
   },
   "repository": {
     "type": "git",
@@ -56,7 +56,8 @@
   "standard": {
     "ignore": [
       "node_modules/**",
-      "pouchdb_level_adapter.js"
+      "pouchdb_level_adapter.js",
+      "index-react.js"
     ]
   }
 }
