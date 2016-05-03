@@ -1,3 +1,5 @@
+/* generate by the pouchDB Project + export of of the adapterBase function (eof) */
+
 'use strict';
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
