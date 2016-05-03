@@ -30,6 +30,8 @@ Tests
 ---
 Currently done manually by me, not sure how to easy simulate a running IOS / Android device
 
+Currently working on getting tests running, but a little struggling in running react-native as node tests
+
 Contact
 ---
 Feedback welcome:
