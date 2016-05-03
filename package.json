@@ -42,7 +42,12 @@
     "vuvuzela": "1.0.3"
   },
   "devDependencies": {
-    "standard": "7.0.0"
+    "faucet": "0.0.1",
+    "pouchdb": "5.3.2",
+    "react": "0.14.8",
+    "react-native": "0.24.1",
+    "standard": "7.0.0",
+    "tape": "4.5.1"
   },
   "peerDependencies": {
     "react-native": ">=0.20.0",
