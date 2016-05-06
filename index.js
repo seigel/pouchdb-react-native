@@ -3,7 +3,7 @@
 global.Buffer = global.Buffer || require('buffer').Buffer
 
 if (!process.version) process.version = 'v0.10'
-process.nextTick = process.nextTick || ((func) => setImmediate(func))
+process.nextTick = process.nextTick || require('process-nextick-args')
 
 const downAdapter = require('asyncstorage-down')
 const pluginBase = require('./pouchdb_level_adapter')
