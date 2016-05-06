@@ -3,7 +3,7 @@
 global.Buffer = global.Buffer || require('buffer').Buffer
 
 if (!process.version) process.version = 'react-native'
-process.nextTick = process.nextTick || ((func) => setTimeout(func, 0))
+process.nextTick = process.nextTick || ((func) => setImmediate(func))
 
 const downAdapter = require('asyncstorage-down')
 const pluginBase = require('./pouchdb_level_adapter')
