@@ -2,7 +2,7 @@
 
 global.Buffer = global.Buffer || require('buffer').Buffer
 
-if (!process.version) process.version = 'react-native'
+if (!process.version) process.version = 'v0.10'
 process.nextTick = process.nextTick || ((func) => setImmediate(func))
 
 const downAdapter = require('asyncstorage-down')

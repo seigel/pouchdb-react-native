@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-asyncstorage-down",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "asyncstorage-down adapter for PouchDB",
   "main": "index.js",
   "scripts": {
