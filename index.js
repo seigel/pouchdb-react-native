@@ -2,6 +2,7 @@
 
 global.Buffer = global.Buffer || require('buffer').Buffer
 global.btoa = global.btoa || require('btoa')
+global.Blob = global.Blob || require('blob')
 
 if (!process.version) process.version = 'v0.10'
 process.nextTick = process.nextTick || setImmediate
