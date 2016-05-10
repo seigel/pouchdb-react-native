@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-asyncstorage-down",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "asyncstorage-down adapter for PouchDB",
   "main": "index.js",
   "scripts": {
@@ -26,6 +26,7 @@
     "argsarray": "0.0.1",
     "asyncstorage-down": "2.4.0",
     "atob": "2.0.3",
+    "blob-polyfill": "1.0.20150320",
     "btoa": "1.1.2",
     "buffer": "4.6.0",
     "core-util-is": "1.0.2",
