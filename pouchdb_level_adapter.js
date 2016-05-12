@@ -2536,7 +2536,7 @@ function LevelPouch(opts, callback) {
             }
           };
           if (opts.include_docs) {
-            doc.doc = data;
+            doc.doc = data || {};
             doc.doc._rev = doc.value.rev;
             if (opts.conflicts) {
               doc.doc._conflicts = collectConflicts(metadata);
