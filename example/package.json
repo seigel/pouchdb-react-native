@@ -9,6 +9,7 @@
     "pouchdb": "5.3.2",
     "pouchdb-asyncstorage-down": "1.1.7",
     "react": "0.14.8",
-    "react-native": "0.25.1"
+    "react-native": "0.25.1",
+    "react-native-action-button": "1.1.5"
   }
 }
