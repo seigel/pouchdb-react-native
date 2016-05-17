@@ -16,7 +16,7 @@ import ActionButton from 'react-native-action-button'
 import PouchDB from 'pouchdb'
 import 'pouchdb-asyncstorage-down'
 
-const localDB = new PouchDB('mydb', {adapter: 'asyncstorage'})
+const localDB = new PouchDB('myDB', {adapter: 'asyncstorage'})
 
 export default React.createClass({
   getInitialState () {
@@ -42,7 +42,7 @@ export default React.createClass({
       dataSource: null
     }
   },
-  renderMain () {
+  _renderMain () {
     const { dataSource } = this.state
 
     const renderSeparator = (sectionID, rowID) => (
@@ -72,14 +72,78 @@ export default React.createClass({
           <ActionButton.Item
              buttonColor='#005BFF'
              title='Add Item'
-             onPress={() => this._navigator.push({name: 'AddItem', render: this.renderAddItem})}>
+             onPress={() => this._navigator.push({name: 'AddItem', render: this._renderAddItem})}>
             <Text>+</Text>
+          </ActionButton.Item>
+          <ActionButton.Item
+             buttonColor='#005BFF'
+             title='Sync'
+             onPress={() => this._navigator.push({name: 'Sync', render: this._renderSync})}>
+            <Text>sync</Text>
           </ActionButton.Item>
         </ActionButton>
       </View>
     )
   },
-  renderAddItem () {
+  _renderSync () {
+    const addSync = () => {
+      this._sync && this._sync.cancel()
+
+      const remoteDb = new PouchDB(this.state.syncUrl, {ajax: {cache: false}})
+      this._sync = PouchDB.sync(
+        localDB, remoteDb, {live: true, retry: true})
+        .on('error', error => console.error('Sync Error', error))
+        .on('change', info => console.log('Sync change', info))
+        .on('paused', info => console.log('Sync paused', info))
+
+      this._navigator.pop()
+    }
+
+    return (
+      <View style={{flex: 1}}>
+        <TextInput
+          style={{
+            height: 40,
+            lineHeight: 40,
+            fontSize: 16,
+            paddingLeft: 10,
+            paddingRight: 10
+          }}
+          autoFocus
+          keyboardType='url'
+          clearButtonMode='always'
+          placeholder='enter URL'
+          onChangeText={(text) => this.setState({syncUrl: text})}
+          value={this.state.syncUrl} />
+        <TouchableHighlight
+          onPress={addSync}
+          style={{
+            flexDirection: 'column',
+            paddingTop: 3,
+            paddingBottom: 3,
+            marginLeft: 10,
+            marginRight: 10,
+            backgroundColor: '#78B55E',
+            borderRadius: 5
+          }}>
+          <Text
+            style={{
+              flex: 1,
+              fontSize: 18,
+              fontWeight: 'bold',
+              color: '#FFFFFF',
+              paddingLeft: 10,
+              paddingRight: 10,
+              paddingTop: 2,
+              alignSelf: 'center'
+            }}>
+            Add Sync
+          </Text>
+        </TouchableHighlight>
+      </View>
+    )
+  },
+  _renderAddItem () {
     const addItem = () => {
       localDB.post(JSON.parse(this.state.newItem))
         .then(result => {
@@ -133,7 +197,7 @@ export default React.createClass({
       </View>
     )
   },
-  renderScene (route, navigator) {
+  _renderScene (route, navigator) {
     return (
       <View style={{flex: 1, marginTop: 20, backgroundColor: '#FFFFFF'}}>
         {route.render()}
@@ -145,8 +209,8 @@ export default React.createClass({
       <View style={{flex: 1}}>
         <Navigator
           ref={(navigator) => { this._navigator = navigator }}
-          renderScene={this.renderScene}
-          initialRoute={{name: 'Main', render: this.renderMain}}
+          renderScene={this._renderScene}
+          initialRoute={{name: 'Main', render: this._renderMain}}
         />
       </View>
     )
