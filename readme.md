@@ -26,6 +26,11 @@ import 'pouchdb-asyncstorage-down'
 const db = new PouchDB('mydb', {adapter: 'asyncstorage'})
 ```
 
+Sample App
+---
+there is a small example app:
+https://github.com/stockulus/pouchdb-asyncstorage-down/tree/master/example
+
 Tests
 ---
 Currently done manually by me, not sure how to easy simulate a running IOS / Android device
