@@ -6,7 +6,9 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
-    "react": "^0.14.8",
-    "react-native": "^0.25.1"
+    "pouchdb": "5.3.2",
+    "pouchdb-asyncstorage-down": "1.1.7",
+    "react": "0.14.8",
+    "react-native": "0.25.1"
   }
 }

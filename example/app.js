@@ -7,6 +7,11 @@ import {
   View
 } from 'react-native'
 
+import PouchDB from 'pouchdb'
+import 'pouchdb-asyncstorage-down'
+
+const localDB = new PouchDB('mydb', {adapter: 'asyncstorage'})
+
 export default React.createClass({
   render () {
     return (
