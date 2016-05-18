@@ -91,7 +91,10 @@ export default React.createClass({
   },
   _renderSync () {
     const addSync = () => {
-      this._sync && this._sync.cancel()
+      if (this._sync) {
+        this._sync.cancel()
+        this._sync = null
+      }
 
       if (this.state.syncUrl) {
         const remoteDb = new PouchDB(this.state.syncUrl, {ajax: {cache: false}})
