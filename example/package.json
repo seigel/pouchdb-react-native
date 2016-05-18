@@ -1,13 +1,13 @@
 {
   "name": "example",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
     "pouchdb": "5.3.2",
-    "pouchdb-asyncstorage-down": "1.1.7",
+    "pouchdb-asyncstorage-down": "1.1.9",
     "react": "0.14.8",
     "react-native": "0.25.1",
     "react-native-action-button": "1.1.5"
