@@ -58,27 +58,31 @@ export default React.createClass({
       </View>
     )
 
+    const renderList = () => (
+      <ListView
+        dataSource={dataSource}
+        renderRow={renderRow}
+        renderSeparator={renderSeparator}
+        enableEmptySections />
+    )
+
     return (
       <View style={{flex: 1}}>
         {!dataSource
           ? (<Text>Loading...</Text>)
-          : (<ListView
-               dataSource={dataSource}
-               renderRow={renderRow}
-               renderSeparator={renderSeparator}
-               enableEmptySections />)
+          : renderList()
         }
         <ActionButton buttonColor='#78B55E'>
           <ActionButton.Item
-             buttonColor='#005BFF'
-             title='Add Item'
-             onPress={() => this._navigator.push({name: 'AddItem', render: this._renderAddItem})}>
+            buttonColor='#005BFF'
+            title='Add Item'
+            onPress={() => this._navigator.push({name: 'AddItem', render: this._renderAddItem})}>
             <Text>+</Text>
           </ActionButton.Item>
           <ActionButton.Item
-             buttonColor='#005BFF'
-             title='Sync'
-             onPress={() => this._navigator.push({name: 'Sync', render: this._renderSync})}>
+            buttonColor='#005BFF'
+            title='Sync'
+            onPress={() => this._navigator.push({name: 'Sync', render: this._renderSync})}>
             <Text>sync</Text>
           </ActionButton.Item>
         </ActionButton>
