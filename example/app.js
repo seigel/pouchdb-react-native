@@ -157,33 +157,33 @@ export default React.createClass({
     )
   },
   _renderButton (text, onPress) {
-      return (
-        <TouchableHighlight
-          onPress={onPress}
+    return (
+      <TouchableHighlight
+        onPress={onPress}
+        style={{
+          flexDirection: 'column',
+          paddingTop: 3,
+          paddingBottom: 3,
+          marginLeft: 10,
+          marginRight: 10,
+          backgroundColor: '#78B55E',
+          borderRadius: 5
+        }}>
+        <Text
           style={{
-            flexDirection: 'column',
-            paddingTop: 3,
-            paddingBottom: 3,
-            marginLeft: 10,
-            marginRight: 10,
-            backgroundColor: '#78B55E',
-            borderRadius: 5
+            flex: 1,
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: '#FFFFFF',
+            paddingLeft: 10,
+            paddingRight: 10,
+            paddingTop: 2,
+            alignSelf: 'center'
           }}>
-          <Text
-            style={{
-              flex: 1,
-              fontSize: 18,
-              fontWeight: 'bold',
-              color: '#FFFFFF',
-              paddingLeft: 10,
-              paddingRight: 10,
-              paddingTop: 2,
-              alignSelf: 'center'
-            }}>
-            {text}
-          </Text>
-        </TouchableHighlight>
-      )
+          {text}
+        </Text>
+      </TouchableHighlight>
+    )
   },
   _renderScene (route, navigator) {
     return (
