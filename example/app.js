@@ -31,15 +31,14 @@ export default React.createClass({
         .catch(error => console.error('Could not load Documents', error))
     }
 
-    localDB.changes({
-      since: 'now',
-      live: true
-    }).on('change', () => updateDocs())
+    localDB.changes({since: 'now', live: true})
+      .on('change', () => updateDocs())
 
     updateDocs()
 
     return {
-      dataSource: null
+      dataSource: null,
+      syncUrl: ''
     }
   },
   _renderMain () {
@@ -48,8 +47,8 @@ export default React.createClass({
     const renderSeparator = (sectionID, rowID) => (
       <View
         key={rowID}
-        style={{borderColor: '#969A99', borderBottomWidth: StyleSheet.hairlineWidth
-      }} />)
+        style={{borderColor: '#969A99', borderBottomWidth: StyleSheet.hairlineWidth}} />
+    )
 
     const renderRow = (row) => (
       <View key={row._id}>
@@ -98,8 +97,7 @@ export default React.createClass({
 
       if (this.state.syncUrl) {
         const remoteDb = new PouchDB(this.state.syncUrl, {ajax: {cache: false}})
-        this._sync = PouchDB.sync(
-          localDB, remoteDb, {live: true, retry: true})
+        this._sync = PouchDB.sync(localDB, remoteDb, {live: true, retry: true})
           .on('error', error => console.error('Sync Error', error))
           .on('change', info => console.log('Sync change', info))
           .on('paused', info => console.log('Sync paused', info))
@@ -124,31 +122,7 @@ export default React.createClass({
           placeholder='enter URL'
           onChangeText={(text) => this.setState({syncUrl: text})}
           value={this.state.syncUrl} />
-        <TouchableHighlight
-          onPress={addSync}
-          style={{
-            flexDirection: 'column',
-            paddingTop: 3,
-            paddingBottom: 3,
-            marginLeft: 10,
-            marginRight: 10,
-            backgroundColor: '#78B55E',
-            borderRadius: 5
-          }}>
-          <Text
-            style={{
-              flex: 1,
-              fontSize: 18,
-              fontWeight: 'bold',
-              color: '#FFFFFF',
-              paddingLeft: 10,
-              paddingRight: 10,
-              paddingTop: 2,
-              alignSelf: 'center'
-            }}>
-            Add Sync
-          </Text>
-        </TouchableHighlight>
+        {this._renderButton('Add Sync', addSync)}
       </View>
     )
   },
@@ -178,8 +152,14 @@ export default React.createClass({
           placeholder='JSON Object here'
           onChangeText={(text) => this.setState({newItem: text})}
           value={this.state.newItem} />
+        {this._renderButton('Add Item', addItem)}
+      </View>
+    )
+  },
+  _renderButton (text, onPress) {
+      return (
         <TouchableHighlight
-          onPress={addItem}
+          onPress={onPress}
           style={{
             flexDirection: 'column',
             paddingTop: 3,
@@ -200,11 +180,10 @@ export default React.createClass({
               paddingTop: 2,
               alignSelf: 'center'
             }}>
-            Add
+            {text}
           </Text>
         </TouchableHighlight>
-      </View>
-    )
+      )
   },
   _renderScene (route, navigator) {
     return (
