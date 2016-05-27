@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start"
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "ios": "node ./node_modules/react-native/local-cli/cli.js run-ios",
+    "android": "node ./node_modules/react-native/local-cli/cli.js run-android"
   },
   "dependencies": {
     "pouchdb": "5.3.2",
     "pouchdb-asyncstorage-down": "1.1.9",
     "react": "15.0.2",
-    "react-native": "0.26.0",
+    "react-native": "0.26.2",
     "react-native-action-button": "1.1.5"
   }
 }
