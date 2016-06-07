@@ -10,7 +10,7 @@ npm install pouchdb-adapter-asyncstorage --save
 ```
 
 ```js
-PouchDB.plugin(require('pouchdb-adapter-asyncstorage'))
+PouchDB.plugin(require('pouchdb-adapter-asyncstorage').default)
 var db = new PouchDB('mydb', {adapter: 'asyncstorage'})
 ```
 
