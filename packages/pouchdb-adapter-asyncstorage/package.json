@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-adapter-asyncstorage",
-  "version": "2.0.0-alpha-1",
+  "version": "2.0.0-alpha-2",
   "description": "asyncstorage adapter for PouchDB",
   "main": "index.js",
   "repository": {
@@ -32,6 +32,7 @@
     "fs": "0.0.2",
     "inherits": "2.0.1",
     "js-extend": "1.0.1",
+    "leveldown": "1.4.6",
     "lie": "3.0.4",
     "path": "0.12.7",
     "pouchdb-adapter-leveldb-core": "5.4.0",
