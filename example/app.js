@@ -13,8 +13,8 @@ import {
 
 import ActionButton from 'react-native-action-button'
 
-import PouchDB from 'pouchdb'
-import 'pouchdb-asyncstorage-down'
+import PouchDB from 'pouchdb-core'
+PouchDB.plugin(require('pouchdb-adapter-asyncstorage'))
 
 const localDB = new PouchDB('myDB', {adapter: 'asyncstorage'})
 
