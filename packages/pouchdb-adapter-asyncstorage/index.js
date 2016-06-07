@@ -19,5 +19,5 @@ AsyncStoragePouch.valid = function () {
 AsyncStoragePouch.use_prefix = false
 
 export default function (PouchDB) {
-  PouchDB.adapter('asyncstorage', AsyncStoragePouch, true);
+  PouchDB.adapter('asyncstorage', AsyncStoragePouch, true)
 }

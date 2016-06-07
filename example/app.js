@@ -16,8 +16,9 @@ import ActionButton from 'react-native-action-button'
 import PouchDB from 'pouchdb-core'
 PouchDB.plugin(require('pouchdb-adapter-asyncstorage'))
 
+// console.log(PouchDB)
 const localDB = new PouchDB('myDB', {adapter: 'asyncstorage'})
-
+console.log(localDB.adapter)
 export default React.createClass({
   getInitialState () {
     const updateDocs = () => {
@@ -28,11 +29,11 @@ export default React.createClass({
           this.setState({
             dataSource: ds.cloneWithRows(items)})
         })
-        .catch(error => console.error('Could not load Documents', error))
+        .catch(error => console.error('Could not load Documents', error, error.message))
     }
 
-    localDB.changes({since: 'now', live: true})
-      .on('change', () => updateDocs())
+//    localDB.changes({since: 'now', live: true})
+//      .on('change', () => updateDocs())
 
     updateDocs()
 

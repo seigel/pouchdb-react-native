@@ -8,7 +8,7 @@
     "android": "node ./node_modules/react-native/local-cli/cli.js run-android"
   },
   "dependencies": {
-    "pouchdb-adapter-asyncstorage": "2.0.0-alpha-1",
+    "pouchdb-adapter-asyncstorage": "2.0.0-alpha-2",
     "pouchdb-core": "5.4.0",
     "react": "15.1.0",
     "react-native": "0.27.1",
