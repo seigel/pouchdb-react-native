@@ -1,4 +1,5 @@
 *** New Version ***
+======
 
 with the new sub-packages in PouchDB 5.4.0 there is a new structure.
 
@@ -16,6 +17,7 @@ https://www.npmjs.com/package/pouchdb-react-native
 For details on PouchDB sub-packages, see the [Custom Builds documentation](http://pouchdb.com/custom.html).
 
 *** Old Readme ***
+======
 
 pouchdb-asyncstorage-down
 ====
