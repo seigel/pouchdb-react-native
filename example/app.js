@@ -13,14 +13,10 @@ import {
 
 import ActionButton from 'react-native-action-button'
 
-import PouchDB from 'pouchdb-core'
-
-let test = require('pouchdb-adapter-asyncstorage')
-PouchDB.plugin(require('pouchdb-adapter-asyncstorage').default)
-
-// console.log(PouchDB)
-const localDB = new PouchDB('myDB', {adapter: 'asyncstorage'})
+import PouchDB from 'pouchdb-react-native'
+const localDB = new PouchDB('myDB')
 console.log(localDB.adapter)
+
 export default React.createClass({
   getInitialState () {
     const updateDocs = () => {
@@ -34,8 +30,8 @@ export default React.createClass({
         .catch(error => console.warn('Could not load Documents', error, error.message))
     }
 
-//    localDB.changes({since: 'now', live: true})
-//      .on('change', () => updateDocs())
+    localDB.changes({since: 'now', live: true})
+      .on('change', () => updateDocs())
 
     updateDocs()
 

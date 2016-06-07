@@ -46,9 +46,6 @@
   },
   "devDependencies": {
     "faucet": "0.0.1",
-    "pouchdb": "5.3.2",
-    "react": "15.1.0",
-    "react-native": "0.27.0",
     "standard": "7.1.2",
     "tape": "4.5.1"
   },
