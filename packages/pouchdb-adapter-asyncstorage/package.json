@@ -1,0 +1,49 @@
+{
+  "name": "pouchdb-adapter-asyncstorage",
+  "version": "2.0.0-alpha-1",
+  "description": "asyncstorage adapter for PouchDB",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stockulus/pouchdb-asyncstorage-down.git"
+  },
+  "keywords": [
+    "pouchdb",
+    "react-native",
+    "asyncstorage",
+    "offlinefirst"
+  ],
+  "author": "Christoph Stock",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stockulus/pouchdb-asyncstorage-down/issues"
+  },
+  "homepage": "https://github.com/stockulus/pouchdb-asyncstorage-down#readme",
+  "dependencies": {
+    "argsarray": "0.0.1",
+    "asyncstorage-down": "2.4.1",
+    "atob": "2.0.3",
+    "blob-polyfill": "1.0.20150320",
+    "btoa": "1.1.2",
+    "buffer": "4.6.0",
+    "core-util-is": "1.0.2",
+    "double-ended-queue": "2.1.0-0",
+    "events": "1.1.0",
+    "fs": "0.0.2",
+    "inherits": "2.0.1",
+    "js-extend": "1.0.1",
+    "lie": "3.0.4",
+    "path": "0.12.7",
+    "pouchdb-adapter-leveldb-core": "5.4.0",
+    "stream": "0.0.2",
+    "through2": "2.0.1",
+    "vuvuzela": "1.0.3"
+  },
+  "devDependencies": {},
+  "peerDependencies": {},
+  "standard": {
+    "ignore": [
+      "node_modules/**"
+    ]
+  }
+}
