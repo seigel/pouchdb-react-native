@@ -16,7 +16,7 @@ function AsyncStoragePouch(opts, callback) {
 AsyncStoragePouch.valid = function () {
   return true
 };
-AsyncStoragePouch.name: 'asyncstorage'
+AsyncStoragePouch.name = 'asyncstorage'
 AsyncStoragePouch.use_prefix = false
 
 export default function (PouchDB) {
