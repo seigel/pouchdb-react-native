@@ -1,7 +1,7 @@
 import './polyfill'
 
 import asyncstorageDown from 'asyncstorage-down'
-import CoreLevelPouch from 'pouchdb-adapter-leveldb-core'
+import CoreLevelPouch from 'pouchdb-adapter-leveldb-core-rn'
 import { extend } from 'js-extend'
 
 function AsyncStoragePouch (opts, callback) {
