@@ -15,3 +15,7 @@ var db = new PouchDB('mydb', {adapter: 'asyncstorage'})
 ```
 
 For full API documentation and guides on PouchDB, see [PouchDB.com](http://pouchdb.com/). For details on PouchDB sub-packages, see the [Custom Builds documentation](http://pouchdb.com/custom.html).
+
+---
+Feedback welcome:
+Twitter: @stockulus

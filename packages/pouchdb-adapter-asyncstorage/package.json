@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stockulus/pouchdb-asyncstorage-down.git"
+    "url": "git+https://github.com/stockulus/pouchdb-react-native.git"
   },
   "keywords": [
     "pouchdb",
@@ -16,9 +16,9 @@
   "author": "Christoph Stock",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/stockulus/pouchdb-asyncstorage-down/issues"
+    "url": "https://github.com/stockulus/pouchdb-react-native/issues"
   },
-  "homepage": "https://github.com/stockulus/pouchdb-asyncstorage-down#readme",
+  "homepage": "https://github.com/stockulus/pouchdb-react-native#readme",
   "dependencies": {
     "argsarray": "0.0.1",
     "asyncstorage-down": "2.4.1",

@@ -1,64 +1,47 @@
-*** New Version ***
+pouchdb-react-native
 ======
 
-with the new sub-packages in PouchDB 5.4.0 there is a new structure.
+PouchDB, the ReactNative-only edition. A preset representing the PouchDB code that runs in ReactNative, without any of the code required to run it in Node.js.
 
-Adapter
-====
-https://github.com/stockulus/pouchdb-asyncstorage-down/tree/master/packages/pouchdb-adapter-asyncstorage
-https://www.npmjs.com/package/pouchdb-adapter-asyncstorage
+The `pouchdb-react-native` preset contains the version of PouchDB that is designed for ReactNative. In particular, it ships with the AsyncStorage adapters as its default adapters. It also contains the replication, HTTP, and map/reduce plugins.
 
-Bundle
-====
+Use this preset if you only want to use PouchDB in ReactNative,
+and don't want to use it in Node.js. (E.g. to avoid installing LevelDB.)
 
-https://github.com/stockulus/pouchdb-asyncstorage-down/tree/master/packages/pouchdb-react-native
-https://www.npmjs.com/package/pouchdb-react-native
+### Usage
 
-For details on PouchDB sub-packages, see the [Custom Builds documentation](http://pouchdb.com/custom.html).
-
-*** Old Readme ***
-======
-
-pouchdb-asyncstorage-down
-====
-
-Adds an async storage Adapter to the PouchDB + Polifills core-js that PouchDB with leveldown Adapter is running with react-native
-
-Usage
----
-
-You should be able to just do:
-
-    npm install pouchdb-asyncstorage-down --save
-
-Then require it after PouchDB:
-
-```js
-const PouchDB = require('pouchdb')
-require('pouchdb-asyncstorage-down')
-
-const db = new PouchDB('mydb', {adapter: 'asyncstorage'})
-
-// or import style
-
-import PouchDB from 'pouchdb'
-import 'pouchdb-asyncstorage-down'
-
-const db = new PouchDB('mydb', {adapter: 'asyncstorage'})
+```bash
+npm install pouchdb-react-native --save
 ```
 
-Sample App
----
+```js
+import PouchDB from 'pouchdb-react-native'
+const db = new PouchDB('mydb')
+```
+
+### Sample App
 there is a small example app:
 https://github.com/stockulus/pouchdb-asyncstorage-down/tree/master/example
 
-Tests
----
-Currently done manually by me, not sure how to easy simulate a running IOS / Android device
+```bash
+npm install && npm run ios
+```
+pouchdb-adapter-localstorage
+======
 
-Currently working on getting tests running, but a little struggling in running react-native as node tests
+PouchDB adapter using AsyncStorage as its data store. Designed to run in ReactNative. Its adapter name is `'asyncstorage'`.
 
-Contact
+### Usage
+
+```bash
+npm install pouchdb-adapter-asyncstorage --save
+```
+
+```js
+PouchDB.plugin(require('pouchdb-adapter-asyncstorage').default)
+var db = new PouchDB('mydb', {adapter: 'asyncstorage'})
+```
+
 ---
 Feedback welcome:
 Twitter: @stockulus

@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-asyncstorage-down",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "asyncstorage-down adapter for PouchDB",
   "main": "index.js",
   "scripts": {
@@ -51,7 +51,7 @@
   },
   "peerDependencies": {
     "react-native": ">=0.20.0",
-    "pouchdb": ">=5.0.0"
+    "pouchdb": ">=5.0.0 <5.4.0"
   },
   "standard": {
     "ignore": [
