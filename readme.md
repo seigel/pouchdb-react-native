@@ -44,4 +44,4 @@ var db = new PouchDB('mydb', {adapter: 'asyncstorage'})
 
 ---
 Feedback welcome:
-Twitter: @stockulus
+Twitter: [@stockulus](https://twitter.com/stockulus)

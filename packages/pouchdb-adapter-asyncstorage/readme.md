@@ -18,4 +18,4 @@ For full API documentation and guides on PouchDB, see [PouchDB.com](http://pouch
 
 ---
 Feedback welcome:
-Twitter: @stockulus
+Twitter: [@stockulus](https://twitter.com/stockulus)

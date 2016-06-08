@@ -66,4 +66,4 @@ Currently working on getting tests running, but a little struggling in running r
 Contact
 ---
 Feedback welcome:
-Twitter: @stockulus
+Twitter: [@stockulus](https://twitter.com/stockulus)
