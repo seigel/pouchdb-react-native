@@ -19,9 +19,9 @@ function AsyncStorageCore (dbName) {
 }
 
 AsyncStorageCore.prototype.getKeys = function (callback) {
-  var keys = []
-  var prefix = this._prefix
-  var prefixLen = prefix.length
+  const keys = []
+  const prefix = this._prefix
+  const prefixLen = prefix.length
 
   AsyncStorage.getAllKeys((error, allKeys) => {
     if (error) return callback(error)
@@ -43,9 +43,8 @@ AsyncStorageCore.prototype.put = function (key, value, callback) {
 }
 
 AsyncStorageCore.prototype.multiPut = function (pairs, callback) {
-  var self = this
   pairs.forEach((pair) => {
-    pair[0] = prepareKey(pair[0], self)
+    pair[0] = prepareKey(pair[0], this)
   })
 
   AsyncStorage.multiSet(pairs, callback)
@@ -57,9 +56,8 @@ AsyncStorageCore.prototype.get = function (key, callback) {
 }
 
 AsyncStorageCore.prototype.multiGet = function (keys, callback) {
-  var self = this
   keys = keys.map((key) => {
-    return prepareKey(key, self)
+    return prepareKey(key, this)
   })
 
   AsyncStorage.multiGet(keys)
@@ -80,8 +78,8 @@ AsyncStorageCore.prototype.multiRemove = function (keys, callback) {
 }
 
 AsyncStorageCore.destroy = function (dbName, callback) {
-  var prefix = createPrefix(dbName)
-  var prefixLen = prefix.length
+  const prefix = createPrefix(dbName)
+  const prefixLen = prefix.length
 
   AsyncStorage.getAllKeys((error, keys) => {
     if (error) return callback(error)
