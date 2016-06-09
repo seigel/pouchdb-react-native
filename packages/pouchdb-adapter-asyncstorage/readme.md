@@ -1,3 +1,4 @@
+![Logo](https://raw.githubusercontent.com/stockulus/pouchdb-react-native/master/static/pouchdb-react-native.png)
 pouchdb-adapter-localstorage
 ======
 
