@@ -1,5 +1,5 @@
 ![PouchDB Logo](https://pouchdb.com/static/img/mark.svg)
-![React Native Logo](https://facebook.github.io/react-native/img/header_logo.png)
+![React Native Logo](http://facebook.github.io/react-native/img/opengraph.png?2)
 pouchdb-react-native
 ======
 
