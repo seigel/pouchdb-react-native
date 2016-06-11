@@ -1,13 +1,12 @@
 'use strict'
 
-const SEPERATOR = 'ÿ'
-const DOC_STORE = 'document-store'
-const META_STORE = 'meta-store'
+const DOC_STORE = 'ÿdocument-storeÿ'
+const META_STORE = 'ÿmeta-storeÿ'
 
-const forDocument = (id) => `${SEPERATOR}${DOC_STORE}${SEPERATOR}${id}`
+const forDocument = (id) => `${DOC_STORE}${id}`
+const forMeta = (id) => `${META_STORE}${id}`
 
 export default {
-  DOC_STORE,
-  META_STORE,
-  forDocument
+  forDocument,
+  forMeta
 }
