@@ -8,7 +8,7 @@
     "android": "node ./node_modules/react-native/local-cli/cli.js run-android"
   },
   "dependencies": {
-    "pouchdb-react-native": "5.4.3",
+    "pouchdb-react-native": "5.4.4",
     "react": "15.1.0",
     "react-native": "0.27.2",
     "react-native-action-button": "1.1.5"
