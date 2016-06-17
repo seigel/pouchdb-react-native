@@ -562,11 +562,16 @@ function LevelPouch(opts, callback) {
     }
 
     function finish() {
-      if (api.auto_compaction) {
-        return autoCompact(complete);
-      } else {
-        compact(stemmedRevs, complete);
-      }
+      compact(stemmedRevs, function (error) {
+        /* istanbul ignore if */
+        if (error) {
+          complete(error);
+        }
+        if (api.auto_compaction) {
+          return autoCompact(complete);
+        }
+        complete();
+      });
     }
 
     function writeDoc(docInfo, winningRev, winningRevIsDeleted, newRevIsDeleted,
