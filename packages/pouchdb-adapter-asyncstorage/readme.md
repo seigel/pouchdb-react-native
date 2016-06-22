@@ -1,4 +1,5 @@
 ![Logo](https://raw.githubusercontent.com/stockulus/pouchdb-react-native/master/static/pouchdb-react-native.png)
+
 pouchdb-adapter-localstorage
 ======
 
@@ -12,7 +13,7 @@ npm install pouchdb-adapter-asyncstorage --save
 
 ```js
 PouchDB.plugin(require('pouchdb-adapter-asyncstorage').default)
-var db = new PouchDB('mydb', {adapter: 'asyncstorage'})
+const db = new PouchDB('mydb', {adapter: 'asyncstorage'})
 ```
 
 For full API documentation and guides on PouchDB, see [PouchDB.com](http://pouchdb.com/). For details on PouchDB sub-packages, see the [Custom Builds documentation](http://pouchdb.com/custom.html).
