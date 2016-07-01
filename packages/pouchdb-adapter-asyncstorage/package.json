@@ -13,6 +13,9 @@
     "asyncstorage",
     "offlinefirst"
   ],
+  "scripts": {
+    "updtr": "updtr --save-exact"
+  },
   "author": "Christoph Stock",
   "license": "MIT",
   "bugs": {
@@ -25,10 +28,10 @@
     "atob": "2.0.3",
     "blob-polyfill": "1.0.20150320",
     "btoa": "1.1.2",
-    "buffer": "4.6.0",
+    "buffer": "4.7.0",
     "core-util-is": "1.0.2",
     "double-ended-queue": "2.1.0-0",
-    "events": "1.1.0",
+    "events": "1.1.1",
     "fs": "0.0.2",
     "inherits": "2.0.1",
     "js-extend": "1.0.1",

@@ -11,6 +11,9 @@
   "files": [
     "src"
   ],
+  "scripts": {
+    "updtr": "updtr --save-exact"
+  },
   "dependencies": {
     "argsarray": "0.0.1",
     "double-ended-queue": "2.1.0-0",

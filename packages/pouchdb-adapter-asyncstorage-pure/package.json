@@ -13,6 +13,9 @@
     "asyncstorage",
     "offlinefirst"
   ],
+  "scripts": {
+    "updtr": "updtr --save-exact"
+  },
   "author": "Christoph Stock",
   "license": "MIT",
   "bugs": {

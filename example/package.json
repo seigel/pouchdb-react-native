@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "ios": "node ./node_modules/react-native/local-cli/cli.js run-ios",
-    "android": "node ./node_modules/react-native/local-cli/cli.js run-android"
+    "android": "node ./node_modules/react-native/local-cli/cli.js run-android",
+    "updtr": "updtr --save-exact"
   },
   "dependencies": {
     "pouchdb-react-native": "5.4.7",
