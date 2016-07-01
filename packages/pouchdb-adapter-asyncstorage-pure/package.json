@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-adapter-asyncstorage-pure",
-  "version": "5.4.7",
+  "version": "5.4.8",
   "description": "asyncstorage adapter for PouchDB",
   "main": "./src/index.js",
   "repository": {
