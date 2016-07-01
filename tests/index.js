@@ -1,5 +1,7 @@
 import 'react-native-mock/mock'
 
+/*
+
 import test from 'tape'
 import Pouchdb from 'pouchdb-react-native'
 
@@ -17,3 +19,4 @@ test('simple test', (assert) => {
     })
     .catch(error => assert.error(error))
 })
+*/

@@ -7,9 +7,6 @@ PouchDB, the ReactNative-only edition. A preset representing the PouchDB code th
 
 The `pouchdb-react-native` preset contains the version of PouchDB that is designed for ReactNative. In particular, it ships with the AsyncStorage adapters as its default adapters. It also contains the replication, HTTP, and map/reduce plugins.
 
-Use this preset if you only want to use PouchDB in ReactNative,
-and don't want to use it in Node.js. (E.g. to avoid installing LevelDB.)
-
 ### Usage
 
 ```bash
@@ -19,11 +16,17 @@ npm install pouchdb-react-native --save
 ```js
 import PouchDB from 'pouchdb-react-native'
 const db = new PouchDB('mydb')
+
+// use PouchDB
+db.get('4711')
+  .then(doc => console.log(doc))
+
 ```
+For full API documentation and guides on PouchDB, see [PouchDB.com](http://pouchdb.com/).
 
 ### Sample App
 there is a small example app:
-https://github.com/stockulus/pouchdb-asyncstorage-down/tree/master/example
+https://github.com/stockulus/pouchdb-react-native/tree/master/example
 
 ```bash
 npm install && npm run ios
@@ -40,10 +43,17 @@ npm install pouchdb-adapter-asyncstorage --save
 ```
 
 ```js
+import PouchDB from 'pouchdb-core'
 PouchDB.plugin(require('pouchdb-adapter-asyncstorage').default)
-var db = new PouchDB('mydb', {adapter: 'asyncstorage'})
+const db = new PouchDB('mydb', {adapter: 'asyncstorage'})
+
+// use PouchDB
+db.get('4711')
+  .then(doc => console.log(doc))
+
 ```
 
 ---
-Feedback welcome:
 Twitter: [@stockulus](https://twitter.com/stockulus)
+
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
