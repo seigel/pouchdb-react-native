@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-react-native-bundle",
-  "version": "5.4.6",
+  "version": "5.4.8",
   "description": "Package Bundle for PouchDB for ReactNative",
   "repository": {
     "type": "git",
@@ -15,7 +15,7 @@
   "scripts": {
     "test": "babel-node ./node_modules/tape/bin/tape ./tests/**/*.js | ./node_modules/faucet/bin/cmd.js",
     "standard": "node ./node_modules/standard/bin/cmd.js",
-    "clean": "lerna clean && rm -rf ./example/node_modules",
+    "clean": "lerna clean && rm -rf ./example/node_modules && rm -rf ./node_modules",
     "bootstrap": "npm install && lerna bootstrap && cd example && npm install && cd ..",
     "updtr": "updtr --save-exact && lerna run updtr && cd example && npm run updtr && cd .."
   },
@@ -26,7 +26,6 @@
   },
   "homepage": "https://github.com/stockulus/pouchdb-react-native#readme",
   "dependencies": {
-    "babel-preset-stockulus": "6.0.2"
   },
   "devDependencies": {
     "lerna": "2.0.0-beta.23",
