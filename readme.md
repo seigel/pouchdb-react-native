@@ -28,10 +28,7 @@ For full API documentation and guides on PouchDB, see [PouchDB.com](http://pouch
 there is a small example app:
 https://github.com/stockulus/pouchdb-react-native/tree/master/example
 
-```bash
-npm install && npm run ios
-```
-pouchdb-adapter-localstorage
+pouchdb-adapter-asyncstorage
 ======
 
 PouchDB adapter using AsyncStorage as its data store. Designed to run in ReactNative. Its adapter name is `'asyncstorage'`.
@@ -50,6 +47,17 @@ const db = new PouchDB('mydb', {adapter: 'asyncstorage'})
 // use PouchDB
 db.get('4711')
   .then(doc => console.log(doc))
+
+```
+
+development
+======
+```bash
+git clone https://github.com/stockulus/pouchdb-react-native.git
+cd pouchdb-react-native
+npm run bootstrap
+cd example
+npm run ios
 
 ```
 

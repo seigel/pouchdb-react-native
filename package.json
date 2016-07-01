@@ -15,6 +15,8 @@
   "scripts": {
     "test": "babel-node ./node_modules/tape/bin/tape ./tests/**/*.js | ./node_modules/faucet/bin/cmd.js",
     "standard": "node ./node_modules/standard/bin/cmd.js",
+    "clean": "lerna clean && rm -rf ./example/node_modules",
+    "bootstrap": "npm install && lerna bootstrap && cd example && npm install && cd ..",
     "updtr": "updtr --save-exact && lerna run updtr && cd example && npm run updtr && cd .."
   },
   "author": "Christoph Stock",

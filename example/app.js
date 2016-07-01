@@ -10,10 +10,10 @@ import {
   TouchableHighlight,
   View
 } from 'react-native'
-
 import ActionButton from 'react-native-action-button'
 
-import PouchDB from 'pouchdb-react-native'
+import PouchDB from '../packages/pouchdb-react-native'
+
 const localDB = new PouchDB('myDB')
 console.log(localDB.adapter)
 
