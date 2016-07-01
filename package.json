@@ -1,0 +1,44 @@
+{
+  "name": "pouchdb-react-native-bundle",
+  "version": "5.4.6",
+  "description": "Package Bundle for PouchDB for ReactNative",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stockulus/pouchdb-react-native.git"
+  },
+  "keywords": [
+    "pouchdb",
+    "react-native",
+    "asyncstorage",
+    "offlinefirst"
+  ],
+  "scripts": {
+    "test": "babel-node ./node_modules/tape/bin/tape ./tests/**/*.js | ./node_modules/faucet/bin/cmd.js",
+    "standard": "node ./node_modules/standard/bin/cmd.js",
+    "updtr": "updtr --save-exact"
+  },
+  "author": "Christoph Stock",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stockulus/pouchdb-react-native/issues"
+  },
+  "homepage": "https://github.com/stockulus/pouchdb-react-native#readme",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "babel-preset-stockulus": "6.0.2",
+    "faucet": "0.0.1",
+    "react": "15.1.0",
+    "react-native": "0.28.0",
+    "react-native-mock": "0.2.4",
+    "standard": "7.1.2",
+    "tape": "4.6.0"
+  },
+  "peerDependencies": {},
+  "standard": {
+    "ignore": [
+      "node_modules/**",
+      "packages/pouchdb-adapter-leveldb-core-rn/**"
+    ]
+  }
+}
