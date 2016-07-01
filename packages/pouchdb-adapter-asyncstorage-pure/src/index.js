@@ -2,7 +2,7 @@
 
 import './polyfill'
 import { changesHandler as ChangesHandler } from 'pouchdb-utils'
-import AsyncStorageCore from 'AsyncStorageCore'
+import AsyncStorageCore from './asyncstorage_core'
 
 // API implementations
 import info from './info'

@@ -1,14 +1,16 @@
 ![Logo](https://raw.githubusercontent.com/stockulus/pouchdb-react-native/master/static/pouchdb-react-native.png)
 
-pouchdb-adapter-asyncstorage
+pouchdb-adapter-asyncstorage-pure
 ======
+
+This is Work in Progress / Do not use now
 
 PouchDB adapter using AsyncStorage as its data store. Designed to run in ReactNative. Its adapter name is `'asyncstorage'`.
 
 ### Usage
 
 ```bash
-npm install pouchdb-adapter-asyncstorage --save
+npm install pouchdb-adapter-asyncstorage-pure --save
 ```
 
 ```js
