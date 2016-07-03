@@ -26,9 +26,9 @@
     "atob": "2.0.3",
     "btoa": "1.1.2",
     "buffer": "4.7.0",
-    "pouchdb-binary-utils": "5.4.4",
-    "pouchdb-errors": "5.4.4",
-    "pouchdb-utils": "5.4.4"
+    "pouchdb-binary-utils": "5.4.5",
+    "pouchdb-errors": "5.4.5",
+    "pouchdb-utils": "5.4.5"
   },
   "devDependencies": {},
   "peerDependencies": {},
