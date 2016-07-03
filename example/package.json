@@ -9,7 +9,7 @@
     "updtr": "updtr --save-exact"
   },
   "dependencies": {
-    "pouchdb-react-native": "5.4.8",
+    "pouchdb-react-native": "5.4.9",
     "react": "15.2.0",
     "react-native": "0.28.0",
     "react-native-action-button": "1.1.9"
