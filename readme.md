@@ -55,7 +55,7 @@ development
 ```bash
 git clone https://github.com/stockulus/pouchdb-react-native.git
 cd pouchdb-react-native
-npm run bootstrap
+npm install
 cd example
 npm run ios
 
