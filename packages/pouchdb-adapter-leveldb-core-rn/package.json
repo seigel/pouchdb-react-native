@@ -4,7 +4,7 @@
   "description": "React Native Copy of Core PouchDB adapter code for LevelDOWN-based adapters",
   "main": "./src/index.js",
   "keywords": [],
-  "author": "Dale Harvey <dale@arandomurl.com>",
+  "author": "Dale Harvey <dale@arandomurl.com> / Christoph Stock (@stockulus)",
   "license": "Apache-2.0",
   "files": [
     "src"

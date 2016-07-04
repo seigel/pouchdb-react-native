@@ -16,7 +16,7 @@
   "scripts": {
     "updtr": "updtr --save-exact"
   },
-  "author": "Christoph Stock",
+  "author": "Christoph Stock (@stockulus)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/stockulus/pouchdb-react-native/issues"

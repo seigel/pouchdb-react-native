@@ -1,7 +1,12 @@
 {
   "name": "example",
   "version": "1.0.0",
-  "private": true,
+  "author": "Christoph Stock (@stockulus)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stockulus/pouchdb-react-native.git"
+  },
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "ios": "node ./node_modules/react-native/local-cli/cli.js run-ios",
