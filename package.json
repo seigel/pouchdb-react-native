@@ -17,7 +17,8 @@
     "standard": "node ./node_modules/standard/bin/cmd.js",
     "clean": "lerna clean && rm -rf ./example/node_modules && rm -rf ./node_modules",
     "postinstall": "lerna bootstrap && cd example && npm install && cd ..",
-    "updtr": "updtr --save-exact && lerna run updtr && cd example && npm run updtr && cd .."
+    "updtr": "updtr --save-exact && lerna run updtr && cd example && npm run updtr && cd ..",
+    "publish": "lerna publish"
   },
   "author": "Christoph Stock (@stockulus)",
   "license": "MIT",
