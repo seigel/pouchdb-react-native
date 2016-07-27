@@ -28,7 +28,9 @@ export default React.createClass({
           const items = result.rows.map(row => row.doc)
           const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.id !== r2.id})
           this.setState({
-            dataSource: ds.cloneWithRows(items)})
+            dataSource: ds.cloneWithRows(items),
+            count: items.length
+          })
         })
         .catch(error => console.warn('Could not load Documents', error, error.message))
     }
@@ -40,7 +42,7 @@ export default React.createClass({
 
     return {
       dataSource: null,
-      syncUrl: ''
+      syncUrl: 'http://localhost:5984/test'
     }
   },
   _renderMain () {
@@ -69,6 +71,12 @@ export default React.createClass({
 
     return (
       <View style={{flex: 1}}>
+        <View>
+          {!!this._sync && <Text style={{fontWeight: 'bold'}}>{this.state.syncUrl}</Text>}
+          <Text style={{fontWeight: 'bold'}}>Count: {this.state.count}</Text>
+        </View>
+        <View
+          style={{borderColor: '#969A99', borderBottomWidth: StyleSheet.hairlineWidth}} />
         {!dataSource
           ? (<Text>Loading...</Text>)
           : renderList()
@@ -86,9 +94,20 @@ export default React.createClass({
             onPress={() => this._navigator.push({name: 'Sync', render: this._renderSync})}>
             <Text>sync</Text>
           </ActionButton.Item>
+          <ActionButton.Item
+            buttonColor='#005BFF'
+            title='Insert 250 Records'
+            onPress={() => this._insertRecords(250)}>
+            <Text>insert</Text>
+          </ActionButton.Item>
         </ActionButton>
       </View>
     )
+  },
+  _insertRecords (count) {
+    for (let index = 0; index < count; index++) {
+      localDB.post({index})
+    }
   },
   _renderSync () {
     const addSync = () => {
