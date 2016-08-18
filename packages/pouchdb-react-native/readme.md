@@ -3,7 +3,7 @@
 pouchdb-react-native
 ======
 
-PouchDB, the ReactNative-only edition. A preset representing the PouchDB code that runs in ReactNative, without any of the code required to run it in Node.js.
+PouchDB, the ReactNative-only edition. A preset representing the PouchDB code that runs in ReactNative.
 
 The `pouchdb-react-native` preset contains the version of PouchDB that is designed for ReactNative. In particular, it ships with the AsyncStorage adapters as its default adapters. It also contains the replication, HTTP, and map/reduce plugins.
 
