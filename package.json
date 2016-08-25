@@ -33,8 +33,7 @@
   },
   "standard": {
     "ignore": [
-      "node_modules/**",
-      "packages/pouchdb-adapter-leveldb-core-rn/**"
+      "node_modules/**"
     ]
   }
 }

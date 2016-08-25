@@ -199,6 +199,10 @@ function LevelPouch (opts, callback) {
     stores.metaStore = db.sublevel(META_STORE, {valueEncoding: 'json'})
     migrate.localAndMetaStores(db, stores, function () {
       stores.metaStore.get(UPDATE_SEQ_KEY, function (err, value) {
+        if (err) {
+          return console.warn(err)
+        }
+
         if (typeof db._updateSeq === 'undefined') {
           db._updateSeq = value || 0
         }
@@ -1095,6 +1099,9 @@ function LevelPouch (opts, callback) {
         var winningSeq = metadata.rev_map[winningRev]
 
         stores.bySeqStore.get(formatSeq(winningSeq), function (err, doc) {
+          if (err) {
+            return console.warn(err)
+          }
           onGetWinningDoc(doc)
         })
       }
@@ -1105,6 +1112,9 @@ function LevelPouch (opts, callback) {
       }
       // metadata not cached, have to go fetch it
       stores.docStore.get(doc._id, function (err, metadata) {
+        if (err) {
+          return console.warn(err)
+        }
         /* istanbul ignore if */
         if (opts.cancelled || opts.done || db.isClosed() ||
           isLocalId(metadata.id)) {
