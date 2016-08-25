@@ -1,5 +1,6 @@
 'use strict'
 
+import { createError } from 'pouchdb-errors'
 import { collectConflicts } from 'pouchdb-merge'
 
 const getDocs = (db, {filterKey, startkey, endkey, skip, limit, inclusiveEnd, includeDeleted}, callback) => {
@@ -42,7 +43,7 @@ export default function (db, opts, callback) {
 
   getDocs(db, {filterKey, startkey, endkey, skip, limit, inclusiveEnd, includeDeleted},
     (error, docs) => {
-      if (error) return callback(error)
+      if (error) return callback(createError(error))
 
       let rows = docs.map(doc => {
         if (includeDoc) {
