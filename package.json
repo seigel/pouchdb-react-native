@@ -13,10 +13,11 @@
     "offlinefirst"
   ],
   "scripts": {
-    "test": "babel-node ./node_modules/tape/bin/tape ./tests/**/*.js | ./node_modules/faucet/bin/cmd.js",
+    "test": "npm run standard && npm run test-unit",
+    "test-unit": "mocha -r tests/setup.js pouchdb-original/tests/unit/test.*.js",
     "standard": "node ./node_modules/standard/bin/cmd.js",
     "clean": "lerna clean && rm -rf ./example/node_modules && rm -rf ./node_modules",
-    "postinstall": "lerna bootstrap && cd example && npm install && cd ..",
+    "postinstall": "lerna bootstrap && cd example && npm install && cd ../pouchdb-original && npm install",
     "updtr": "updtr --save-exact && lerna run updtr && cd example && npm run updtr && cd ..",
     "publish": "lerna publish"
   },
@@ -39,7 +40,8 @@
   },
   "standard": {
     "ignore": [
-      "node_modules/**"
+      "node_modules/**",
+      "pouchdb-original/**"
     ]
   }
 }
