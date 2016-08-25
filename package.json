@@ -34,7 +34,6 @@
     "babel-cli": "6.14.0",
     "lerna": "2.0.0-beta.24",
     "mocha": "3.0.2",
-    "lerna": "2.0.0-beta.24",
     "react": "15.2.1",
     "react-native": "0.31.0",
     "react-native-mock": "0.2.6",
