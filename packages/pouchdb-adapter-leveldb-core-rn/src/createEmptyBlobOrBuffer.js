@@ -1,7 +1,7 @@
-import { typedBuffer } from 'pouchdb-binary-utils';
+import { typedBuffer } from 'pouchdb-binary-utils'
 
-function createEmptyBlobOrBuffer(type) {
-  return typedBuffer('', 'binary', type);
+function createEmptyBlobOrBuffer (type) {
+  return typedBuffer('', 'binary', type)
 }
 
-export default createEmptyBlobOrBuffer;
+export default createEmptyBlobOrBuffer
