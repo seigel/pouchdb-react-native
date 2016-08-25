@@ -5,46 +5,46 @@ import { changesHandler as ChangesHandler } from 'pouchdb-utils'
 import AsyncStorageCore from './asyncstorage_core'
 
 // API implementations
-import info from './info'
+import allDocs from './all_docs'
 import get from './get'
-import getAttachment from './getAttachment'
-import bulkDocs from './bulkDocs'
-import allDocs from './allDocs'
+import getAttachment from './get_attachment'
+import bulkDocs from './bulk_docs'
 import changes from './changes'
-import getRevisionTree from './getRevisionTree'
+import getRevisionTree from './get_revision_tree'
 import doCompaction from './doCompaction'
+import info from './info'
 import destroy from './destroy'
 
 const ADAPTER_NAME = 'asyncstorage'
-const asyncStorageChanges = new ChangesHandler()
 
 // A shared list of database handles
 const openDatabases = {}
-const getDatabase = (opts) => {
+const getDatabase = opts => new Promise(resolve => {
   if (opts.name in openDatabases) {
-    return openDatabases[opts.name]
+    return resolve(openDatabases[opts.name])
   }
 
-  openDatabases[opts.name] = new Promise((resolve) => {
-    const storage = new AsyncStorageCore(opts.name)
+  const result = {
+    storage: new AsyncStorageCore(opts.name),
+    meta: {db_uuid: opts.name, doc_count: 0, update_seq: 0},
+    changes: new ChangesHandler()
+  }
 
-    resolve({storage})
-  })
-}
+  openDatabases[opts.name] = result
+  resolve(result)
+})
 
 function AsyncStoragePouch (dbOpts, callback) {
   const api = this
-  let metadata = {}
 
   // This is a wrapper function for any methods that need an
   // active database handle it will recall itself but with
   // the database handle as the first argument
-  var $ = function (fun) {
+  const $ = function (fun) {
     return function () {
       var args = Array.prototype.slice.call(arguments)
-      getDatabase(dbOpts).then(function (res) {
-        metadata = res.metadata
-        args.unshift(res.idb)
+      getDatabase(dbOpts).then(function (database) {
+        args.unshift(database)
         fun.apply(api, args)
       })
     }
@@ -52,44 +52,24 @@ function AsyncStoragePouch (dbOpts, callback) {
 
   api.type = () => ADAPTER_NAME
 
-  api._id = $(function (idb, cb) {
-    cb(null, metadata.db_uuid)
-  })
-
-  api._info = $(function (idb, cb) {
-    return info(idb, metadata, cb)
-  })
+  api._id = $(({meta}, cb) => cb(null, meta.db_uuid))
+  api._info = $(info)
 
   api._get = $(get)
-
-  api._bulkDocs = $(function (idb, req, opts, callback) {
-    return bulkDocs(idb, req, opts, metadata, dbOpts, asyncStorageChanges, callback)
-  })
-
-  api._allDocs = $(function (idb, opts, cb) {
-    return allDocs(idb, metadata, opts, cb)
-  })
-
-  api._getAttachment = $(function (idb, docId, attachId, attachment, opts, cb) {
-    return getAttachment(idb, docId, attachId, opts, cb)
-  })
-
-  api._changes = $(function (idb, opts) {
-    return changes(idb, asyncStorageChanges, api, dbOpts, opts)
-  })
-
   api._getRevisionTree = $(getRevisionTree)
+  api._getAttachment = $(getAttachment)
+
+  api._bulkDocs = $(bulkDocs)
+  api._allDocs = $(allDocs)
+  api._changes = $(changes)
+
   api._doCompaction = $(doCompaction)
+  api._destroy = $(destroy)
 
-  api._destroy = function (opts, callback) {
-    return destroy(dbOpts, openDatabases, asyncStorageChanges, callback)
-  }
-
-  api._close = $(function (db, cb) {
+  api._close = cb => {
     delete openDatabases[dbOpts.name]
-    db.close()
     cb()
-  })
+  }
 
   callback(null, api)
 }

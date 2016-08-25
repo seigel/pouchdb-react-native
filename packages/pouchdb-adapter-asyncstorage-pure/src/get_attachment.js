@@ -4,7 +4,7 @@ import { btoa, readAsBinaryString } from 'pouchdb-binary-utils'
 import { createError, MISSING_DOC } from 'pouchdb-errors'
 import keys from './keys'
 
-export default function (db, docId, attachId, opts, callback) {
+export default function (db, docId, attachId, attachment, opts, callback) {
   db.storage.get(keys.forDocument(docId), (error, doc) => {
     if (error) {
       return callback(createError(
