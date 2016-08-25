@@ -1,4 +1,4 @@
 [submodule "pouchdb-original"]
-	path = pouchdb-original
-	url = https://github.com/pouchdb/pouchdb.git
-  branch = 5.4.5
+  path = pouchdb-original
+  url = https://github.com/pouchdb/pouchdb.git
+	branch = 5.4.5
