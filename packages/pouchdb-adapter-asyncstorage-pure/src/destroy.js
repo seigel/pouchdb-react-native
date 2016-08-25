@@ -1,5 +1,5 @@
 'use strict'
 
-export default function (opts, callback) {
+export default function (db, opts, callback) {
   callback()
 }
