@@ -26,7 +26,7 @@ AsyncStorageCore.prototype.getKeys = function (callback) {
   AsyncStorage.getAllKeys((error, allKeys) => {
     if (error) return callback(error)
 
-    allKeys.forEach((fullKey) => {
+    allKeys.forEach(fullKey => {
       if (fullKey.slice(0, prefixLen) === prefix) {
         keys.push(fullKey.slice(prefixLen))
       }
@@ -43,7 +43,7 @@ AsyncStorageCore.prototype.put = function (key, value, callback) {
 }
 
 AsyncStorageCore.prototype.multiPut = function (pairs, callback) {
-  pairs.forEach((pair) => {
+  pairs.forEach(pair => {
     pair[0] = prepareKey(pair[0], this)
   })
 
@@ -56,14 +56,10 @@ AsyncStorageCore.prototype.get = function (key, callback) {
 }
 
 AsyncStorageCore.prototype.multiGet = function (keys, callback) {
-  keys = keys.map((key) => {
-    return prepareKey(key, this)
-  })
+  keys = keys.map(key => prepareKey(key, this))
 
   AsyncStorage.multiGet(keys)
-    .then(function (pairs) {
-      callback(null, pairs.map((pair) => pair[1]))
-    })
+    .then(pairs => callback(null, pairs.map((pair) => pair[1])))
     .catch(callback)
 }
 
@@ -73,7 +69,7 @@ AsyncStorageCore.prototype.remove = function (key, callback) {
 }
 
 AsyncStorageCore.prototype.multiRemove = function (keys, callback) {
-  keys = keys.map((key) => prepareKey(key, this))
+  keys = keys.map(key => prepareKey(key, this))
   AsyncStorage.multiRemove(keys, callback)
 }
 
@@ -84,7 +80,7 @@ AsyncStorageCore.destroy = function (dbName, callback) {
   AsyncStorage.getAllKeys((error, keys) => {
     if (error) return callback(error)
 
-    keys = keys.filter((key) => key.slice(0, prefixLen) === prefix)
+    keys = keys.filter(key => key.slice(0, prefixLen) === prefix)
     AsyncStorage.multiRemove(keys, callback)
   })
 }
