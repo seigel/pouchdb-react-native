@@ -13,7 +13,7 @@ import { winningRev as calculateWinningRev, merge } from 'pouchdb-merge'
 */
 
 export default function (db, req, opts, callback) {
-  const revsLimit = db.opts.revs_limit || 1000
+//  const revsLimit = db.opts.revs_limit || 1000
 
   callback()
 }
