@@ -27,6 +27,7 @@ const getDatabase = opts => new Promise(resolve => {
   const result = {
     storage: new AsyncStorageCore(opts.name),
     meta: {db_uuid: opts.name, doc_count: 0, update_seq: 0},
+    opts,
     changes: new ChangesHandler()
   }
 
