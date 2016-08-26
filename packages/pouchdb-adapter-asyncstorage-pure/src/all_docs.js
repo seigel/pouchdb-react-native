@@ -3,7 +3,9 @@
 import { createError } from 'pouchdb-errors'
 import { collectConflicts } from 'pouchdb-merge'
 
-const getDocs = (db, {filterKey, startkey, endkey, skip, limit, inclusiveEnd, includeDeleted}, callback) => {
+const getDocs = (db,
+  {filterKey, startkey, endkey, skip, limit, inclusiveEnd, includeDeleted},
+  callback) => {
   db.getKeys((error, keys) => {
     if (error) return callback(error)
 
@@ -15,8 +17,10 @@ const getDocs = (db, {filterKey, startkey, endkey, skip, limit, inclusiveEnd, in
       return true
     })
 
-    db.multiGet(filterKeys, (error, docs) => {
+    db.multiGet(filterKeys, (error, keyValues) => {
       if (error) return callback(error)
+
+      const docs = keyValues.map(keyValue => keyValue.value)
 
       let result = includeDeleted
         ? docs
@@ -31,6 +35,7 @@ const getDocs = (db, {filterKey, startkey, endkey, skip, limit, inclusiveEnd, in
 }
 
 export default function (db, opts, callback) {
+  // get options like pouchdb-adapter-indexeddb
   const startkey = 'startkey' in opts ? opts.startkey : false
   const endkey = 'endkey' in opts ? opts.endkey : false
   const filterKey = 'key' in opts ? opts.key : false
@@ -43,9 +48,9 @@ export default function (db, opts, callback) {
 
   getDocs(db, {filterKey, startkey, endkey, skip, limit, inclusiveEnd, includeDeleted},
     (error, docs) => {
-      if (error) return callback(createError(error))
+      if (error) return callback(createError(error, 'get_docs'))
 
-      let rows = docs.map(doc => {
+      const rows = docs.map(doc => {
         if (includeDoc) {
           return {
             id: doc.id,
