@@ -43,7 +43,7 @@ function AsyncStoragePouch (dbOpts, callback) {
   const $ = function (fun) {
     return function () {
       var args = Array.prototype.slice.call(arguments)
-      getDatabase(dbOpts).then(function (database) {
+      getDatabase(dbOpts).then(database => {
         args.unshift(database)
         fun.apply(api, args)
       })
