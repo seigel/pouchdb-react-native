@@ -43,10 +43,7 @@ AsyncStorageCore.prototype.put = function (key, value, callback) {
 }
 
 AsyncStorageCore.prototype.multiPut = function (pairs, callback) {
-  pairs.forEach(pair => {
-    pair[0] = prepareKey(pair[0], this)
-  })
-
+  pairs = pairs.map(pair => [prepareKey(pair[0], this), pair[1]])
   AsyncStorage.multiSet(pairs, callback)
 }
 
@@ -59,7 +56,7 @@ AsyncStorageCore.prototype.multiGet = function (keys, callback) {
   keys = keys.map(key => prepareKey(key, this))
 
   AsyncStorage.multiGet(keys)
-    .then(pairs => callback(null, pairs.map((pair) => pair[1])))
+    .then(pairs => callback(null, pairs.map(pair => pair[1])))
     .catch(callback)
 }
 
