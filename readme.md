@@ -28,7 +28,7 @@ For full API documentation and guides on PouchDB, see [PouchDB.com](http://pouch
 
 ### Sample App
 there is a small example app:
-https://github.com/stockulus/pouchdb-react-native/tree/master/example
+https://github.com/stockulus/pouchdb-react-native/tree/master/app.js
 
 pouchdb-adapter-asyncstorage
 ======
@@ -59,7 +59,6 @@ git clone https://github.com/stockulus/pouchdb-react-native.git
 cd pouchdb-react-native
 npm install
 npm test
-cd example
 npm run ios
 
 ```

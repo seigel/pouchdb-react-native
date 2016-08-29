@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-react-native-bundle",
-  "version": "5.4.8",
+  "version": "5.4.18",
   "description": "Package Bundle for PouchDB for ReactNative",
   "repository": {
     "type": "git",
@@ -13,15 +13,17 @@
     "offlinefirst"
   ],
   "scripts": {
+    "start": "node ./node_modules/react-native/local-cli/cli.js start",
+    "ios": "node ./node_modules/react-native/local-cli/cli.js run-ios",
+    "android": "node ./node_modules/react-native/local-cli/cli.js run-android",
     "test": "npm run standard && npm run test-unit",
     "test-unit": "mocha -r tests/setup.js pouchdb-original/tests/unit/test.*.js",
     "test-mapreduce": "mocha -r tests/setup.js pouchdb-original/tests/mapreduce/test.*.js",
     "test-integration": "mocha -r tests/setup.js pouchdb-original/tests/integration/test.*.js",
     "standard": "node ./node_modules/standard/bin/cmd.js",
-    "clean": "lerna clean && rm -rf ./example/node_modules && rm -rf ./pouchdb-original/node_modules && rm -rf ./node_modules",
-    "postinstall": "lerna bootstrap && cd example && npm install && cd ../pouchdb-original && npm install",
-    "updtr": "updtr --save-exact && lerna run updtr && cd example && npm run updtr && cd ..",
-    "publish": "lerna publish"
+    "clean": "rm -rf packages/node_modules/**/node_modules && rm -rf rm -rf ./pouchdb-original/node_modules && rm -rf ./node_modules",
+    "postinstall": "for D in ./packages/*; do cd $D; npm install; cd -; done && cd pouchdb-original && npm install",
+    "updtr": "updtr --save-exact && for D in ./packages/*; do cd $D; run updtr; cd -;"
   },
   "author": "Christoph Stock (@stockulus)",
   "license": "MIT",
@@ -29,13 +31,15 @@
     "url": "https://github.com/stockulus/pouchdb-react-native/issues"
   },
   "homepage": "https://github.com/stockulus/pouchdb-react-native#readme",
-  "dependencies": {},
-  "devDependencies": {
-    "babel-cli": "6.14.0",
-    "lerna": "2.0.0-beta.24",
-    "mocha": "3.0.2",
+  "dependencies": {
     "react": "15.3.1",
     "react-native": "0.32.0",
+    "react-native-action-button": "2.0.1",
+    "react-native-native": "5.4.18"
+  },
+  "devDependencies": {
+    "babel-cli": "6.14.0",
+    "mocha": "3.0.2",
     "react-native-mock": "0.2.6",
     "standard": "8.0.0"
   },

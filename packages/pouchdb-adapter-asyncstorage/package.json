@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-adapter-asyncstorage",
-  "version": "5.4.17",
+  "version": "5.4.18",
   "description": "asyncstorage adapter for PouchDB",
   "main": "index.js",
   "repository": {
@@ -38,9 +38,10 @@
     "leveldown": "1.4.6",
     "lie": "3.1.0",
     "path": "0.12.7",
-    "pouchdb-adapter-leveldb-core-rn": "^5.4.17",
+    "pouchdb-adapter-leveldb-core-rn": "5.4.18",
     "stream": "0.0.2",
     "through2": "2.0.1",
+    "util": "0.10.3",
     "vuvuzela": "1.0.3"
   },
   "devDependencies": {},
