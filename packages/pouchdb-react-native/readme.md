@@ -29,7 +29,7 @@ For full API documentation and guides on PouchDB, see [PouchDB.com](http://pouch
 
 ### Sample App
 there is a small example app:
-https://github.com/stockulus/pouchdb-react-native/tree/master/example
+https://github.com/stockulus/pouchdb-react-native/tree/master/app.js
 
 ---
 [![Twitter URL](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&maxAge=2592000)](https://twitter.com/stockulus) [![GitHub stars](https://img.shields.io/github/stars/stockulus/pouchdb-react-native.svg?style=social&label=Star)](https://github.com/stockulus/pouchdb-react-native)
