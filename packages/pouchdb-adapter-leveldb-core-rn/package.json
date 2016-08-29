@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-adapter-leveldb-core-rn",
-  "version": "5.4.18",
+  "version": "5.4.19",
   "description": "React Native Copy of Core PouchDB adapter code for LevelDOWN-based adapters",
   "main": "./src/index.js",
   "keywords": [],
