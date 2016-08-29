@@ -2,6 +2,7 @@
   "name": "example",
   "version": "1.0.0",
   "author": "Christoph Stock (@stockulus)",
+  "description": "small example app for pouchdb-react-native",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -11,7 +12,9 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "ios": "node ./node_modules/react-native/local-cli/cli.js run-ios",
     "android": "node ./node_modules/react-native/local-cli/cli.js run-android",
-    "updtr": "updtr --save-exact"
+    "updtr": "updtr --save-exact",
+    "copy-packages": "sh copy_packages.sh",
+    "postinstall": "npm run copy-packages"
   },
   "dependencies": {
     "pouchdb-react-native": "5.4.18",

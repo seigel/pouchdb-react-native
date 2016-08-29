@@ -2,17 +2,17 @@
 // pre-2.2.0 LevelDB-specific migrations
 var toSublevel = function (name, db, callback) {
   process.nextTick(function () {
-    callback()
-  })
-}
+    callback();
+  });
+};
 
 var localAndMetaStores = function (db, stores, callback) {
   process.nextTick(function () {
-    callback()
-  })
-}
+    callback();
+  });
+};
 
 export default {
   toSublevel: toSublevel,
   localAndMetaStores: localAndMetaStores
-}
+};
