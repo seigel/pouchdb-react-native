@@ -25,7 +25,7 @@ const getDatabase = opts => new Promise(resolve => {
   }
 
   const result = {
-    storage: new AsyncStorageCore(opts.name),
+    storage: new AsyncStorageCore(opts.name.slice(7)),
     meta: {db_uuid: opts.name, doc_count: 0, update_seq: 0},
     opts,
     changes: new ChangesHandler()
@@ -36,6 +36,7 @@ const getDatabase = opts => new Promise(resolve => {
 })
 
 function AsyncStoragePouch (dbOpts, callback) {
+  console.warn('constructor', dbOpts)
   const api = this
 
   // This is a wrapper function for any methods that need an
@@ -46,6 +47,7 @@ function AsyncStoragePouch (dbOpts, callback) {
       var args = Array.prototype.slice.call(arguments)
       getDatabase(dbOpts).then(database => {
         args.unshift(database)
+        console.log('$', args, fun.toString())
         fun.apply(api, args)
       })
     }

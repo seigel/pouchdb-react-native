@@ -2,6 +2,7 @@
 
 import React from 'react'
 import {
+  AsyncStorage,
   ListView,
   Navigator,
   StyleSheet,
@@ -17,8 +18,7 @@ import PouchDB from 'pouchdb-react-native'
 const localDB = new PouchDB('myDB')
 console.log(localDB.adapter)
 
-// import { AsyncStorage } from 'react-native'
-// AsyncStorage.getAllKeys((error, keys) => console.log(keys))
+AsyncStorage.getAllKeys((error, keys) => console.log(error, keys))
 
 export default React.createClass({
   getInitialState () {

@@ -3,13 +3,27 @@
 import { createError } from 'pouchdb-errors'
 import { collectConflicts } from 'pouchdb-merge'
 
+const DOC_STORE = 'ÿdocument-storeÿ'
+const DOC_STORE_LENGTH = DOC_STORE.length
+
+const toDocuments = list => {
+  return list
+    .filter(key => key.startsWith(DOC_STORE))
+    .map(key => key.slice(DOC_STORE_LENGTH))
+}
+
+const toKeys = list => {
+  return list
+    .map(key => DOC_STORE + key)
+}
+
 const getDocs = (db,
   {filterKey, startkey, endkey, skip, limit, inclusiveEnd, includeDeleted},
   callback) => {
   db.storage.getKeys((error, keys) => {
     if (error) return callback(error)
 
-    const filterKeys = keys.filter(key => {
+    const filterKeys = toDocuments(keys).filter(key => {
       if (startkey && startkey > key) return false
       if (endkey) return inclusiveEnd ? endkey >= key : endkey > key
       if (filterKey) return filterKey === key
@@ -17,7 +31,7 @@ const getDocs = (db,
       return true
     })
 
-    db.storage.multiGet(filterKeys, (error, docs) => {
+    db.storage.multiGet(toKeys(filterKeys), (error, docs) => {
       if (error) return callback(error)
 
       let result = includeDeleted
@@ -27,6 +41,7 @@ const getDocs = (db,
       if (skip > 0) result = result.slice(skip)
       if (limit > 0 && result.length > limit) result = result.slice(0, limit)
 
+      console.warn('query type', typeof docs, docs)
       callback(null, result)
     })
   })
@@ -73,8 +88,13 @@ export default function (db, opts, callback) {
     (error, docs) => {
       if (error) return callback(createError(error, 'get_docs'))
 
-      let rows = docs.map(docToRow)
+      console.warn('docs', typeof docs, docs)
+
+      let rows = Array.prototype.map.call(docs, docToRow)
       if (descending) rows = rows.reverse()
+
+      console.warn('docs', docs)
+      console.warn('rows', rows)
 
       callback(null, {
         total_rows: db.meta.doc_count,

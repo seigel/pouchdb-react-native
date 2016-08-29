@@ -17,6 +17,7 @@
     "postinstall": "npm run copy-packages"
   },
   "dependencies": {
+    "pouchdb-adapter-asyncstorage-pure": "^5.4.19",
     "pouchdb-react-native": "5.4.19",
     "react": "15.2.1",
     "react-native": "0.31.0",
