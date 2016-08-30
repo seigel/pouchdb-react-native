@@ -41,7 +41,6 @@ const getDocs = (db,
       if (skip > 0) result = result.slice(skip)
       if (limit > 0 && result.length > limit) result = result.slice(0, limit)
 
-      console.warn('query type', typeof docs, docs)
       callback(null, result)
     })
   })
@@ -70,7 +69,7 @@ export default function (db, opts, callback) {
         doc: Object.assign({}, doc.data, {
           _id: doc.id,
           _rev: doc.id,
-          _conflicts: opts.conflicts ? collectConflicts(doc) : null
+          _conflicts: opts.conflicts ? collectConflicts(doc) : undefined
         })
       }
     }
@@ -88,9 +87,7 @@ export default function (db, opts, callback) {
     (error, docs) => {
       if (error) return callback(createError(error, 'get_docs'))
 
-      console.warn('docs', typeof docs, docs)
-
-      let rows = Array.prototype.map.call(docs, docToRow)
+      let rows = docs.map(docToRow)
       if (descending) rows = rows.reverse()
 
       console.warn('docs', docs)
