@@ -1,8 +1,6 @@
 'use strict'
 
 import './polyfill'
-import { changesHandler as ChangesHandler } from 'pouchdb-utils'
-import AsyncStorageCore from './asyncstorage_core'
 
 // API implementations
 import allDocs from './all_docs'
@@ -15,39 +13,9 @@ import doCompaction from './do_compaction'
 import info from './info'
 import destroy from './destroy'
 
-import { toMetaKeys } from './keys'
+import { get as getDatabase, close as closeDatabase } from './databases'
 
 const ADAPTER_NAME = 'asyncstorage'
-
-// A shared list of database handles
-const openDatabases = {}
-const getDatabase = opts => new Promise((resolve, reject) => {
-  if (opts.name in openDatabases) {
-    return resolve(openDatabases[opts.name])
-  }
-
-  const storage = new AsyncStorageCore(opts.name.slice(7))
-
-  storage.multiGet(toMetaKeys([
-    '_local_uuid', '_local_doc_count', '_local_last_update_seq'
-  ]), (error, meta) => {
-    if (error) return reject(error)
-
-    const result = {
-      storage,
-      meta: {
-        db_uuid: meta[0],
-        doc_count: meta[1],
-        update_seq: meta[2]
-      },
-      opts,
-      changes: new ChangesHandler()
-    }
-
-    openDatabases[opts.name] = result
-    resolve(result)
-  })
-})
 
 function AsyncStoragePouch (dbOpts, callback) {
   const api = this
@@ -83,7 +51,7 @@ function AsyncStoragePouch (dbOpts, callback) {
   api._destroy = $(destroy)
 
   api._close = cb => {
-    delete openDatabases[dbOpts.name]
+    closeDatabase(dbOpts.name)
     cb()
   }
 

@@ -44,7 +44,9 @@ AsyncStorageCore.prototype.put = function (key, value, callback) {
 
 AsyncStorageCore.prototype.multiPut = function (pairs, callback) {
   pairs = pairs.map(pair => [prepareKey(pair[0], this), JSON.stringify(pair[1])])
-  AsyncStorage.multiSet(pairs, callback)
+  AsyncStorage.multiSet(pairs)
+    .then(result => callback(null, result))
+    .catch(callback)
 }
 
 AsyncStorageCore.prototype.get = function (key, callback) {
