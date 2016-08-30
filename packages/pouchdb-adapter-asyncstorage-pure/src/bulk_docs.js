@@ -9,6 +9,8 @@ export default function (db, req, opts, callback) {
   const newEdits = opts.new_edits
   const revsLimit = db.opts.revs_limit || 1000
 
+  console.warn('bulk_docs', req, opts)
+
   const mapRequestDoc = doc => {
     // call shared parseDoc (pouchDB) and reformat it
     const parsedDoc = parseDoc(doc, newEdits)
