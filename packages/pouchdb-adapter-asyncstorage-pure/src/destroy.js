@@ -8,5 +8,5 @@ export default function (db, opts, callback) {
 
     closeDatabase(db.dbOpts.name)
     callback()
-  }
+  })
 }
