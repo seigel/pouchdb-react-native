@@ -135,8 +135,8 @@ export default function (db, req, opts, callback) {
 
     const dbChanges = changes.map(item => item.doc)
       .concat(changes.map(item => item.data))
-      .concat([forMeta('_local_doc_count'), newMeta.doc_count])
-      .concat([forMeta('_local_last_update_seq'), newMeta.update_seq])
+    dbChanges.push([forMeta('_local_doc_count'), newMeta.doc_count])
+    dbChanges.push([forMeta('_local_last_update_seq'), newMeta.update_seq])
 
     db.storage.multiPut(dbChanges, error => {
       if (error) return callback(generateErrorFromResponse(error))
