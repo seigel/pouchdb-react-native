@@ -15,28 +15,41 @@ import doCompaction from './do_compaction'
 import info from './info'
 import destroy from './destroy'
 
+import { toMetaKeys } from './keys'
+
 const ADAPTER_NAME = 'asyncstorage'
 
 // A shared list of database handles
 const openDatabases = {}
-const getDatabase = opts => new Promise(resolve => {
+const getDatabase = opts => new Promise((resolve, reject) => {
   if (opts.name in openDatabases) {
     return resolve(openDatabases[opts.name])
   }
 
-  const result = {
-    storage: new AsyncStorageCore(opts.name.slice(7)),
-    meta: {db_uuid: opts.name, doc_count: 0, update_seq: 0},
-    opts,
-    changes: new ChangesHandler()
-  }
+  const storage = new AsyncStorageCore(opts.name.slice(7))
 
-  openDatabases[opts.name] = result
-  resolve(result)
+  storage.multiGet(toMetaKeys([
+    '_local_uuid', '_local_doc_count', '_local_last_update_seq'
+  ]), (error, meta) => {
+    if (error) return reject(error)
+
+    const result = {
+      storage,
+      meta: {
+        db_uuid: meta[0],
+        doc_count: meta[1],
+        update_seq: meta[2]
+      },
+      opts,
+      changes: new ChangesHandler()
+    }
+
+    openDatabases[opts.name] = result
+    resolve(result)
+  })
 })
 
 function AsyncStoragePouch (dbOpts, callback) {
-  console.warn('constructor', dbOpts)
   const api = this
 
   // This is a wrapper function for any methods that need an
