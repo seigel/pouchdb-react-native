@@ -36,7 +36,6 @@ export const get = opts => new Promise((resolve, reject) => {
   ]), (error, meta) => {
     if (error) return reject(error)
 
-    console.warn('meta', meta)
     if (!meta[0]) {
       const id = uuid()
 
