@@ -91,7 +91,7 @@ export default function (db, req, opts, callback) {
       if (!newDoc.deleted) newMeta.doc_count ++
 
       const data = newDoc.data
-      newDoc.data = undefined
+      delete newDoc.data
       data._id = newDoc.id
       data._rev = newDoc.rev
 
