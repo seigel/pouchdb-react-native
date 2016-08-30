@@ -18,7 +18,8 @@ export const get = opts => new Promise((resolve, reject) => {
         update_seq: meta[2]
       },
       opts,
-      changes: new ChangesHandler()
+      changes: new ChangesHandler(),
+      internalName: opts.name.slice(7)
     }
 
     openDatabases[opts.name] = result
