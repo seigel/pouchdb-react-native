@@ -143,7 +143,7 @@ export default function (db, req, opts, callback) {
 
       db.meta.doc_count = newMeta.doc_count
       db.meta.update_seq = newMeta.update_seq
-//      db.changes.notify(db.opts.name)
+      db.changes.notify(db.opts.name)
 
       callback(null, {})
     })
