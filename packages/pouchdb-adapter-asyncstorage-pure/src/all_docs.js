@@ -2,9 +2,12 @@
 
 import { createError } from 'pouchdb-errors'
 import { collectConflicts } from 'pouchdb-merge'
+import leftPad from 'left-pad'
 
 const DOC_STORE = 'ÿdocument-storeÿ'
 const DOC_STORE_LENGTH = DOC_STORE.length
+
+const getSequenceKey = seq => `ÿby-sequenceÿ${leftPad(seq, 16, 0)}`
 
 const toDocuments = list => {
   return list
@@ -41,7 +44,21 @@ const getDocs = (db,
       if (skip > 0) result = result.slice(skip)
       if (limit > 0 && result.length > limit) result = result.slice(0, limit)
 
-      callback(null, result)
+      let seqKeys = result.map(item => getSequenceKey(item.seq))
+      db.storage.multiGet(seqKeys, (error, dataDocs) => {
+        if (error) return callback(error)
+
+        const dataObj = dataDocs.reduce(
+          (res, data) => {
+            res[data._id] = data
+            return res
+          }, {})
+
+        callback(null, result.map(item => {
+          item.data = dataObj[item.id]
+          return item
+        }))
+      })
     })
   })
 }
@@ -85,13 +102,10 @@ export default function (db, opts, callback) {
 
   getDocs(db, {filterKey, startkey, endkey, skip, limit, inclusiveEnd, includeDeleted},
     (error, docs) => {
-      if (error) return callback(createError(error, 'get_docs'))
+      if (error) return callback(createError(error, error.message))
 
       let rows = docs.map(docToRow)
       if (descending) rows = rows.reverse()
-
-      console.warn('docs', docs)
-      console.warn('rows', rows)
 
       callback(null, {
         total_rows: db.meta.doc_count,

@@ -96,7 +96,11 @@ export default function (db, req, opts, callback) {
   db.storage.multiGet(newDocs.map(doc => doc.id), (error, oldDocs) => {
     if (error) return callback(createError(error, 'muti_get'))
 
-    const oldDocsObj = oldDocs.reduce((result, doc) => { result[doc.id] = doc }, {})
+    const oldDocsObj = oldDocs.reduce(
+      (result, doc) => {
+        result[doc.id] = doc
+        return result
+      }, {})
     const changes = []
     for (let index = 0; index < newDocs.length; index++) {
       let newDoc = Object.assign({}, newDocs[index])
