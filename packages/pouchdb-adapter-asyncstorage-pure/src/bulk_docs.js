@@ -1,15 +1,16 @@
 'use strict'
 
-import { createError, MISSING_DOC, REV_CONFLICT } from 'pouchdb-errors'
+import { createError, generateErrorFromResponse, MISSING_DOC, REV_CONFLICT } from 'pouchdb-errors'
 import { parseDoc } from 'pouchdb-adapter-utils'
 import { merge } from 'pouchdb-merge'
+
+import { forDocument, forMeta, forSequence } from './keys'
 
 export default function (db, req, opts, callback) {
   const wasDelete = 'was_delete' in opts
   const newEdits = opts.new_edits
   const revsLimit = db.opts.revs_limit || 1000
-
-  console.warn('bulk_docs', req, opts)
+  const newMeta = Object.assign({}, db.meta)
 
   const mapRequestDoc = doc => {
     // call shared parseDoc (pouchDB) and reformat it
@@ -17,13 +18,12 @@ export default function (db, req, opts, callback) {
     const result = {
       id: parsedDoc.metadata.id,
       rev: parsedDoc.metadata.rev,
-      writtenRev: parsedDoc.metadata.rev,
       rev_tree: parsedDoc.metadata.rev_tree,
+      data: parsedDoc.data,
       revs: {}
     }
 
     result.revs[result.rev] = {
-      data: parsedDoc.data,
       deleted: parsedDoc.metadata.deleted
     }
 
@@ -31,7 +31,6 @@ export default function (db, req, opts, callback) {
   }
 
   const rootIsMissing = doc => doc.rev_tree[0].ids[1].status === 'missing'
-  const docsRevsLimit = doc => /^_local/.test(doc.id) ? 1 : revsLimit
 
   const getChange = (oldDoc, newDoc) => {
     // pouchdb magic, adapted from indexeddb adapter
@@ -56,7 +55,7 @@ export default function (db, req, opts, callback) {
         newDoc = mapRequestDoc(tmp)
       }
 
-      var merged = merge(oldDoc.rev_tree, newDoc.rev_tree[0], docsRevsLimit(newDoc))
+      var merged = merge(oldDoc.rev_tree, newDoc.rev_tree[0], revsLimit)
       newDoc.stemmedRevs = merged.stemmedRevs
       newDoc.rev_tree = merged.tree
 
@@ -76,15 +75,31 @@ export default function (db, req, opts, callback) {
       }
 
       newDoc.wasDeleted = oldDoc.deleted
-      return {change: [newDoc.id, newDoc]}
+      return {
+        type: newDoc.deleted ? 'DELETE' : 'UPDATE',
+        doc: [newDoc.id, newDoc]
+      }
     } else {
       // create
-      const merged = merge([], newDoc.rev_tree[0], docsRevsLimit(newDoc))
+      const merged = merge([], newDoc.rev_tree[0], revsLimit)
       newDoc.rev_tree = merged.tree
-      newDoc.stemmedRevs = merged.stemmedRevs
-      newDoc.isNewDoc = true
-      newDoc.wasDeleted = newDoc.revs[newDoc.rev].deleted ? 1 : 0
-      return {change: [newDoc.id, newDoc]}
+      newDoc.deleted = newDoc.revs[newDoc.rev].deleted ? 1 : 0
+      newDoc.seq = ++newMeta.update_seq
+      newDoc.rev_map = {}
+      newDoc.rev_map[newDoc.rev] = newDoc.seq
+      newDoc.winningRev = newDoc.rev
+      if (!newDoc.deleted) newMeta.doc_count ++
+
+      const data = newDoc.data
+      newDoc.data = undefined
+      data._id = newDoc.id
+      data._rev = newDoc.rev
+
+      return {
+        type: 'INSERT',
+        doc: [forDocument(newDoc.id), newDoc],
+        data: [forSequence(newDoc.seq), data]
+      }
     }
   }
 
@@ -92,33 +107,45 @@ export default function (db, req, opts, callback) {
   try {
     newDocs = req.docs.map(mapRequestDoc)
   } catch (error) {
-    return callback(createError(error, 'parse_input'))
+    return callback(generateErrorFromResponse(error))
   }
 
-  db.storage.multiGet(newDocs.map(doc => doc.id), (error, oldDocs) => {
-    if (error) return callback(createError(error, 'muti_get'))
+  const docIds = newDocs.map(doc => forDocument(doc.id))
+
+  db.storage.multiGet(docIds, (error, oldDocs) => {
+    if (error) return callback(generateErrorFromResponse(error))
 
     const oldDocsObj = oldDocs.reduce(
       (result, doc) => {
-        result[doc.id] = doc
+        if (doc && doc.id) result[doc.id] = doc
         return result
       }, {})
+
     const changes = []
     for (let index = 0; index < newDocs.length; index++) {
       let newDoc = Object.assign({}, newDocs[index])
       const oldDoc = oldDocsObj[newDoc.id]
 
-      const change = getChange(newDoc, oldDoc)
+      const change = getChange(oldDoc, newDoc)
       if (change.error) return callback(change.error)
-      if (change.change) changes.push(change.change)
+      if (change.doc) changes.push(change)
     }
 
-    if (changes.length === 0) return callback()
+    if (changes.length === 0) return callback(null, {})
 
-    db.storage.multiPut(changes, (error, result) => {
-      if (error) return callback(createError(error), 'muti_put')
+    const dbChanges = changes.map(item => item.doc)
+      .concat(changes.map(item => item.data))
+      .concat([forMeta('_local_doc_count'), newMeta.doc_count])
+      .concat([forMeta('_local_last_update_seq'), newMeta.update_seq])
 
-      callback(null, result)
+    db.storage.multiPut(dbChanges, error => {
+      if (error) return callback(generateErrorFromResponse(error))
+
+      db.meta.doc_count = newMeta.doc_count
+      db.meta.update_seq = newMeta.update_seq
+//      db.changes.notify(db.opts.name)
+
+      callback(null, {})
     })
   })
 }

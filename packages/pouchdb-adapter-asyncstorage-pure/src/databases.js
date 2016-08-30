@@ -36,22 +36,19 @@ export const get = opts => new Promise((resolve, reject) => {
   ]), (error, meta) => {
     if (error) return reject(error)
 
-    if (!meta[0]) {
-      const id = uuid()
+    if (meta[0]) return resolveResult(meta)
 
-      storage.multiPut([
-        [forMeta('_local_uuid'), id],
-        [forMeta('_local_doc_count'), 0],
-        [forMeta('_local_last_update_seq'), 0]],
-        (error) => {
-          if (error) return reject(error)
+    const id = uuid()
+    storage.multiPut([
+      [forMeta('_local_uuid'), id],
+      [forMeta('_local_doc_count'), 0],
+      [forMeta('_local_last_update_seq'), 0]],
+      (error) => {
+        if (error) return reject(error)
 
-          resolveResult([id, 0, 0])
-        }
-      )
-    } else {
-      resolveResult(meta)
-    }
+        resolveResult([id, 0, 0])
+      }
+    )
   })
 })
 

@@ -1,6 +1,6 @@
 'use strict'
 
-import { createError } from 'pouchdb-errors'
+import { generateErrorFromResponse } from 'pouchdb-errors'
 import { collectConflicts } from 'pouchdb-merge'
 import { getDocumentKeys, toDocumentKeys, forSequence } from './keys'
 
@@ -34,7 +34,7 @@ const getDocs = (db,
 
         const dataObj = dataDocs.reduce(
           (res, data) => {
-            res[data._id] = data
+            if (data) res[data._id] = data
             return res
           }, {})
 
@@ -69,7 +69,7 @@ export default function (db, opts, callback) {
         },
         doc: Object.assign({}, doc.data, {
           _id: doc.id,
-          _rev: doc.id,
+          _rev: doc.rev,
           _conflicts: opts.conflicts ? collectConflicts(doc) : undefined
         })
       }
@@ -86,7 +86,7 @@ export default function (db, opts, callback) {
 
   getDocs(db, {filterKey, startkey, endkey, skip, limit, inclusiveEnd, includeDeleted},
     (error, docs) => {
-      if (error) return callback(createError(error, error.message))
+      if (error) return callback(generateErrorFromResponse(error))
 
       let rows = docs.map(docToRow)
       if (descending) rows = rows.reverse()
