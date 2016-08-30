@@ -2,23 +2,7 @@
 
 import { createError } from 'pouchdb-errors'
 import { collectConflicts } from 'pouchdb-merge'
-import leftPad from 'left-pad'
-
-const DOC_STORE = 'ÿdocument-storeÿ'
-const DOC_STORE_LENGTH = DOC_STORE.length
-
-const getSequenceKey = seq => `ÿby-sequenceÿ${leftPad(seq, 16, 0)}`
-
-const toDocuments = list => {
-  return list
-    .filter(key => key.startsWith(DOC_STORE))
-    .map(key => key.slice(DOC_STORE_LENGTH))
-}
-
-const toKeys = list => {
-  return list
-    .map(key => DOC_STORE + key)
-}
+import { getDocumentKeys, toDocumentKeys, forSequence } from './keys'
 
 const getDocs = (db,
   {filterKey, startkey, endkey, skip, limit, inclusiveEnd, includeDeleted},
@@ -26,7 +10,7 @@ const getDocs = (db,
   db.storage.getKeys((error, keys) => {
     if (error) return callback(error)
 
-    const filterKeys = toDocuments(keys).filter(key => {
+    const filterKeys = getDocumentKeys(keys).filter(key => {
       if (startkey && startkey > key) return false
       if (endkey) return inclusiveEnd ? endkey >= key : endkey > key
       if (filterKey) return filterKey === key
@@ -34,7 +18,7 @@ const getDocs = (db,
       return true
     })
 
-    db.storage.multiGet(toKeys(filterKeys), (error, docs) => {
+    db.storage.multiGet(toDocumentKeys(filterKeys), (error, docs) => {
       if (error) return callback(error)
 
       let result = includeDeleted
@@ -44,7 +28,7 @@ const getDocs = (db,
       if (skip > 0) result = result.slice(skip)
       if (limit > 0 && result.length > limit) result = result.slice(0, limit)
 
-      let seqKeys = result.map(item => getSequenceKey(item.seq))
+      let seqKeys = result.map(item => forSequence(item.seq))
       db.storage.multiGet(seqKeys, (error, dataDocs) => {
         if (error) return callback(error)
 
