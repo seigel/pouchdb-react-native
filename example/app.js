@@ -18,7 +18,10 @@ import PouchDB from 'pouchdb-react-native'
 const localDB = new PouchDB('myDB')
 console.log(localDB.adapter)
 
-AsyncStorage.getAllKeys((error, keys) => console.log(error, keys))
+AsyncStorage.getAllKeys()
+  .then(keys => AsyncStorage.multiGet(keys))
+  .then(items => console.log('all pure Items', items))
+  .catch(error => console.warn('error get all Items', error))
 
 export default React.createClass({
   getInitialState () {
