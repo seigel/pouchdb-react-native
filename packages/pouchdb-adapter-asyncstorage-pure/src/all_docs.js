@@ -67,11 +67,12 @@ export default function (db, opts, callback) {
         value: {
           rev: doc.rev
         },
-        doc: Object.assign({}, doc.data, {
+        doc: {
+          ...doc.data,
           _id: doc.id,
           _rev: doc.rev,
           _conflicts: opts.conflicts ? collectConflicts(doc) : undefined
-        })
+        }
       }
     }
 

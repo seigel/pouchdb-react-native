@@ -54,12 +54,25 @@ export default React.createClass({
         style={{borderColor: '#969A99', borderBottomWidth: StyleSheet.hairlineWidth}} />
     )
 
-    const renderRow = (row) => (
-      <View key={row._id}>
-        <Text style={{fontWeight: 'bold'}}>{row._id}</Text>
-        <Text>{JSON.stringify(row, null, 4)}</Text>
-      </View>
-    )
+    const renderRow = (row) => {
+      const updateItem = () => {
+        const newRow = {...row}
+        newRow.clickCount = newRow.clickCount ? newRow.clickCount + 1 : 1
+
+        localDB.put(newRow)
+          .then(result => console.log('Updated Item', result))
+          .catch(error => console.error('Error during update Item', error))
+      }
+
+      return (
+        <TouchableHighlight onPress={updateItem}>
+          <View key={row._id}>
+            <Text style={{fontWeight: 'bold'}}>{row._id}</Text>
+            <Text>{JSON.stringify(row, null, 4)}</Text>
+          </View>
+        </TouchableHighlight>
+      )
+    }
 
     const renderList = () => (
       <ListView

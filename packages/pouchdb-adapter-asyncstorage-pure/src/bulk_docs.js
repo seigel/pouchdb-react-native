@@ -10,7 +10,7 @@ export default function (db, req, opts, callback) {
   const wasDelete = 'was_delete' in opts
   const newEdits = opts.new_edits
   const revsLimit = db.opts.revs_limit || 1000
-  const newMeta = Object.assign({}, db.meta)
+  const newMeta = {...db.meta}
 
   const mapRequestDoc = doc => {
     // call shared parseDoc (pouchDB) and reformat it
@@ -30,10 +30,10 @@ export default function (db, req, opts, callback) {
     return result
   }
 
-  const rootIsMissing = doc => doc.rev_tree[0].ids[1].status === 'missing'
-
   const getChange = (oldDoc, newDoc) => {
     // pouchdb magic, adapted from indexeddb adapter
+    const rootIsMissing = doc => doc.rev_tree[0].ids[1].status === 'missing'
+
     if (wasDelete && !oldDoc) {
       return {error: createError(MISSING_DOC, 'deleted')}
     }
@@ -83,7 +83,7 @@ export default function (db, req, opts, callback) {
       // create
       const merged = merge([], newDoc.rev_tree[0], revsLimit)
       newDoc.rev_tree = merged.tree
-      newDoc.deleted = newDoc.revs[newDoc.rev].deleted ? 1 : 0
+      newDoc.deleted = newDoc.revs[newDoc.rev].deleted
       newDoc.seq = ++newMeta.update_seq
       newDoc.rev_map = {}
       newDoc.rev_map[newDoc.rev] = newDoc.seq
@@ -111,7 +111,6 @@ export default function (db, req, opts, callback) {
   }
 
   const docIds = newDocs.map(doc => forDocument(doc.id))
-
   db.storage.multiGet(docIds, (error, oldDocs) => {
     if (error) return callback(generateErrorFromResponse(error))
 
@@ -123,7 +122,7 @@ export default function (db, req, opts, callback) {
 
     const changes = []
     for (let index = 0; index < newDocs.length; index++) {
-      let newDoc = Object.assign({}, newDocs[index])
+      let newDoc = {...newDocs[index]}
       const oldDoc = oldDocsObj[newDoc.id]
 
       const change = getChange(oldDoc, newDoc)
