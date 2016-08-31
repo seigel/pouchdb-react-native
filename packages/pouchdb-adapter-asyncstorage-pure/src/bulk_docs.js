@@ -15,19 +15,13 @@ export default function (db, req, opts, callback) {
   const mapRequestDoc = doc => {
     // call shared parseDoc (pouchDB) and reformat it
     const parsedDoc = parseDoc(doc, newEdits)
-    const result = {
+    return {
       id: parsedDoc.metadata.id,
       rev: parsedDoc.metadata.rev,
       rev_tree: parsedDoc.metadata.rev_tree,
-      data: parsedDoc.data,
-      revs: {}
+      deleted: !!parsedDoc.metadata.deleted,
+      data: parsedDoc.data
     }
-
-    result.revs[result.rev] = {
-      deleted: parsedDoc.metadata.deleted
-    }
-
-    return result
   }
 
   const getChange = (oldDoc, newDoc) => {
@@ -42,37 +36,11 @@ export default function (db, req, opts, callback) {
     }
 
     if (oldDoc) {
-      /* "{
-         "id":"C58F6DCD-9451-728C-B7AA-70240F710D9F",
-         "rev":"2-ef7df567fdf053c9157696bc932a3c7c",
-         "rev_tree":[{"pos":1,"ids":["64899b888295be7d0a2712a69ff0fbfd",{"status":"available"},[["ef7df567fdf053c9157696bc932a3c7c",{"status":"available"},[]]]]}],
-         "rev_map":{"1-64899b888295be7d0a2712a69ff0fbfd":1,"2-ef7df567fdf053c9157696bc932a3c7c":2},
-         "winningRev":"2-ef7df567fdf053c9157696bc932a3c7c"
-         ,"deleted":false,
-         "seq":2}" */
       // Ignore updates to existing revisions
       if (newDoc.rev in oldDoc.rev_map) return {}
 
-      const isRoot = /^1-/.test(newDoc.rev)
-
-      // Reattach first writes after a deletion to last deleted tree
-      if (oldDoc.deleted && !newDoc.deleted && opts.new_edits && isRoot) {
-        newDoc = mapRequestDoc({
-          ...newDoc.revs[newDoc.rev].data,
-          _id: oldDoc.id,
-          _rev: oldDoc.rev
-        })
-      }
-
       var merged = merge(oldDoc.rev_tree, newDoc.rev_tree[0], revsLimit)
-      newDoc.stemmedRevs = merged.stemmedRevs
       newDoc.rev_tree = merged.tree
-
-      // Merge the old and new rev data
-      const revTree = oldDoc.rev_tree
-      revTree[newDoc.rev] = newDoc.rev_tree[newDoc.rev]
-      newDoc.rev_tree = revTree
-
       newDoc.attachments = oldDoc.attachments
 
       const inConflict = newEdits && (((oldDoc.deleted && newDoc.deleted) ||
@@ -95,16 +63,15 @@ export default function (db, req, opts, callback) {
       delete newDoc.data
       data._id = newDoc.id
       data._rev = newDoc.rev
+
       return {
-        type: newDoc.deleted ? 'DELETE' : 'UPDATE',
-        doc: [newDoc.id, newDoc],
+        doc: [forDocument(newDoc.id), newDoc],
         data: [forSequence(newDoc.seq), data]
       }
     } else {
       // create
       const merged = merge([], newDoc.rev_tree[0], revsLimit)
       newDoc.rev_tree = merged.tree
-      newDoc.deleted = newDoc.revs[newDoc.rev].deleted
       newDoc.seq = ++newMeta.update_seq
       newDoc.rev_map = {}
       newDoc.rev_map[newDoc.rev] = newDoc.seq
@@ -117,7 +84,6 @@ export default function (db, req, opts, callback) {
       data._rev = newDoc.rev
 
       return {
-        type: 'INSERT',
         doc: [forDocument(newDoc.id), newDoc],
         data: [forSequence(newDoc.seq), data]
       }
