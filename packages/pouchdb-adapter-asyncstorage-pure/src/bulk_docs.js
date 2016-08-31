@@ -25,7 +25,7 @@ export default function (db, req, opts, callback) {
   }
 
   const getChange = (oldDoc, newDoc) => {
-    // pouchdb magic, adapted from indexeddb adapter
+    // pouchdb magic
     const rootIsMissing = doc => doc.rev_tree[0].ids[1].status === 'missing'
 
     if (wasDelete && !oldDoc) {
