@@ -24,6 +24,7 @@
   "homepage": "https://github.com/stockulus/pouchdb-react-native#readme",
   "dependencies": {
     "atob": "2.0.3",
+    "blob-polyfill": "1.0.20150320",
     "btoa": "1.1.2",
     "buffer": "4.9.1",
     "left-pad": "1.1.1",
