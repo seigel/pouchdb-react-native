@@ -2,7 +2,7 @@
 
 import { close as closeDatabase } from './databases'
 
-export default function (db, opts, callback) {
+export default function (db, api, opts, callback) {
   db.storage.destroy(db.internalName, error => {
     if (error) callback(error)
 

@@ -27,6 +27,7 @@ function AsyncStoragePouch (dbOpts, callback) {
     return function () {
       var args = Array.prototype.slice.call(arguments)
       getDatabase(dbOpts).then(database => {
+        args.unshift(api)
         args.unshift(database)
         console.log('$', args, fun.toString())
         fun.apply(api, args)
@@ -36,7 +37,7 @@ function AsyncStoragePouch (dbOpts, callback) {
 
   api.type = () => ADAPTER_NAME
 
-  api._id = $(({meta}, cb) => cb(null, meta.db_uuid))
+  api._id = $(({meta}, api, cb) => cb(null, meta.db_uuid))
   api._info = $(info)
 
   api._get = $(get)

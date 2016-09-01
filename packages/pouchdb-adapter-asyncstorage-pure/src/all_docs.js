@@ -47,7 +47,7 @@ const getDocs = (db,
   })
 }
 
-export default function (db, opts, callback) {
+export default function (db, api, opts, callback) {
   // get options like pouchdb-adapter-indexeddb
   const startkey = 'startkey' in opts ? opts.startkey : false
   const endkey = 'endkey' in opts ? opts.endkey : false

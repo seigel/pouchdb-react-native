@@ -6,7 +6,7 @@ import { merge } from 'pouchdb-merge'
 
 import { forDocument, forMeta, forSequence } from './keys'
 
-export default function (db, req, opts, callback) {
+export default function (db, api, req, opts, callback) {
   const wasDelete = 'was_delete' in opts
   const newEdits = opts.new_edits
   const revsLimit = db.opts.revs_limit || 1000
