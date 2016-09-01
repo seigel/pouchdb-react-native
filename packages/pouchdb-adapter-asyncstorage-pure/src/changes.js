@@ -6,7 +6,6 @@ import { forDocument, getSequenceKeys, toSequenceKeys } from './keys'
 export default function (db, api, opts) {
   const continuous = opts.continuous
 
-  console.warn('changes', opts)
   if (continuous) {
     const id = db.opts.name + ':' + uuid()
     db.changes.addListener(db.opts.name, id, api, opts)
@@ -24,13 +23,11 @@ export default function (db, api, opts) {
     ? opts.limit
     : null
   const docIds = opts.doc_ids && new Set(opts.doc_ids)
-  /*
   const returnDocs = ('return_docs' in opts)
     ? opts.return_docs
     : 'returnDocs' in opts
       ? opts.returnDocs
       : true
-  */
   const filter = filterChange(opts)
   const complete = opts.complete
   const onChange = opts.onChange
@@ -44,21 +41,24 @@ export default function (db, api, opts) {
       return true
     })
 
+    if (filterSeqs.length === 0) return
+
     db.storage.multiGet(toSequenceKeys(filterSeqs), (error, dataDocs) => {
       if (error) return complete(error)
 
       const filterDocs = docIds
         ? dataDocs.filter(doc => docIds.has(doc._id))
         : dataDocs
+      if (filterDocs.length === 0) return
 
-      const dataObj = filterDocs.reduce(
-        (res, data) => {
-          if (data) res[data._id] = data
-          return res
-        }, {})
-
-      db.store.multiGet(filterDocs.map(data => forDocument(data._id)), (error, docs) => {
+      db.storage.multiGet(filterDocs.map(data => forDocument(data._id)), (error, docs) => {
         if (error) return complete(error)
+
+        const dataObj = filterDocs.reduce(
+          (res, data) => {
+            if (data) res[data._id] = data
+            return res
+          }, {})
 
         const results = []
         let lastChangeSeq
@@ -73,12 +73,18 @@ export default function (db, api, opts) {
             return complete(filtered)
           }
           if (filtered) {
+            if (returnDocs) {
+              // correct Position???
+              change.changes[0].data = data
+            }
+
             lastChangeSeq = change.seq
             results.push(change)
             onChange(change)
           }
         }
 
+        console.warn('changes', results)
         complete({
           results,
           last_seq: lastChangeSeq
