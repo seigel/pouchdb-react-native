@@ -1,8 +1,12 @@
 'use strict'
 
-import { createError, generateErrorFromResponse, MISSING_DOC, REV_CONFLICT } from 'pouchdb-errors'
+import {
+  createError,
+  generateErrorFromResponse,
+  BAD_ARG, MISSING_DOC, REV_CONFLICT } from 'pouchdb-errors'
 import { parseDoc } from 'pouchdb-adapter-utils'
 import { merge } from 'pouchdb-merge'
+import { binaryStringToBlobOrBuffer } from 'pouchdb-binary-utils'
 
 import { forDocument, forMeta, forSequence } from './keys'
 
@@ -13,7 +17,6 @@ export default function (db, api, req, opts, callback) {
   const newMeta = {...db.meta}
 
   const mapRequestDoc = doc => {
-    // call shared parseDoc (pouchDB) and reformat it
     const parsedDoc = parseDoc(doc, newEdits)
     return {
       id: parsedDoc.metadata.id,
@@ -24,24 +27,66 @@ export default function (db, api, req, opts, callback) {
     }
   }
 
+  const preProcessAllAttachments = data => {
+    const binaryMd5 = (data, callback) => {
+      // const base64 = md5(data)
+      callback('123')
+    }
+
+    const parseBase64 = data => {
+      try {
+        return global.atob(data)
+      } catch (error) {
+        return {
+          error: createError(BAD_ARG, 'Attachment is not a valid base64 string')
+        }
+      }
+    }
+
+    const preProcessAttachment = attachment => {
+      if (!attachment.data) {
+        return Promise.resolve(attachment)
+      }
+
+      let binData
+      if (typeof attachment.data === 'string') {
+        binData = parseBase64(attachment.data)
+        if (binData.error) {
+          return Promise.reject(binData.error)
+        }
+        attachment = binaryStringToBlobOrBuffer(binData, attachment.content_type)
+      } else {
+        binData = attachment.data
+      }
+
+      return new Promise(resolve => {
+        binaryMd5(binData, md5 => {
+          attachment.digest = 'md5-' + md5
+          attachment.length = binData.size || binData.length || 0
+          resolve(attachment)
+        })
+      })
+    }
+
+    if (!data._attachments) return Promise.resolve(data)
+
+    const promises = Object.keys(data._attachments).map(key => {
+      return preProcessAttachment(data._attachments[key])
+        .then(attachment => { data._attachments[key] = attachment })
+    })
+
+    return Promise.all(promises)
+  }
+
   const getChange = (oldDoc, newDoc) => {
     // pouchdb magic
     const rootIsMissing = doc => doc.rev_tree[0].ids[1].status === 'missing'
-
-    if (wasDelete && !oldDoc) {
-      return {error: createError(MISSING_DOC, 'deleted')}
-    }
-    if (newEdits && !oldDoc && rootIsMissing(newDoc)) {
-      return {error: createError(REV_CONFLICT)}
-    }
-
-    if (oldDoc) {
+    const getUpdate = () => {
       // Ignore updates to existing revisions
       if (newDoc.rev in oldDoc.rev_map) return {}
 
       const merged = merge(oldDoc.rev_tree, newDoc.rev_tree[0], revsLimit)
       newDoc.rev_tree = merged.tree
-      newDoc.attachments = oldDoc.attachments
 
       const inConflict = newEdits && (((oldDoc.deleted && newDoc.deleted) ||
          (!oldDoc.deleted && merged.conflicts !== 'new_leaf') ||
@@ -73,8 +118,8 @@ export default function (db, api, req, opts, callback) {
           rev: newDoc.deleted ? '0-0' : newDoc.rev
         }
       }
-    } else {
-      // create
+    }
+    const getInsert = () => {
       const merged = merge([], newDoc.rev_tree[0], revsLimit)
       newDoc.rev_tree = merged.tree
       newDoc.seq = ++newMeta.update_seq
@@ -98,6 +143,23 @@ export default function (db, api, req, opts, callback) {
         }
       }
     }
+
+    return new Promise((resolve, reject) => {
+      if (wasDelete && !oldDoc) {
+        return reject(createError(MISSING_DOC, 'deleted'))
+      }
+      if (newEdits && !oldDoc && rootIsMissing(newDoc)) {
+        return reject(createError(REV_CONFLICT))
+      }
+
+      preProcessAllAttachments(newDoc.data)
+        .then(data => {
+          const change = oldDoc ? getUpdate() : getInsert()
+          if (change.error) return reject(change.error)
+          resolve(change)
+        })
+        .catch(reject)
+    })
   }
 
   let newDocs
@@ -117,31 +179,26 @@ export default function (db, api, req, opts, callback) {
         return result
       }, {})
 
-    const changes = []
-    for (let index = 0; index < newDocs.length; index++) {
-      let newDoc = {...newDocs[index]}
-      const oldDoc = oldDocsObj[newDoc.id]
+    const promises = newDocs.map(newDoc => getChange(oldDocsObj[newDoc.id], newDoc))
+    Promise.all(promises)
+      .then(changes => {
+        if (changes.length === 0) return callback(null, {})
 
-      const change = getChange(oldDoc, newDoc)
-      if (change.error) return callback(change.error)
-      if (change.doc) changes.push(change)
-    }
+        const dbChanges = changes.map(item => item.doc)
+          .concat(changes.map(item => item.data))
+        dbChanges.push([forMeta('_local_doc_count'), newMeta.doc_count])
+        dbChanges.push([forMeta('_local_last_update_seq'), newMeta.update_seq])
 
-    if (changes.length === 0) return callback(null, {})
+        db.storage.multiPut(dbChanges, error => {
+          if (error) return callback(generateErrorFromResponse(error))
 
-    const dbChanges = changes.map(item => item.doc)
-      .concat(changes.map(item => item.data))
-    dbChanges.push([forMeta('_local_doc_count'), newMeta.doc_count])
-    dbChanges.push([forMeta('_local_last_update_seq'), newMeta.update_seq])
+          db.meta.doc_count = newMeta.doc_count
+          db.meta.update_seq = newMeta.update_seq
+          db.changes.notify(db.opts.name)
 
-    db.storage.multiPut(dbChanges, error => {
-      if (error) return callback(generateErrorFromResponse(error))
-
-      db.meta.doc_count = newMeta.doc_count
-      db.meta.update_seq = newMeta.update_seq
-      db.changes.notify(db.opts.name)
-
-      callback(null, changes.map(change => change.result))
-    })
+          callback(null, changes.map(change => change.result))
+        })
+      })
+      .catch(callback)
   })
 }

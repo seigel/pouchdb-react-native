@@ -64,7 +64,7 @@ export default React.createClass({
 
         localDB.put(newRow)
           .then(result => console.log('Updated Item', result))
-          .catch(error => console.error('Error during update Item', error))
+          .catch(error => console.warn('Error during update Item', error))
       }
 
       return (
@@ -116,6 +116,12 @@ export default React.createClass({
             onPress={() => this._insertRecords(250)}>
             <Text>insert</Text>
           </ActionButton.Item>
+          <ActionButton.Item
+            buttonColor='#005BFF'
+            title='Insert Attachments'
+            onPress={() => this._insertAttachments()}>
+            <Text>Attachments</Text>
+          </ActionButton.Item>
         </ActionButton>
       </View>
     )
@@ -124,6 +130,22 @@ export default React.createClass({
     for (let index = 0; index < count; index++) {
       localDB.post({index})
     }
+  },
+  _insertAttachments () {
+    const doc = {
+      'title': 'with attachment',
+      '_attachments': {
+        'att.txt': {
+          'content_type': 'text/plain',
+          'data': 'TGVnZW5kYXJ5IGhlYXJ0cywgdGVhciB1cyBhbGwgYXBhcnQKTWFrZS' +
+                  'BvdXIgZW1vdGlvbnMgYmxlZWQsIGNyeWluZyBvdXQgaW4gbmVlZA=='
+        }
+      }
+    }
+
+    localDB.post(doc)
+      .then(result => console.warn('save.attachment', result))
+      .catch(error => console.warn('save.attachment', error))
   },
   _renderSync () {
     const addSync = () => {

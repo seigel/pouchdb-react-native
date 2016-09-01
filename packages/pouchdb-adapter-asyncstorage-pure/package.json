@@ -30,7 +30,6 @@
     "pouchdb-adapter-utils": "5.4.5",
     "pouchdb-binary-utils": "5.4.5",
     "pouchdb-errors": "5.4.5",
-    "pouchdb-md5": "5.4.5",
     "pouchdb-merge": "5.4.5",
     "pouchdb-utils": "5.4.5"
   },
