@@ -1,47 +1,7 @@
 'use strict'
 
-import { uuid } from 'pouchdb-utils'
-
-import { getDocumentKeys, toDocumentKeys, forSequence } from './keys'
-
-const getDocs = (db,
-  {lastSeq, limit, docIds},
-  callback) => {
-  db.storage.getKeys((error, keys) => {
-    if (error) return callback(error)
-
-    const filterKeys = getDocumentKeys(keys).filter(key => {
-      if (docIds) return docIds.has(key)
-
-      return true
-    })
-
-    db.storage.multiGet(toDocumentKeys(filterKeys), (error, docs) => {
-      if (error) return callback(error)
-
-      let result = docs.filter(doc => !doc.deleted)
-
-      if (lastSeq) result = result.filter(doc => doc.seq > lastSeq)
-      if (limit > 0 && result.length > limit) result = result.slice(0, limit)
-
-      let seqKeys = result.map(item => forSequence(item.seq))
-      db.storage.multiGet(seqKeys, (error, dataDocs) => {
-        if (error) return callback(error)
-
-        const dataObj = dataDocs.reduce(
-          (res, data) => {
-            if (data) res[data._id] = data
-            return res
-          }, {})
-
-        callback(null, result.map(item => {
-          item.data = dataObj[item.id]
-          return item
-        }))
-      })
-    })
-  })
-}
+import { uuid, filterChange } from 'pouchdb-utils'
+import { forDocument, getSequenceKeys, toSequenceKeys } from './keys'
 
 export default function (db, api, opts) {
   const continuous = opts.continuous
@@ -64,19 +24,66 @@ export default function (db, api, opts) {
     ? opts.limit
     : null
   const docIds = opts.doc_ids && new Set(opts.doc_ids)
-/*  const returnDocs = ('return_docs' in opts)
+  /*
+  const returnDocs = ('return_docs' in opts)
     ? opts.return_docs
     : 'returnDocs' in opts
       ? opts.returnDocs
       : true
-*/
-//  let cancelled = false
-  return {
-    cancel: function () {
-//      cancelled = true
-      getDocs(db, {lastSeq, limit, docIds}, (error, result) => {
-        if (error) console.warn(error)
+  */
+  const filter = filterChange(opts)
+  const complete = opts.complete
+  const onChange = opts.onChange
+
+  db.storage.getKeys((error, keys) => {
+    if (error) return complete(error)
+
+    const filterSeqs = getSequenceKeys(keys).filter(seq => {
+      if (lastSeq) return seq > lastSeq
+
+      return true
+    })
+
+    db.storage.multiGet(toSequenceKeys(filterSeqs), (error, dataDocs) => {
+      if (error) return complete(error)
+
+      const filterDocs = docIds
+        ? dataDocs.filter(doc => docIds.has(doc._id))
+        : dataDocs
+
+      const dataObj = filterDocs.reduce(
+        (res, data) => {
+          if (data) res[data._id] = data
+          return res
+        }, {})
+
+      db.store.multiGet(filterDocs.map(data => forDocument(data._id)), (error, docs) => {
+        if (error) return complete(error)
+
+        const results = []
+        let lastChangeSeq
+        for (let index = 0; index < docs.length && results.length <= limit; index++) {
+          const doc = docs[index]
+          const data = dataObj[doc.id]
+          const change = opts.processChange(data, doc, opts)
+          change.seq = doc.seq
+
+          const filtered = filter(change)
+          if (typeof filtered === 'object') {
+            return complete(filtered)
+          }
+          if (filtered) {
+            lastChangeSeq = change.seq
+            results.push(change)
+            onChange(change)
+          }
+        }
+
+        complete({
+          results,
+          last_seq: lastChangeSeq
+        })
       })
-    }
-  }
+    })
+  })
 }

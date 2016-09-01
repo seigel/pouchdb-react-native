@@ -8,6 +8,7 @@ const META_STORE = 'ÿmeta-storeÿ'
 const META_STORE_LENGTH = META_STORE.length
 const ATTACHMENT_STORE = 'ÿattach-storeÿ'
 const SEQUENCE_STORE = 'ÿby-sequenceÿ'
+const SEQUENCE_STORE_LENGTH = SEQUENCE_STORE.length
 
 export const forDocument = id => `${DOC_STORE}${id}`
 export const forAttachment = id => `${ATTACHMENT_STORE}${id}`
@@ -19,7 +20,12 @@ export const sliceMeta = id => id.slice(META_STORE_LENGTH)
 
 export const toDocumentKeys = list => list.map(forDocument)
 export const toMetaKeys = list => list.map(forMeta)
+export const toSequenceKeys = list => list.map(forSequence)
 
 export const getDocumentKeys = list => list
   .filter(key => key.startsWith(DOC_STORE))
   .map(key => key.slice(DOC_STORE_LENGTH))
+
+export const getSequenceKeys = list => list
+  .filter(key => key.startsWith(SEQUENCE_STORE))
+  .map(key => parseInt(key.slice(SEQUENCE_STORE_LENGTH), 10))
