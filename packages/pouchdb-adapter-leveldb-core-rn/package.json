@@ -6,6 +6,10 @@
   "keywords": [],
   "author": "Dale Harvey <dale@arandomurl.com> / Christoph Stock (@stockulus)",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stockulus/pouchdb-react-native.git"
+  },
   "files": [
     "src"
   ],
