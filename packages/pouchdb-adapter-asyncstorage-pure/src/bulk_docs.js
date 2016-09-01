@@ -39,7 +39,7 @@ export default function (db, api, req, opts, callback) {
       // Ignore updates to existing revisions
       if (newDoc.rev in oldDoc.rev_map) return {}
 
-      var merged = merge(oldDoc.rev_tree, newDoc.rev_tree[0], revsLimit)
+      const merged = merge(oldDoc.rev_tree, newDoc.rev_tree[0], revsLimit)
       newDoc.rev_tree = merged.tree
       newDoc.attachments = oldDoc.attachments
 
