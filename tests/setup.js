@@ -21,6 +21,7 @@ const _require = Module.prototype.require
 const reqPouch = () => _require.call(null, require.resolve('./pouchdb-for-coverage/')).default
 const reqPouchModule = name => _require.call(null, require.resolve(`../pouchdb-original/packages/node_modules/${name}`))
 const reqAdapter = () => _require.call(null, require.resolve('../packages/pouchdb-adapter-asyncstorage')).default
+const reqAdapterPure = () => _require.call(null, require.resolve('../packages/pouchdb-adapter-asyncstorage-pure')).default
 const reqLevelAdapter = () => _require.call(null, require.resolve('../packages/pouchdb-adapter-leveldb-core-rn')).default
 
 const map = fs
@@ -32,6 +33,7 @@ const map = fs
     '../../packages/node_modules/pouchdb-for-coverage': reqPouch,
     '../../packages/node_modules/pouchdb': reqPouch,
     'pouchdb-adapter-asyncstorage': reqAdapter,
+    'pouchdb-adapter-asyncstorage-pure': reqAdapterPure,
     'pouchdb-adapter-leveldb-core-rn': reqLevelAdapter
   })
 
