@@ -20,7 +20,7 @@
     "standard": "node ./node_modules/standard/bin/cmd.js",
     "clean": "rm -rf packages/node_modules/**/node_modules && rm -rf ./example/node_modules && rm -rf ./pouchdb-original/node_modules && rm -rf ./node_modules",
     "postinstall": "for D in ./packages/*; do cd $D; npm install; cd -; done && cd example && npm install && cd ../pouchdb-original && npm install",
-    "updtr": "updtr --save-exact && cd example && updtr --save-exact && cd .. && for D in ./packages/*; do cd $D; run updtr; cd -; done"
+    "updtr": "updtr --save-exact && cd example && updtr --save-exact && cd .. && for D in ./packages/*; do echo $D; cd $D; npm run updtr; cd -; done"
   },
   "author": "Christoph Stock (@stockulus)",
   "license": "MIT",
