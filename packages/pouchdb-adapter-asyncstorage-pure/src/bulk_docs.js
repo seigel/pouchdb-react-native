@@ -66,7 +66,12 @@ export default function (db, api, req, opts, callback) {
 
       return {
         doc: [forDocument(newDoc.id), newDoc],
-        data: [forSequence(newDoc.seq), data]
+        data: [forSequence(newDoc.seq), data],
+        result: {
+          ok: true,
+          id: newDoc.id,
+          rev: newDoc.deleted ? '0-0' : newDoc.rev
+        }
       }
     } else {
       // create
@@ -85,7 +90,12 @@ export default function (db, api, req, opts, callback) {
 
       return {
         doc: [forDocument(newDoc.id), newDoc],
-        data: [forSequence(newDoc.seq), data]
+        data: [forSequence(newDoc.seq), data],
+        result: {
+          ok: true,
+          id: newDoc.id,
+          rev: newDoc.deleted ? '0-0' : newDoc.rev
+        }
       }
     }
   }
@@ -131,7 +141,7 @@ export default function (db, api, req, opts, callback) {
       db.meta.update_seq = newMeta.update_seq
       db.changes.notify(db.opts.name)
 
-      callback(null, {})
+      callback(null, changes.map(change => change.result))
     })
   })
 }
