@@ -41,7 +41,7 @@ export default function (db, api, opts) {
       return true
     })
 
-    if (filterSeqs.length === 0) return
+    if (filterSeqs.length === 0) return complete(null, [])
 
     db.storage.multiGet(toSequenceKeys(filterSeqs), (error, dataDocs) => {
       if (error) return complete(error)
@@ -49,7 +49,7 @@ export default function (db, api, opts) {
       const filterDocs = docIds
         ? dataDocs.filter(doc => docIds.has(doc._id))
         : dataDocs
-      if (filterDocs.length === 0) return
+      if (filterDocs.length === 0) return complete(null, [])
 
       db.storage.multiGet(filterDocs.map(data => forDocument(data._id)), (error, docs) => {
         if (error) return complete(error)
@@ -84,8 +84,7 @@ export default function (db, api, opts) {
           }
         }
 
-        console.warn('changes', results)
-        complete({
+        complete(null, {
           results,
           last_seq: lastChangeSeq
         })
