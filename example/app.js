@@ -69,7 +69,7 @@ export default React.createClass({
         }
 
         localDB.post(doc)
-          .then(result => console.warn('save.attachment', result))
+          .then(result => console.log('save.attachment', result))
           .catch(error => console.warn('save.attachment', error))
       }
 
