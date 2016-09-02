@@ -7,6 +7,7 @@ import {
 import { parseDoc } from 'pouchdb-adapter-utils'
 import { merge } from 'pouchdb-merge'
 import { binaryStringToBlobOrBuffer } from 'pouchdb-binary-utils'
+import { binaryMd5 } from 'pouchdb-md5'
 
 import { forDocument, forMeta, forSequence } from './keys'
 
@@ -28,11 +29,6 @@ export default function (db, req, opts, callback) {
   }
 
   const preProcessAllAttachments = data => {
-    const binaryMd5 = (data, callback) => {
-      // const base64 = md5(data)
-      callback('123')
-    }
-
     const parseBase64 = data => {
       try {
         return global.atob(data)
@@ -65,7 +61,6 @@ export default function (db, req, opts, callback) {
           attachment.length = binData.size || binData.length || 0
           attachment.content_type = attachment.content_type || attachment.type
           attachment.stub = true
-          delete attachment.type
           resolve(attachment)
         })
       })
