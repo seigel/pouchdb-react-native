@@ -75,7 +75,9 @@ export default React.createClass({
 
       const insertRecords = count => {
         for (let index = 0; index < count; index++) {
-          localDB.post({index})
+          localDB.post({
+            text: `${index} Record`
+          })
         }
       }
 

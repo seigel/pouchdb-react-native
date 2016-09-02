@@ -17,45 +17,101 @@ import { get as getDatabase, close as closeDatabase } from './databases'
 
 const ADAPTER_NAME = 'asyncstorage'
 
-function AsyncStoragePouch (dbOpts, callback) {
+function AsyncStoragePouch (dbOpts, constuctorCallback) {
   const api = this
-
-  // This is a wrapper function for any methods that need an
-  // active database handle it will recall itself but with
-  // the database handle as the first argument
-  const $ = function (fun) {
-    return function () {
-      var args = Array.prototype.slice.call(arguments)
-      getDatabase(dbOpts).then(database => {
-        args.unshift(api)
-        args.unshift(database)
-        fun.apply(api, args)
-      })
-    }
-  }
 
   api.type = () => ADAPTER_NAME
 
-  api._id = $(({meta}, api, cb) => cb(null, meta.db_uuid))
-  api._info = $(info)
-
-  api._get = $(get)
-  api._getRevisionTree = $(getRevisionTree)
-  api._getAttachment = $(getAttachment)
-
-  api._bulkDocs = $(bulkDocs)
-  api._allDocs = $(allDocs)
-  api._changes = $(changes)
-
-  api._doCompaction = $(doCompaction)
-  api._destroy = $(destroy)
-
-  api._close = cb => {
-    closeDatabase(dbOpts.name)
-    cb()
+  api._id = callback => {
+    getDatabase(dbOpts).then(database => {
+      sequence(cb => cb(null, database.meta.db_uuid), callback)
+    })
   }
 
-  callback(null, api)
+  api._info = callback => {
+    getDatabase(dbOpts).then(database => {
+      sequence(cb => info(database, cb), callback)
+    })
+  }
+
+  api._get = (id, opts, callback) => {
+    getDatabase(dbOpts).then(database => {
+      sequence(cb => get(database, id, opts, cb), callback)
+    })
+  }
+
+  api._getRevisionTree = (id, opts, callback) => {
+    getDatabase(dbOpts).then(database => {
+      sequence(cb => getRevisionTree(database, id, opts, cb), callback)
+    })
+  }
+
+  api._getAttachment = (docId, attachId, attachment, opts, callback) => {
+    getDatabase(dbOpts).then(database => {
+      sequence(cb => getAttachment(docId, attachId, attachment, opts, cb), callback)
+    })
+  }
+
+  api._bulkDocs = (req, opts, callback) => {
+    getDatabase(dbOpts).then(database => {
+      sequence(cb => bulkDocs(database, req, opts, cb), callback)
+    })
+  }
+
+  api._allDocs = (opts, callback) => {
+    getDatabase(dbOpts).then(database => {
+      sequence(cb => allDocs(database, opts, cb), callback)
+    })
+  }
+  api._changes = opts => {
+    getDatabase(dbOpts).then(database => {
+      sequence(cb => {
+        changes(database, api, opts)
+        cb()
+      })
+    })
+  }
+
+  api._doCompaction = (id, revs, callback) => {
+    getDatabase(dbOpts).then(database => {
+      sequence(cb => doCompaction(database, id, revs, cb), callback)
+    })
+  }
+  api._destroy = (opts, callback) => {
+    getDatabase(dbOpts).then(database => {
+      sequence(cb => destroy(database, opts, cb), callback)
+    })
+  }
+
+  api._close = callback => {
+    sequence(cb => {
+      closeDatabase(dbOpts.name)
+      cb()
+    }, callback)
+  }
+
+  constuctorCallback(null, api)
+
+  const queue = []
+  let isRunning = false
+  const sequence = (func, callback) => {
+    const run = () => {
+      if (isRunning || queue.length === 0) return
+
+      isRunning = true
+      const task = queue.shift()
+      setImmediate(() => {
+        task.func((error, result) => {
+          task.callback && task.callback(error, result)
+          isRunning = false
+          run()
+        })
+      })
+    }
+
+    queue.push({func, callback})
+    run()
+  }
 }
 
 AsyncStoragePouch.valid = () => {
