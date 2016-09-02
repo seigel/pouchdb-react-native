@@ -23,57 +23,57 @@ function AsyncStoragePouch (dbOpts, constuctorCallback) {
   api.type = () => ADAPTER_NAME
 
   api._id = callback => {
-    getDatabase(dbOpts).then(database => {
-      sequence(cb => cb(null, database.meta.db_uuid), callback)
-    })
+    getDatabase(dbOpts)
+      .then(database => sequence(cb => cb(null, database.meta.db_uuid), callback))
+      .catch(callback)
   }
   api._info = callback => {
-    getDatabase(dbOpts).then(database => {
-      sequence(cb => info(database, cb), callback)
-    })
+    getDatabase(dbOpts)
+      .then(database => sequence(cb => info(database, cb), callback))
+      .catch(callback)
   }
   api._get = (id, opts, callback) => {
-    getDatabase(dbOpts).then(database => {
-      sequence(cb => get(database, id, opts, cb), callback)
-    })
+    getDatabase(dbOpts)
+      .then(database => sequence(cb => get(database, id, opts, cb), callback))
+      .catch(callback)
   }
   api._getAttachment = (docId, attachId, attachment, opts, callback) => {
-    getDatabase(dbOpts).then(database => {
-      sequence(cb => getAttachment(docId, attachId, attachment, opts, cb), callback)
-    })
+    getDatabase(dbOpts)
+      .then(database => sequence(cb => getAttachment(docId, attachId, attachment, opts, cb), callback))
+      .catch(callback)
   }
   api._getRevisionTree = (id, opts, callback) => {
-    getDatabase(dbOpts).then(database => {
-      sequence(cb => getRevisionTree(database, id, opts, cb), callback)
-    })
+    getDatabase(dbOpts)
+      .then(database => sequence(cb => getRevisionTree(database, id, opts, cb), callback))
+      .catch(callback)
   }
   api._allDocs = (opts, callback) => {
-    getDatabase(dbOpts).then(database => {
-      sequence(cb => allDocs(database, opts, cb), callback)
-    })
+    getDatabase(dbOpts)
+      .then(database => sequence(cb => allDocs(database, opts, cb), callback))
+      .catch(callback)
   }
   api._bulkDocs = (req, opts, callback) => {
-    getDatabase(dbOpts).then(database => {
-      sequence(cb => bulkDocs(database, req, opts, cb), callback)
-    })
+    getDatabase(dbOpts)
+      .then(database => sequence(cb => bulkDocs(database, req, opts, cb), callback))
+      .catch(callback)
   }
   api._changes = opts => {
-    getDatabase(dbOpts).then(database => {
-      sequence(cb => {
+    getDatabase(dbOpts)
+      .then(database => sequence(cb => {
         changes(database, api, opts)
         cb()
-      })
-    })
+      }))
+      .catch(error => opts.complete && opts.complete(error))
   }
   api._doCompaction = (id, revs, callback) => {
-    getDatabase(dbOpts).then(database => {
-      sequence(cb => doCompaction(database, id, revs, cb), callback)
-    })
+    getDatabase(dbOpts)
+      .then(database => sequence(cb => doCompaction(database, id, revs, cb), callback))
+      .catch(callback)
   }
   api._destroy = (opts, callback) => {
-    getDatabase(dbOpts).then(database => {
-      sequence(cb => destroy(database, opts, cb), callback)
-    })
+    getDatabase(dbOpts)
+      .then(database => sequence(cb => destroy(database, opts, cb), callback))
+      .catch(callback)
   }
   api._close = callback => {
     sequence(cb => {
