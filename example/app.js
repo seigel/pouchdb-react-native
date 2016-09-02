@@ -76,9 +76,15 @@ export default React.createClass({
       const insertRecords = count => {
         for (let index = 0; index < count; index++) {
           localDB.post({
-            text: `${index} Record`
+            text: `Record ${index}/${count}`
           })
         }
+      }
+
+      const destroy = count => {
+        localDB.destroy()
+          .then(() => console.log('destroyed'))
+          .catch(error => console.warn('destroyed', error))
       }
 
       const { dataSource } = this.state
@@ -132,15 +138,15 @@ export default React.createClass({
           <ActionButton buttonColor='#78B55E'>
             <ActionButton.Item
               buttonColor='#005BFF'
-              title='Add Item'
-              onPress={() => this._navigator.push({name: 'AddItem', render: renderAddItem})}>
-              <Text>+</Text>
+              title='Destroy Database'
+              onPress={destroy}>
+              <Text>destroy</Text>
             </ActionButton.Item>
             <ActionButton.Item
               buttonColor='#005BFF'
-              title='Sync'
-              onPress={() => this._navigator.push({name: 'Sync', render: renderSync})}>
-              <Text>sync</Text>
+              title='Insert Attachments'
+              onPress={insertAttachment}>
+              <Text>attach</Text>
             </ActionButton.Item>
             <ActionButton.Item
               buttonColor='#005BFF'
@@ -150,9 +156,15 @@ export default React.createClass({
             </ActionButton.Item>
             <ActionButton.Item
               buttonColor='#005BFF'
-              title='Insert Attachments'
-              onPress={insertAttachment}>
-              <Text>Attachments</Text>
+              title='Sync'
+              onPress={() => this._navigator.push({name: 'Sync', render: renderSync})}>
+              <Text>sync</Text>
+            </ActionButton.Item>
+            <ActionButton.Item
+              buttonColor='#005BFF'
+              title='Add Item'
+              onPress={() => this._navigator.push({name: 'AddItem', render: renderAddItem})}>
+              <Text>+</Text>
             </ActionButton.Item>
           </ActionButton>
         </View>

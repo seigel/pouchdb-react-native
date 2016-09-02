@@ -44,7 +44,7 @@ export default function (db, req, opts, callback) {
     }
 
     const preProcessAttachment = attachment => {
-      if (!attachment.data) {
+      if (!attachment.data || attachment.stub) {
         return Promise.resolve(attachment)
       }
 
@@ -63,6 +63,9 @@ export default function (db, req, opts, callback) {
         binaryMd5(binData, md5 => {
           attachment.digest = 'md5-' + md5
           attachment.length = binData.size || binData.length || 0
+          attachment.content_type = attachment.content_type || attachment.type
+          attachment.stub = true
+          delete attachment.type
           resolve(attachment)
         })
       })

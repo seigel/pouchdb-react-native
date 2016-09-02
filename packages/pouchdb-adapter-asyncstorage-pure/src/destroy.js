@@ -1,12 +1,13 @@
 'use strict'
 
 import { close as closeDatabase } from './databases'
+import AsyncStorageCore from './asyncstorage_core'
 
 export default function (db, opts, callback) {
-  db.storage.destroy(db.internalName, error => {
+  AsyncStorageCore.destroy(db.internalName, error => {
     if (error) callback(error)
 
-    closeDatabase(db.dbOpts.name)
+    closeDatabase(db.opts.name)
     callback()
   })
 }
