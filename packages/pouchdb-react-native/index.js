@@ -1,8 +1,7 @@
 'use strict'
 
 import PouchDB from 'pouchdb-core'
-// import AsyncStoragePouch from 'pouchdb-adapter-asyncstorage'
-import AsyncStoragePouch from 'pouchdb-adapter-asyncstorage-pure'
+import AsyncStoragePouch from 'pouchdb-adapter-asyncstorage'
 import HttpPouch from 'pouchdb-adapter-http'
 import mapreduce from 'pouchdb-mapreduce'
 import replication from 'pouchdb-replication'

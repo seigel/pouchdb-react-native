@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "5.4.20",
+  "version": "5.5.0-beta-2",
   "author": "Christoph Stock (@stockulus)",
   "description": "small example app for pouchdb-react-native",
   "license": "MIT",
@@ -18,8 +18,7 @@
     "postinstall": "npm run copy-packages"
   },
   "dependencies": {
-    "pouchdb-adapter-asyncstorage-pure": "5.4.20",
-    "pouchdb-react-native": "5.4.20",
+    "pouchdb-react-native": "5.5.0-beta-2",
     "react": "15.3.1",
     "react-native": "0.32.0",
     "react-native-action-button": "2.0.1"

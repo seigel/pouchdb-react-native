@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-react-native",
-  "version": "5.4.20",
+  "version": "5.5.0-beta-2",
   "description": "PouchDB Bundle for ReactNative",
   "main": "index.js",
   "repository": {
@@ -23,8 +23,7 @@
   },
   "homepage": "https://github.com/stockulus/pouchdb-react-native#readme",
   "dependencies": {
-    "pouchdb-adapter-asyncstorage": "5.4.20",
-    "pouchdb-adapter-asyncstorage-pure": "5.4.20",
+    "pouchdb-adapter-asyncstorage": "5.5.0-beta-2",
     "pouchdb-adapter-http": "5.4.5",
     "pouchdb-core": "5.4.5",
     "pouchdb-mapreduce": "5.4.5",
