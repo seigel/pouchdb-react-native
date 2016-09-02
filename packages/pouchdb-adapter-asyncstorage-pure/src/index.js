@@ -4,14 +4,14 @@ import './polyfill'
 
 // API implementations
 import allDocs from './all_docs'
+import bulkDocs from './bulk_docs'
+import changes from './changes'
+import destroy from './destroy'
+import doCompaction from './do_compaction'
 import get from './get'
 import getAttachment from './get_attachment'
 import getRevisionTree from './get_revision_tree'
-import bulkDocs from './bulk_docs'
-import changes from './changes'
-import doCompaction from './do_compaction'
 import info from './info'
-import destroy from './destroy'
 
 import { get as getDatabase, close as closeDatabase } from './databases'
 
@@ -27,40 +27,34 @@ function AsyncStoragePouch (dbOpts, constuctorCallback) {
       sequence(cb => cb(null, database.meta.db_uuid), callback)
     })
   }
-
   api._info = callback => {
     getDatabase(dbOpts).then(database => {
       sequence(cb => info(database, cb), callback)
     })
   }
-
   api._get = (id, opts, callback) => {
     getDatabase(dbOpts).then(database => {
       sequence(cb => get(database, id, opts, cb), callback)
     })
   }
-
-  api._getRevisionTree = (id, opts, callback) => {
-    getDatabase(dbOpts).then(database => {
-      sequence(cb => getRevisionTree(database, id, opts, cb), callback)
-    })
-  }
-
   api._getAttachment = (docId, attachId, attachment, opts, callback) => {
     getDatabase(dbOpts).then(database => {
       sequence(cb => getAttachment(docId, attachId, attachment, opts, cb), callback)
     })
   }
-
-  api._bulkDocs = (req, opts, callback) => {
+  api._getRevisionTree = (id, opts, callback) => {
     getDatabase(dbOpts).then(database => {
-      sequence(cb => bulkDocs(database, req, opts, cb), callback)
+      sequence(cb => getRevisionTree(database, id, opts, cb), callback)
     })
   }
-
   api._allDocs = (opts, callback) => {
     getDatabase(dbOpts).then(database => {
       sequence(cb => allDocs(database, opts, cb), callback)
+    })
+  }
+  api._bulkDocs = (req, opts, callback) => {
+    getDatabase(dbOpts).then(database => {
+      sequence(cb => bulkDocs(database, req, opts, cb), callback)
     })
   }
   api._changes = opts => {
@@ -71,7 +65,6 @@ function AsyncStoragePouch (dbOpts, constuctorCallback) {
       })
     })
   }
-
   api._doCompaction = (id, revs, callback) => {
     getDatabase(dbOpts).then(database => {
       sequence(cb => doCompaction(database, id, revs, cb), callback)
@@ -82,7 +75,6 @@ function AsyncStoragePouch (dbOpts, constuctorCallback) {
       sequence(cb => destroy(database, opts, cb), callback)
     })
   }
-
   api._close = callback => {
     sequence(cb => {
       closeDatabase(dbOpts.name)
