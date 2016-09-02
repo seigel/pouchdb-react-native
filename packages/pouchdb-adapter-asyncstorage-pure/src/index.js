@@ -29,7 +29,6 @@ function AsyncStoragePouch (dbOpts, callback) {
       getDatabase(dbOpts).then(database => {
         args.unshift(api)
         args.unshift(database)
-        console.log('$', args, fun.toString())
         fun.apply(api, args)
       })
     }

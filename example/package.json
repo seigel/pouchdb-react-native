@@ -9,10 +9,11 @@
     "url": "git+https://github.com/stockulus/pouchdb-react-native.git"
   },
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "start": "node node_modules/react-native/local-cli/cli.js start --reset-cache",
     "ios": "node ./node_modules/react-native/local-cli/cli.js run-ios",
     "android": "node ./node_modules/react-native/local-cli/cli.js run-android",
     "updtr": "updtr --save-exact",
+    "clean-watchman": "watchman watch-del-all",
     "copy-packages": "sh copy_packages.sh",
     "postinstall": "npm run copy-packages"
   },
