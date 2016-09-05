@@ -2,7 +2,6 @@
 
 import {
   createError,
-  generateErrorFromResponse,
   MISSING_DOC } from 'pouchdb-errors'
 import { forDocument, forSequence } from './keys'
 
@@ -19,7 +18,10 @@ export default function (db, id, opts, callback) {
     }
 
     db.storage.get(forSequence(doc.rev_map[rev]), (error, result) => {
-      if (error) return callback(generateErrorFromResponse(error))
+      if (error) {
+        return callback(createError(
+          MISSING_DOC, error.message || 'missing-read-error'))
+      }
 
       callback(null, {
         doc: result,

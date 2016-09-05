@@ -37,22 +37,34 @@ AsyncStorageCore.prototype.getKeys = function (callback) {
   })
 }
 
+const stringifyValue = value => {
+  if (value === null) return ''
+  if (value === undefined) return ''
+
+  return JSON.stringify(value)
+}
+
 AsyncStorageCore.prototype.put = function (key, value, callback) {
   key = prepareKey(key, this)
-  AsyncStorage.setItem(key, JSON.stringify(value), callback)
+  AsyncStorage.setItem(key, stringifyValue(value), callback)
 }
 
 AsyncStorageCore.prototype.multiPut = function (pairs, callback) {
-  pairs = pairs.map(pair => [prepareKey(pair[0], this), JSON.stringify(pair[1])])
+  pairs = pairs.map(pair => [prepareKey(pair[0], this), stringifyValue(pair[1])])
   AsyncStorage.multiSet(pairs)
     .then(result => callback(null, result))
     .catch(callback)
 }
 
+const parseValue = value => {
+  if (typeof value === 'string') return JSON.parse(value)
+  return null
+}
+
 AsyncStorageCore.prototype.get = function (key, callback) {
   key = prepareKey(key, this)
   AsyncStorage.getItem(key)
-    .then(item => callback(null, JSON.parse(item)))
+    .then(item => callback(null, parseValue(item)))
     .catch(callback)
 }
 
@@ -60,7 +72,7 @@ AsyncStorageCore.prototype.multiGet = function (keys, callback) {
   keys = keys.map(key => prepareKey(key, this))
 
   AsyncStorage.multiGet(keys)
-    .then(pairs => callback(null, pairs.map(pair => JSON.parse(pair[1]))))
+    .then(pairs => callback(null, pairs.map(pair => parseValue(pair[1]))))
     .catch(callback)
 }
 
@@ -71,7 +83,7 @@ AsyncStorageCore.prototype.multiGetAsObj = function (keys, callback) {
     .then(pairs => callback(
       null,
       pairs.reduce((result, pair) => {
-        result[pair[0].slice(this._prefix.length)] = JSON.parse(pair[1])
+        result[pair[0].slice(this._prefix.length)] = parseValue(pair[1])
         return result
       }, {}))
     )
