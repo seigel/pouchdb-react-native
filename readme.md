@@ -59,6 +59,7 @@ git clone https://github.com/stockulus/pouchdb-react-native.git
 cd pouchdb-react-native
 npm install
 npm test
+cd example
 npm run ios
 
 ```

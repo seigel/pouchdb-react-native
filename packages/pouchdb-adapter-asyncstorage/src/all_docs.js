@@ -94,7 +94,7 @@ export default function (db, opts, callback) {
 
       callback(null, {
         total_rows: db.meta.doc_count,
-        offset: opts.skip,
+        offset: skip,
         rows
       })
     }
