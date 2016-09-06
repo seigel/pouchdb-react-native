@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-adapter-asyncstorage",
-  "version": "5.5.0-beta-2",
+  "version": "6.1.0-beta-3",
   "description": "asyncstorage adapter for PouchDB",
   "main": "./src/index.js",
   "repository": {
@@ -16,7 +16,11 @@
   "scripts": {
     "updtr": "updtr --save-exact"
   },
-  "author": "Christoph Stock (@stockulus)",
+  "author": {
+    "name": "Christoph Stock",
+    "email": "stockulus@icloud.com",
+    "url": "https://twitter.com/stockulus"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/stockulus/pouchdb-react-native/issues"
@@ -29,12 +33,12 @@
     "buffer": "4.9.1",
     "events": "1.1.1",
     "left-pad": "1.1.1",
-    "pouchdb-adapter-utils": "5.4.5",
-    "pouchdb-binary-utils": "5.4.5",
-    "pouchdb-errors": "5.4.5",
-    "pouchdb-md5": "5.4.5",
-    "pouchdb-merge": "5.4.5",
-    "pouchdb-utils": "5.4.5"
+    "pouchdb-adapter-utils": "6.0.4",
+    "pouchdb-binary-utils": "6.0.4",
+    "pouchdb-errors": "6.0.4",
+    "pouchdb-md5": "6.0.4",
+    "pouchdb-merge": "6.0.4",
+    "pouchdb-utils": "6.0.4"
   },
   "devDependencies": {},
   "peerDependencies": {},

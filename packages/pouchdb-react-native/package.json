@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-react-native",
-  "version": "5.5.0-beta-2",
+  "version": "6.1.0-beta-3",
   "description": "PouchDB Bundle for ReactNative",
   "main": "index.js",
   "repository": {
@@ -16,18 +16,22 @@
   "scripts": {
     "updtr": "updtr --save-exact"
   },
-  "author": "Christoph Stock (@stockulus)",
+  "author": {
+    "name": "Christoph Stock",
+    "email": "stockulus@icloud.com",
+    "url": "https://twitter.com/stockulus"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/stockulus/pouchdb-react-native/issues"
   },
   "homepage": "https://github.com/stockulus/pouchdb-react-native#readme",
   "dependencies": {
-    "pouchdb-adapter-asyncstorage": "5.5.0-beta-2",
-    "pouchdb-adapter-http": "5.4.5",
-    "pouchdb-core": "5.4.5",
-    "pouchdb-mapreduce": "5.4.5",
-    "pouchdb-replication": "5.4.5"
+    "pouchdb-adapter-asyncstorage": "6.1.0-beta-3",
+    "pouchdb-adapter-http": "6.0.4",
+    "pouchdb-core": "6.0.4",
+    "pouchdb-mapreduce": "6.0.4",
+    "pouchdb-replication": "6.0.4"
   },
   "devDependencies": {},
   "peerDependencies": {},

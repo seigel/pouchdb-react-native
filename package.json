@@ -22,7 +22,11 @@
     "postinstall": "for D in ./packages/*; do cd $D; npm install; cd -; done && cd example && npm install && cd ../pouchdb-original && npm install",
     "updtr": "updtr --save-exact && cd example && updtr --save-exact && cd .. && for D in ./packages/*; do echo $D; cd $D; npm run updtr; cd -; done"
   },
-  "author": "Christoph Stock (@stockulus)",
+  "author": {
+    "name": "Christoph Stock",
+    "email": "stockulus@icloud.com",
+    "url": "https://twitter.com/stockulus"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/stockulus/pouchdb-react-native/issues"
@@ -40,8 +44,7 @@
   "standard": {
     "ignore": [
       "node_modules/**",
-      "pouchdb-original/**",
-      "packages/pouchdb-adapter-leveldb-core-rn/**"
+      "pouchdb-original/**"
     ]
   }
 }
