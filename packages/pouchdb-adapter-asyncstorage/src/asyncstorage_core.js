@@ -76,20 +76,6 @@ AsyncStorageCore.prototype.multiGet = function (keys, callback) {
     .catch(callback)
 }
 
-AsyncStorageCore.prototype.multiGetAsObj = function (keys, callback) {
-  keys = keys.map(key => prepareKey(key, this))
-
-  AsyncStorage.multiGet(keys)
-    .then(pairs => callback(
-      null,
-      pairs.reduce((result, pair) => {
-        result[pair[0].slice(this._prefix.length)] = parseValue(pair[1])
-        return result
-      }, {}))
-    )
-    .catch(callback)
-}
-
 AsyncStorageCore.prototype.remove = function (key, callback) {
   key = prepareKey(key, this)
   AsyncStorage.removeItem(key, callback)

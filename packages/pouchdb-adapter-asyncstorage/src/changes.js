@@ -22,7 +22,7 @@ export default function (db, api, opts) {
   const limit = ('limit' in opts && opts.limit > 0)
     ? opts.limit
     : null
-  const docIds = opts.doc_ids && new Set(opts.doc_ids)
+  const filterDocIds = opts.doc_ids && new Set(opts.doc_ids)
   const returnDocs = ('return_docs' in opts)
     ? opts.return_docs
     : 'returnDocs' in opts
@@ -47,12 +47,14 @@ export default function (db, api, opts) {
     db.storage.multiGet(toSequenceKeys(filterSeqs), (error, dataDocs) => {
       if (error) return complete(error)
 
-      const filterDocs = docIds
-        ? dataDocs.filter(doc => docIds.has(doc._id))
+      const filterDocs = filterDocIds
+        ? dataDocs.filter(doc => filterDocIds.has(doc._id))
         : dataDocs
       if (filterDocs.length === 0) return complete(null, [])
 
-      db.storage.multiGet(filterDocs.map(data => forDocument(data._id)), (error, docs) => {
+      const changeDocIds = [...new Set(
+        filterDocs.map(data => forDocument(data._id)))]
+      db.storage.multiGet(changeDocIds, (error, docs) => {
         if (error) return complete(error)
 
         const dataObj = filterDocs.reduce(
@@ -70,6 +72,7 @@ export default function (db, api, opts) {
           const data = dataObj[doc.id]
           const change = processChange(data, doc, opts)
           change.seq = doc.seq
+          change.rev = doc.rev
 
           const filtered = filter(change)
           if (typeof filtered === 'object') {
