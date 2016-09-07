@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-react-native-bundle",
-  "version": "5.4.20",
+  "version": "6.1.0-beta-3",
   "description": "Package Bundle for PouchDB for ReactNative",
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
     "test-mapreduce": "mocha -r tests/setup.js pouchdb-original/tests/mapreduce/test.*.js",
     "test-integration": "mocha -r tests/setup.js pouchdb-original/tests/integration/test.*.js",
     "standard": "node ./node_modules/standard/bin/cmd.js",
-    "clean": "rm -rf packages/node_modules/**/node_modules && rm -rf ./example/node_modules && rm -rf ./pouchdb-original/node_modules && rm -rf ./node_modules",
+    "clean": "rm -rf packages/**/node_modules && rm -rf ./example/node_modules && rm -rf ./pouchdb-original/node_modules && rm -rf ./node_modules",
     "postinstall": "for D in ./packages/*; do cd $D; npm install; cd -; done && cd example && npm install && cd ../pouchdb-original && npm install",
     "updtr": "updtr --save-exact && cd example && updtr --save-exact && cd .. && for D in ./packages/*; do echo $D; cd $D; npm run updtr; cd -; done"
   },
