@@ -18,8 +18,7 @@ export const get = opts => new Promise((resolve, reject) => {
         update_seq: meta[2]
       },
       opts,
-      changes: new ChangesHandler(),
-      internalName: opts.name.slice(7)
+      changes: new ChangesHandler()
     }
 
     openDatabases[opts.name] = result
@@ -30,7 +29,7 @@ export const get = opts => new Promise((resolve, reject) => {
     return resolve(openDatabases[opts.name])
   }
 
-  const storage = new AsyncStorageCore(opts.name.slice(7))
+  const storage = new AsyncStorageCore(opts.name)
 
   storage.multiGet(toMetaKeys([
     '_local_uuid', '_local_doc_count', '_local_last_update_seq'

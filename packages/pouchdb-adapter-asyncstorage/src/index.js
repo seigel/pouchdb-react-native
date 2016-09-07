@@ -114,6 +114,8 @@ AsyncStoragePouch.valid = () => {
   }
 }
 
+AsyncStoragePouch.use_prefix = false
+
 export default function (PouchDB) {
   PouchDB.adapter(ADAPTER_NAME, AsyncStoragePouch, true)
 }
