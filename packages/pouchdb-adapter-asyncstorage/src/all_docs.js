@@ -5,13 +5,14 @@ import { collectConflicts } from 'pouchdb-merge'
 import { getDocumentKeys, toDocumentKeys, forSequence } from './keys'
 
 const getDocs = (db,
-  {filterKey, startkey, endkey, skip, limit, inclusiveEnd, includeDeleted},
+  {filterKey, startkey, endkey, skip, limit, excludeStart, inclusiveEnd, includeDeleted},
   callback) => {
   db.storage.getKeys((error, keys) => {
     if (error) return callback(error)
 
     const filterKeys = getDocumentKeys(keys).filter(key => {
       if (startkey && startkey > key) return false
+      if (excludeStart && startkey && startkey === key) return false
       if (endkey) return inclusiveEnd ? endkey >= key : endkey > key
       if (filterKey) return filterKey === key
 
@@ -49,15 +50,20 @@ const getDocs = (db,
 
 export default function (db, opts, callback) {
   // get options like pouchdb-adapter-indexeddb
-  const startkey = 'startkey' in opts ? opts.startkey : false
-  const endkey = 'endkey' in opts ? opts.endkey : false
   const filterKey = 'key' in opts ? opts.key : false
   const skip = opts.skip || 0
   const limit = typeof opts.limit === 'number' ? opts.limit : -1
-  const inclusiveEnd = opts.inclusive_end !== false
   const includeDeleted = 'deleted' in opts ? opts.deleted === 'ok' : false
   const includeDoc = 'include_docs' in opts ? opts.include_docs : true
   const descending = 'descending' in opts && opts.descending
+  const startkey = descending
+    ? 'endkey' in opts ? opts.endkey : false
+    : 'startkey' in opts ? opts.startkey : false
+  const endkey = descending
+    ? 'startkey' in opts ? opts.startkey : false
+    : 'endkey' in opts ? opts.endkey : false
+  const excludeStart = descending && !(opts.inclusive_end !== false)
+  const inclusiveEnd = descending || opts.inclusive_end !== false
 
   const docToRow = doc => {
     if (includeDoc) {
@@ -85,7 +91,8 @@ export default function (db, opts, callback) {
     }
   }
 
-  getDocs(db, {filterKey, startkey, endkey, skip, limit, inclusiveEnd, includeDeleted},
+  getDocs(db,
+    {filterKey, startkey, endkey, skip, limit, excludeStart, inclusiveEnd, includeDeleted},
     (error, docs) => {
       if (error) return callback(generateErrorFromResponse(error))
 
