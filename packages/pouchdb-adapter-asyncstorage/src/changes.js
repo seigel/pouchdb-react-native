@@ -31,6 +31,7 @@ export default function (db, api, opts) {
   const filter = filterChange(opts)
   const complete = opts.complete
   const onChange = opts.onChange
+  const processChange = opts.processChange
 
   db.storage.getKeys((error, keys) => {
     if (error) return complete(error)
@@ -62,10 +63,12 @@ export default function (db, api, opts) {
 
         const results = []
         let lastChangeSeq
-        for (let index = 0; index < docs.length && results.length <= limit; index++) {
+        for (let index = 0; index < docs.length; index++) {
+          if (limit && results.length > limit) break
+
           const doc = docs[index]
           const data = dataObj[doc.id]
-          const change = opts.processChange(data, doc, opts)
+          const change = processChange(data, doc, opts)
           change.seq = doc.seq
 
           const filtered = filter(change)

@@ -113,7 +113,7 @@ export default function (db, req, opts, callback) {
         result: {
           ok: true,
           id: newDoc.id,
-          rev: newDoc.deleted ? '0-0' : newDoc.rev
+          rev: newDoc.rev
         }
       }
     }
@@ -137,7 +137,7 @@ export default function (db, req, opts, callback) {
         result: {
           ok: true,
           id: newDoc.id,
-          rev: newDoc.deleted ? '0-0' : newDoc.rev
+          rev: newDoc.rev
         }
       }
     }
