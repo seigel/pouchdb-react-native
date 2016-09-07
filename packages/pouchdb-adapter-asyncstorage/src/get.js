@@ -6,27 +6,24 @@ import {
 import { forDocument, forSequence } from './keys'
 
 export default function (db, id, opts, callback) {
-  db.storage.get(forDocument(id), (error, doc) => {
-    if (error) {
+  db.storage.get(forDocument(id), (error, meta) => {
+    if (error || meta === null) {
       return callback(createError(
         MISSING_DOC, error.message || 'missing-read-error'))
     }
 
-    const rev = opts.rev || (doc && doc.rev)
-    if (!doc || (doc.deleted && !opts.rev) || !(rev in doc.rev_map)) {
+    const rev = opts.rev || (meta && meta.rev)
+    if (!meta || (meta.deleted && !opts.rev) || !(rev in meta.rev_map)) {
       return callback(createError(MISSING_DOC, 'missing'))
     }
 
-    db.storage.get(forSequence(doc.rev_map[rev]), (error, result) => {
+    db.storage.get(forSequence(meta.rev_map[rev]), (error, doc) => {
       if (error) {
         return callback(createError(
           MISSING_DOC, error.message || 'missing-read-error'))
       }
 
-      callback(null, {
-        doc: result,
-        metadata: doc
-      })
+      callback(null, {doc, metadata: meta})
     })
   })
 }

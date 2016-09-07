@@ -5,7 +5,7 @@ import { collectConflicts } from 'pouchdb-merge'
 import { getDocumentKeys, toDocumentKeys, forSequence } from './keys'
 
 const getDocs = (db,
-  {filterKey, filterKeySet, startkey, endkey, skip, limit, inclusiveEnd, includeDeleted},
+  {filterKey, startkey, endkey, skip, limit, inclusiveEnd, includeDeleted},
   callback) => {
   db.storage.getKeys((error, keys) => {
     if (error) return callback(error)
@@ -14,7 +14,6 @@ const getDocs = (db,
       if (startkey && startkey > key) return false
       if (endkey) return inclusiveEnd ? endkey >= key : endkey > key
       if (filterKey) return filterKey === key
-      if (filterKeySet) return filterKeySet.has(key)
 
       return true
     })
@@ -27,7 +26,7 @@ const getDocs = (db,
         : docs.filter(doc => !doc.deleted)
 
       if (skip > 0) result = result.slice(skip)
-      if (limit > 0 && result.length > limit) result = result.slice(0, limit)
+      if (limit >= 0 && result.length > limit) result = result.slice(0, limit)
 
       let seqKeys = result.map(item => forSequence(item.seq))
       db.storage.multiGet(seqKeys, (error, dataDocs) => {
@@ -53,7 +52,6 @@ export default function (db, opts, callback) {
   const startkey = 'startkey' in opts ? opts.startkey : false
   const endkey = 'endkey' in opts ? opts.endkey : false
   const filterKey = 'key' in opts ? opts.key : false
-  const filterKeySet = 'keys' in opts ? new Set(opts.keys) : false
   const skip = opts.skip || 0
   const limit = typeof opts.limit === 'number' ? opts.limit : -1
   const inclusiveEnd = opts.inclusive_end !== false
@@ -87,7 +85,7 @@ export default function (db, opts, callback) {
     }
   }
 
-  getDocs(db, {filterKey, filterKeySet, startkey, endkey, skip, limit, inclusiveEnd, includeDeleted},
+  getDocs(db, {filterKey, startkey, endkey, skip, limit, inclusiveEnd, includeDeleted},
     (error, docs) => {
       if (error) return callback(generateErrorFromResponse(error))
 
@@ -97,8 +95,6 @@ export default function (db, opts, callback) {
       callback(null, {
         total_rows: db.meta.doc_count,
         offset: skip,
-        opts,
-        filterKeySet,
         rows
       })
     }
