@@ -21,6 +21,10 @@ export default function (db, docId, attachId, attachment, opts, callback) {
         return callback(createError(
           MISSING_DOC, error.message || 'missing-read-error'))
       }
+      if (!rev._attachments[attachId]) {
+        return callback(createError(
+          MISSING_DOC, 'missing-attachment'))
+      }
       const digest = rev._attachments[attachId].digest
 
       db.storage.get(forBinaryAttachment(digest), (error, attachment) => {

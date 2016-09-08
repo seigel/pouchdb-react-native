@@ -3,7 +3,7 @@
 import {
   createError,
   generateErrorFromResponse,
-  BAD_ARG, MISSING_DOC, REV_CONFLICT } from 'pouchdb-errors'
+  BAD_ARG, BAD_REQUEST, MISSING_DOC, REV_CONFLICT } from 'pouchdb-errors'
 import { parseDoc } from 'pouchdb-adapter-utils'
 import { merge } from 'pouchdb-merge'
 import { binaryStringToBlobOrBuffer } from 'pouchdb-binary-utils'
@@ -76,6 +76,10 @@ export default function (db, req, opts, callback) {
     if (!data._attachments) return Promise.resolve(null)
 
     const promises = Object.keys(data._attachments).map(key => {
+      if (key.startsWith('_')) {
+        return Promise.reject(
+          createError(BAD_REQUEST, 'Attachment name can not start with "_"'))
+      }
       return processAttachment(data._attachments[key])
         .then(({attachment, dbAttachment}) => {
           data._attachments[key] = attachment
