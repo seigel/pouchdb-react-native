@@ -39,7 +39,7 @@ function AsyncStoragePouch (dbOpts, constuctorCallback) {
   }
   api._getAttachment = (docId, attachId, attachment, opts, callback) => {
     getDatabase(dbOpts)
-      .then(database => sequence(cb => getAttachment(docId, attachId, attachment, opts, cb), callback))
+      .then(database => sequence(cb => getAttachment(database, docId, attachId, attachment, opts, cb), callback))
       .catch(callback)
   }
   api._getRevisionTree = (id, opts, callback) => {
