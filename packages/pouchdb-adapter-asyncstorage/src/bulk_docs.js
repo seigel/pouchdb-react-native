@@ -3,7 +3,7 @@
 import {
   createError,
   generateErrorFromResponse,
-  BAD_ARG, BAD_REQUEST, MISSING_DOC, REV_CONFLICT } from 'pouchdb-errors'
+  BAD_ARG, BAD_REQUEST, MISSING_DOC, MISSING_STUB, REV_CONFLICT } from 'pouchdb-errors'
 import { parseDoc } from 'pouchdb-adapter-utils'
 import { merge } from 'pouchdb-merge'
 import { binaryStringToBlobOrBuffer } from 'pouchdb-binary-utils'
@@ -41,7 +41,15 @@ export default function (db, req, opts, callback) {
 
     const processAttachment = attachment => {
       if (!attachment.data || attachment.stub) {
-        return Promise.resolve({attachment, dbAttachment: []})
+        return new Promise((resolve, reject) => {
+          if (!attachment.digest) return reject(createError(MISSING_STUB, 'no digest'))
+
+          db.storage.get(forBinaryAttachment(attachment.digest), (error, data) => {
+            if (error) return reject(createError(MISSING_STUB, error.message))
+            if (!data) return reject(createError(MISSING_STUB, 'can not find attachment'))
+            return resolve({attachment, dbAttachment: []})
+          })
+        })
       }
 
       let binData
@@ -63,8 +71,8 @@ export default function (db, req, opts, callback) {
           attachment.stub = true
 
           const dbAttachment = [
-            forBinaryAttachment(attachment.digest), attachment.data]
-          delete attachment.data
+            forBinaryAttachment(attachment.digest), binData]
+          // delete attachment.data
           delete attachment.size
           delete attachment.type
           delete attachment.encoding
