@@ -40,7 +40,7 @@ export default function (db, req, opts, callback) {
     }
 
     const processAttachment = attachment => {
-      if (!attachment.data || attachment.stub) {
+      if (attachment.stub) {
         return new Promise((resolve, reject) => {
           if (!attachment.digest) return reject(createError(MISSING_STUB, 'no digest'))
 
@@ -65,18 +65,16 @@ export default function (db, req, opts, callback) {
 
       return new Promise((resolve, reject) => {
         binaryMd5(binData, md5 => {
-          attachment.digest = 'md5-' + md5
-          attachment.length = binData.size || binData.length || 0
-          attachment.content_type = attachment.content_type || attachment.type
-          attachment.stub = true
+          const meta = {
+            digest: 'md5-' + md5,
+            content_type: attachment.content_type || attachment.type,
+            length: binData.size || binData.length || 0,
+            stub: true
+          }
 
           const dbAttachment = [
             forBinaryAttachment(attachment.digest), binData]
-          // delete attachment.data
-          delete attachment.size
-          delete attachment.type
-          delete attachment.encoding
-          resolve({attachment, dbAttachment})
+          resolve({attachment: meta, dbAttachment})
         })
       })
     }
