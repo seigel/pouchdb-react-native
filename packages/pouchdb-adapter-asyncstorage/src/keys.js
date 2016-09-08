@@ -6,13 +6,11 @@ const DOC_STORE = 'ÿdocument-storeÿ'
 const DOC_STORE_LENGTH = DOC_STORE.length
 const META_STORE = 'ÿmeta-storeÿ'
 const META_STORE_LENGTH = META_STORE.length
-const ATTACHMENT_STORE = 'ÿattach-storeÿ'
 const ATTACHMENT_BINARY_STORE = 'ÿattach-binary-storeÿ'
 const SEQUENCE_STORE = 'ÿby-sequenceÿ'
 const SEQUENCE_STORE_LENGTH = SEQUENCE_STORE.length
 
 export const forDocument = id => `${DOC_STORE}${id}`
-export const forAttachment = id => `${ATTACHMENT_STORE}${id}`
 export const forBinaryAttachment = id => `${ATTACHMENT_BINARY_STORE}${id}`
 export const forMeta = id => `${META_STORE}${id}`
 export const forSequence = seq => `${SEQUENCE_STORE}${leftPad(seq, 16, 0)}`

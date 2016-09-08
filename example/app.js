@@ -247,7 +247,7 @@ export default React.createClass({
             this.setState({newItem: ''})
             this._navigator.pop()
           })
-          .catch(error => console.error('Error during create Item', error))
+          .catch(error => console.error('Error during create Item', error, error.message))
       }
 
       return (

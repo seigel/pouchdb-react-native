@@ -9,7 +9,7 @@ import { merge } from 'pouchdb-merge'
 import { binaryStringToBlobOrBuffer } from 'pouchdb-binary-utils'
 import { binaryMd5 } from 'pouchdb-md5'
 
-import { forDocument, forMeta, forSequence } from './keys'
+import { forDocument, forBinaryAttachment, forMeta, forSequence } from './keys'
 
 export default function (db, req, opts, callback) {
   const wasDelete = 'was_delete' in opts
@@ -28,7 +28,7 @@ export default function (db, req, opts, callback) {
     }
   }
 
-  const preProcessAllAttachments = data => {
+  const processAllAttachments = data => {
     const parseBase64 = data => {
       try {
         return global.atob(data)
@@ -39,9 +39,9 @@ export default function (db, req, opts, callback) {
       }
     }
 
-    const preProcessAttachment = attachment => {
+    const processAttachment = attachment => {
       if (!attachment.data || attachment.stub) {
-        return Promise.resolve(attachment)
+        return Promise.resolve({attachment, dbAttachment: []})
       }
 
       let binData
@@ -55,22 +55,32 @@ export default function (db, req, opts, callback) {
         binData = attachment.data
       }
 
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
         binaryMd5(binData, md5 => {
           attachment.digest = 'md5-' + md5
           attachment.length = binData.size || binData.length || 0
           attachment.content_type = attachment.content_type || attachment.type
           attachment.stub = true
-          resolve(attachment)
+
+          const dbAttachment = [
+            forBinaryAttachment(attachment.digest), attachment.data]
+          delete attachment.data
+          delete attachment.size
+          delete attachment.type
+          delete attachment.encoding
+          resolve({attachment, dbAttachment})
         })
       })
     }
 
-    if (!data._attachments) return Promise.resolve(data)
+    if (!data._attachments) return Promise.resolve(null)
 
     const promises = Object.keys(data._attachments).map(key => {
-      return preProcessAttachment(data._attachments[key])
-        .then(attachment => { data._attachments[key] = attachment })
+      return processAttachment(data._attachments[key])
+        .then(({attachment, dbAttachment}) => {
+          data._attachments[key] = attachment
+          return dbAttachment
+        })
     })
 
     return Promise.all(promises)
@@ -79,6 +89,8 @@ export default function (db, req, opts, callback) {
   const getChange = (oldDoc, newDoc) => {
     // pouchdb magic
     const rootIsMissing = doc => doc.rev_tree[0].ids[1].status === 'missing'
+    // const getAttachments = () => {}
+
     const getUpdate = () => {
       // Ignore updates to existing revisions
       if (newDoc.rev in oldDoc.rev_map) return {}
@@ -150,10 +162,11 @@ export default function (db, req, opts, callback) {
         return reject(createError(REV_CONFLICT))
       }
 
-      preProcessAllAttachments(newDoc.data)
-        .then(data => {
+      processAllAttachments(newDoc.data)
+        .then(attachments => {
           const change = oldDoc ? getUpdate() : getInsert()
           if (change.error) return reject(change.error)
+          if (attachments) change.attachments = attachments
           resolve(change)
         })
         .catch(reject)
@@ -182,10 +195,17 @@ export default function (db, req, opts, callback) {
       .then(changes => {
         if (changes.length === 0) return callback(null, {})
 
-        const dbChanges = changes.map(item => item.doc)
-          .concat(changes.map(item => item.data))
+        const dbChanges = []
         dbChanges.push([forMeta('_local_doc_count'), newMeta.doc_count])
         dbChanges.push([forMeta('_local_last_update_seq'), newMeta.update_seq])
+
+        changes.forEach(change => {
+          dbChanges.push(change.doc)
+          dbChanges.push(change.data)
+          change.attachments && change.attachments.forEach(attachment => {
+            if (attachment) dbChanges.push(attachment)
+          })
+        })
 
         db.storage.multiPut(dbChanges, error => {
           if (error) return callback(generateErrorFromResponse(error))

@@ -2,24 +2,41 @@
 
 import { btoa, readAsBinaryString } from 'pouchdb-binary-utils'
 import { createError, MISSING_DOC } from 'pouchdb-errors'
-import keys from './keys'
+import { forDocument, forSequence, forBinaryAttachment } from './keys'
 
 export default function (db, docId, attachId, attachment, opts, callback) {
-  db.storage.get(keys.forDocument(docId), (error, doc) => {
+  db.storage.get(forDocument(docId), (error, meta) => {
     if (error) {
       return callback(createError(
         MISSING_DOC, error.message || 'missing-read-error'))
     }
 
-    const rev = opts.rev ? doc.revs[opts.rev].data : doc.data
-    const digest = rev._attachments[attachId].digest
-
-    if (opts.binary) {
-      return callback(null, doc.attachments[digest].data)
+    const rev = opts.rev || (meta && meta.rev)
+    if (!meta || (meta.deleted && !opts.rev) || !(rev in meta.rev_map)) {
+      return callback(createError(MISSING_DOC, 'missing'))
     }
 
-    readAsBinaryString(doc.attachments[digest].data, binString => {
-      callback(null, btoa(binString))
+    db.storage.get(forSequence(meta.rev_map[rev]), (error, doc) => {
+      if (error) {
+        return callback(createError(
+          MISSING_DOC, error.message || 'missing-read-error'))
+      }
+      const digest = rev._attachments[attachId].digest
+
+      db.storage.get(forBinaryAttachment(digest), (error, attachment) => {
+        if (error) {
+          return callback(createError(
+            MISSING_DOC, error.message || 'missing-attachment-read-error'))
+        }
+
+        if (opts.binary) {
+          return callback(null, attachment)
+        }
+
+        readAsBinaryString(attachment, binString => {
+          callback(null, btoa(binString))
+        })
+      })
     })
   })
 }
