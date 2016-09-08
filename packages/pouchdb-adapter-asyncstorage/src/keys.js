@@ -11,8 +11,8 @@ const SEQUENCE_STORE = 'ÿby-sequenceÿ'
 const SEQUENCE_STORE_LENGTH = SEQUENCE_STORE.length
 
 export const forDocument = id => `${DOC_STORE}${id}`
-export const forBinaryAttachment = id => `${ATTACHMENT_BINARY_STORE}${id}`
-export const forMeta = id => `${META_STORE}${id}`
+export const forBinaryAttachment = digest => `${ATTACHMENT_BINARY_STORE}${digest}`
+export const forMeta = key => `${META_STORE}${key}`
 export const forSequence = seq => `${SEQUENCE_STORE}${leftPad(seq, 16, 0)}`
 
 export const sliceDocument = id => id.slice(DOC_STORE_LENGTH)
