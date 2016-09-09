@@ -9,7 +9,7 @@ import { merge } from 'pouchdb-merge'
 import { binaryStringToBlobOrBuffer } from 'pouchdb-binary-utils'
 import { binaryMd5 } from 'pouchdb-md5'
 
-import { forDocument, forBinaryAttachment, forMeta, forSequence } from './keys'
+import { forDocument, forAttachment, forMeta, forSequence } from './keys'
 
 export default function (db, req, opts, callback) {
   const wasDelete = 'was_delete' in opts
@@ -44,7 +44,7 @@ export default function (db, req, opts, callback) {
         return new Promise((resolve, reject) => {
           if (!attachment.digest) return reject(createError(MISSING_STUB, 'no digest'))
 
-          db.storage.get(forBinaryAttachment(attachment.digest), (error, data) => {
+          db.storage.get(forAttachment(attachment.digest), (error, data) => {
             if (error) return reject(createError(MISSING_STUB, error.message))
             if (!data) return reject(createError(MISSING_STUB, 'can not find attachment'))
             return resolve({attachment, dbAttachment: []})
@@ -73,7 +73,7 @@ export default function (db, req, opts, callback) {
           }
 
           const dbAttachment = [
-            forBinaryAttachment(meta.digest), {data: global.btoa(binData)}]
+            forAttachment(meta.digest), {data: global.btoa(binData)}]
           resolve({attachment: meta, dbAttachment})
         })
       })
