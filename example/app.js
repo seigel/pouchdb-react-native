@@ -17,6 +17,8 @@ import PouchDB from 'pouchdb-react-native'
 
 const localDB = new PouchDB('myDB')
 console.log(localDB.adapter)
+const test = new global.Blob([''], {})
+console.warn('blobTest', test)
 
 AsyncStorage.getAllKeys()
   .then(keys => AsyncStorage.multiGet(keys))
