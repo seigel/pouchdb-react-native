@@ -73,7 +73,12 @@ export default function (db, req, opts, callback) {
           }
 
           const dbAttachment = [
-            forAttachment(meta.digest), {data: global.btoa(binData)}]
+            forAttachment(meta.digest), {
+              digest: meta.digest,
+              content_type: meta.content_type,
+              length: meta.length,
+              data: global.btoa(binData)
+            }]
           resolve({attachment: meta, dbAttachment})
         })
       })
