@@ -22,7 +22,7 @@ export default function (db, docId, attachId, attachment, opts, callback) {
 
     callback(null,
       opts.binary
-        ? global.Buffer.alloc(11, data.data, 'base64')
+        ? global.Buffer.from(data.data, 'base64')
         : data.data
     )
   })
