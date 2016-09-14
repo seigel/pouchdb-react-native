@@ -45,7 +45,7 @@ export default function (db, api, opts) {
       return true
     })
 
-    if (filterSeqs.length === 0) return complete(null, { results: [] })
+    if (filterSeqs.length === 0) return complete(null, {results: []})
 
     db.storage.multiGet(toSequenceKeys(filterSeqs), (error, dataDocs) => {
       if (error) return complete(error)
@@ -53,7 +53,7 @@ export default function (db, api, opts) {
       const filterDocs = filterDocIds
         ? dataDocs.filter(doc => filterDocIds.has(doc._id))
         : dataDocs
-      if (filterDocs.length === 0) return complete(null, { results: [] })
+      if (filterDocs.length === 0) return complete(null, {results: []})
 
       const changeDocIds = [...new Set(
         filterDocs.map(data => forDocument(data._id)))]
