@@ -21,7 +21,7 @@ export default function (db, dataDocs, {binaryAttachments}, callback) {
 
     dataDocs.forEach(doc => {
       doc && doc._attachments && Object.keys(doc._attachments).forEach(key => {
-        const newAttachment = attachmentObj[doc._attachments[key].digest]
+        const newAttachment = {...attachmentObj[doc._attachments[key].digest]}
         if (newAttachment) {
           doc._attachments[key] = newAttachment
           if (binaryAttachments) {
