@@ -2,6 +2,7 @@
 
 import { uuid, filterChange } from 'pouchdb-utils'
 import { forDocument, getSequenceKeys, toSequenceKeys } from './keys'
+import inlineAttachments from './inline_attachments'
 
 export default function (db, api, opts) {
   const continuous = opts.continuous
@@ -28,6 +29,8 @@ export default function (db, api, opts) {
     : 'returnDocs' in opts
       ? opts.returnDocs
       : true
+  const includeAttachments = 'attachments' in opts ? opts.attachments : false
+  const binaryAttachments = 'binary' in opts ? opts.binary : false
   const filter = filterChange(opts)
   const complete = opts.complete
   const onChange = opts.onChange
@@ -55,44 +58,54 @@ export default function (db, api, opts) {
       const changeDocIds = [...new Set(
         filterDocs.map(data => forDocument(data._id)))]
       db.storage.multiGet(changeDocIds, (error, docs) => {
-        if (error) return complete(error)
+        const processChanges = () => {
+          const dataObj = filterDocs.reduce(
+            (res, data) => {
+              if (data) res[data._id] = data
+              return res
+            }, {})
 
-        const dataObj = filterDocs.reduce(
-          (res, data) => {
-            if (data) res[data._id] = data
-            return res
-          }, {})
+          const results = []
+          let lastChangeSeq
+          for (let index = 0; index < docs.length; index++) {
+            if (limit && results.length > limit) break
 
-        const results = []
-        let lastChangeSeq
-        for (let index = 0; index < docs.length; index++) {
-          if (limit && results.length > limit) break
+            const doc = docs[index]
+            const data = dataObj[doc.id]
+            const change = processChange(data, doc, opts)
+            change.seq = doc.seq
+            change.rev = doc.rev
 
-          const doc = docs[index]
-          const data = dataObj[doc.id]
-          const change = processChange(data, doc, opts)
-          change.seq = doc.seq
-          change.rev = doc.rev
-
-          const filtered = filter(change)
-          if (typeof filtered === 'object') {
-            return complete(filtered)
-          }
-          if (filtered) {
-            if (returnDocs) {
-              // correct Position???
-              change.changes[0].data = data
+            const filtered = filter(change)
+            if (typeof filtered === 'object') {
+              return complete(filtered)
             }
+            if (filtered) {
+              if (returnDocs) {
+                // correct Position???
+                change.changes[0].data = data
+              }
 
-            lastChangeSeq = change.seq
-            results.push(change)
-            onChange(change)
+              lastChangeSeq = change.seq
+              results.push(change)
+              onChange(change)
+            }
           }
+
+          complete(null, {
+            results,
+            last_seq: lastChangeSeq
+          })
         }
 
-        complete(null, {
-          results,
-          last_seq: lastChangeSeq
+        if (error) return complete(error)
+
+        if (!includeAttachments) return processChanges()
+
+        inlineAttachments(db, dataDocs, {binaryAttachments}, error => {
+          if (error) return complete(error)
+
+          processChanges()
         })
       })
     })
