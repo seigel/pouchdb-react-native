@@ -3,19 +3,20 @@
 import {
   createError,
   MISSING_DOC } from 'pouchdb-errors'
-// import { blob } from 'pouchdb-binary-utils'
 import { forDocument, forSequence } from './keys'
 
 export default function (db, id, opts, callback) {
   db.storage.get(forDocument(id), (error, meta) => {
-    if (error || meta === null) {
-      return callback(createError(
-        MISSING_DOC, error.message || 'missing-read-error'))
+    if (error) {
+      return callback(createError(MISSING_DOC, error.message || 'missing-read-error'))
+    }
+    if (meta === null) {
+      return callback(createError(MISSING_DOC, 'missing-no-meta-found'))
     }
 
     const rev = opts.rev || (meta && meta.rev)
     if (!meta || (meta.deleted && !opts.rev) || !(rev in meta.rev_map)) {
-      return callback(createError(MISSING_DOC, 'missing'))
+      return callback(createError(MISSING_DOC, 'missing-rev-check'))
     }
 
     db.storage.get(forSequence(meta.rev_map[rev]), (error, doc) => {

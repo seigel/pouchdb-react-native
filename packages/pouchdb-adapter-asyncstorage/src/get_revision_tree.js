@@ -11,7 +11,7 @@ export default function (db, id, opts, callback) {
     }
 
     if (!doc) {
-      return callback(createError(MISSING_DOC, 'missing'))
+      return callback(createError(MISSING_DOC, 'missing-rev-tree'))
     }
 
     callback(null, doc.rev_tree)
