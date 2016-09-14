@@ -26,29 +26,28 @@ export default function (db, opts, callback) {
   const inclusiveEnd = descending || opts.inclusive_end !== false
 
   const docToRow = doc => {
-    if (includeDoc) {
-      return {
-        id: doc.id,
-        key: doc.id,
-        value: {
-          rev: doc.rev
-        },
-        doc: {
-          ...doc.data,
-          _id: doc.id,
-          _rev: doc.rev,
-          _conflicts: includeConflicts ? collectConflicts(doc) : undefined
-        }
-      }
-    }
-
-    return {
+    const result = {
       id: doc.id,
       key: doc.id,
       value: {
+        deleted: doc.deleted,
         rev: doc.rev
       }
     }
+
+    if (includeDoc && !doc.deleted) {
+      result.doc = {
+        ...doc.data,
+        _id: doc.id,
+        _rev: doc.rev
+      }
+
+      if (includeConflicts) {
+        result.doc._conflicts = collectConflicts(doc)
+      }
+    }
+
+    return result
   }
 
   getDocs(db,
