@@ -58,7 +58,7 @@ export default function (db, req, opts, callback) {
           return Promise.reject(binData.error)
         }
         binData = global.Buffer.from(attachment.data, 'base64')
-        buffer.type = attachment.content_type
+        binData.type = attachment.content_type
       } else {
         binData = attachment.data
       }
