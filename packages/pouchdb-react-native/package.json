@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-react-native",
-  "version": "6.1.5",
+  "version": "6.1.7",
   "description": "PouchDB Bundle for ReactNative",
   "main": "index.js",
   "repository": {
@@ -14,7 +14,8 @@
     "offlinefirst"
   ],
   "scripts": {
-    "updtr": "updtr --save-exact"
+    "updtr": "updtr --save-exact",
+    "postinstall": "node ./setup.js"
   },
   "author": {
     "name": "Christoph Stock",
@@ -27,7 +28,7 @@
   },
   "homepage": "https://github.com/stockulus/pouchdb-react-native#readme",
   "dependencies": {
-    "pouchdb-adapter-asyncstorage": "6.1.5",
+    "pouchdb-adapter-asyncstorage": "6.1.7",
     "pouchdb-adapter-http": "6.0.4",
     "pouchdb-core": "6.0.4",
     "pouchdb-mapreduce": "6.0.4",
