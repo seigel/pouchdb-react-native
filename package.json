@@ -13,10 +13,11 @@
     "offlinefirst"
   ],
   "scripts": {
-    "test": "npm run standard && npm run test-unit",
+    "test": "npm run standard && npm run test-unit && npm run test-integration-subset",
     "test-unit": "mocha -r tests/setup.js pouchdb-original/tests/unit/test.*.js",
-    "test-mapreduce": "mocha -r tests/setup.js pouchdb-original/tests/mapreduce/test.*.js",
-    "test-integration": "mocha -r tests/setup.js pouchdb-original/tests/integration/test.*.js",
+    "test-mapreduce": "COUCH_HOST=http://localhost:3000 mocha -r tests/setup.js pouchdb-original/tests/mapreduce/test.*.js",
+    "test-integration": "COUCH_HOST=http://localhost:3000 mocha -r tests/setup.js pouchdb-original/tests/integration/test.*.js",
+    "test-integration-subset": "COUCH_HOST=http://localhost:3000 ./tests/run-integration.sh",
     "standard": "node ./node_modules/standard/bin/cmd.js",
     "clean": "rm -rf packages/**/node_modules && rm -rf ./example/node_modules && rm -rf ./pouchdb-original/node_modules && rm -rf ./node_modules",
     "postinstall": "for D in ./packages/*; do cd $D; npm install; cd -; done && cd example && npm install && cd ../pouchdb-original && npm install",
@@ -35,7 +36,7 @@
   "dependencies": {},
   "devDependencies": {
     "babel-cli": "6.14.0",
-    "mocha": "3.0.2",
+    "mocha": "2.5.3",
     "react": "15.3.1",
     "react-native": "0.33.0",
     "react-native-mock": "0.2.6",

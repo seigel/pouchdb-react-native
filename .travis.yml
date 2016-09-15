@@ -1,3 +1,22 @@
 language: node_js
 node_js:
   - "6"
+sudo: required
+services:
+  - docker
+before_install:
+  - "if [ -z \"$COUCH_HOST\" ]; then export COUCH_HOST=http://127.0.0.1:3000; fi"
+before_script:
+  - sh pouchdb-original/bin/run-couchdb-on-travis.sh
+env:
+  - COMMAND="npm test"
+matrix:
+  include:
+    - services: docker
+      env: COMMAND="npm run test-integration"
+    - services: docker
+      env: COMMAND="npm run test-mapreduce"
+  allow_failures:
+    - env: COMMAND="npm run test-integration"
+    - env: COMMAND="npm run test-mapreduce"
+script: $COMMAND
