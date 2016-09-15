@@ -6,7 +6,6 @@ import {
   BAD_ARG, BAD_REQUEST, MISSING_DOC, MISSING_STUB, REV_CONFLICT } from 'pouchdb-errors'
 import { parseDoc } from 'pouchdb-adapter-utils'
 import { merge } from 'pouchdb-merge'
-import { binaryStringToBlobOrBuffer } from 'pouchdb-binary-utils'
 import { binaryMd5 } from 'pouchdb-md5'
 
 import { forDocument, forAttachment, forMeta, forSequence } from './keys'
@@ -58,7 +57,8 @@ export default function (db, req, opts, callback) {
         if (binData.error) {
           return Promise.reject(binData.error)
         }
-        attachment = binaryStringToBlobOrBuffer(binData, attachment.content_type)
+        binData = global.Buffer.from(attachment.data, 'base64')
+        buffer.type = attachment.content_type
       } else {
         binData = attachment.data
       }
