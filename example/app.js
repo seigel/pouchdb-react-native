@@ -210,9 +210,10 @@ export default React.createClass({
 
         if (this.state.syncUrl) {
           const remoteDb = new PouchDB(this.state.syncUrl, {ajax: {cache: false}})
-          this._sync = PouchDB.sync(localDB, remoteDb, {})
-            .then(result => console.warn('sync Results', result))
-            .catch(error => console.warn('sync Error', error, error.message, error.stack))
+          this._sync = PouchDB.sync(localDB, remoteDb, {live: true, retry: true})
+            .on('error', error => console.error('Sync Error', error))
+            .on('change', info => console.log('Sync change', info))
+            .on('paused', info => console.log('Sync paused', info))
         }
 
         this._navigator.pop()
