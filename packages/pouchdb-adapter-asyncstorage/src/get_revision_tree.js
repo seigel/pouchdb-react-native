@@ -3,7 +3,7 @@
 import { createError, MISSING_DOC } from 'pouchdb-errors'
 import { forDocument } from './keys'
 
-export default function (db, id, opts, callback) {
+export default function (db, id, callback) {
   db.storage.get(forDocument(id), (error, doc) => {
     if (error) {
       return callback(createError(

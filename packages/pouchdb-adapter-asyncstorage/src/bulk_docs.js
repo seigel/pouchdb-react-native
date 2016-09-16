@@ -130,7 +130,7 @@ export default function (db, req, opts, callback) {
       newDoc.rev_map[newDoc.rev] = newDoc.seq
       newDoc.winningRev = newDoc.rev
 
-      const data = newDoc.data
+      const data = newDoc.deleted ? {_deleted: true} : newDoc.data
       delete newDoc.data
       data._id = newDoc.id
       data._rev = newDoc.rev
