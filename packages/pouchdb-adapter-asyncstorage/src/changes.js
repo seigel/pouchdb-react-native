@@ -20,9 +20,9 @@ export default function (db, api, opts) {
 
 //  const descending = opts.descending
   const lastSeq = opts.since || 0
-  const limit = ('limit' in opts && opts.limit > 0)
+  const limit = ('limit' in opts && opts.limit >= 0)
     ? opts.limit
-    : null
+    : -1
   const filterDocIds = opts.doc_ids && new Set(opts.doc_ids)
   const returnDocs = ('return_docs' in opts)
     ? opts.return_docs
@@ -68,7 +68,7 @@ export default function (db, api, opts) {
           const results = []
           let lastChangeSeq
           for (let index = 0; index < docs.length; index++) {
-            if (limit && results.length > limit) break
+            if (limit >= 0 && results.length > limit) break
 
             const doc = docs[index]
             const data = dataObj[doc.id]

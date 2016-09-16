@@ -18,6 +18,8 @@ export default function (db, req, opts, callback) {
 
   const mapRequestDoc = doc => {
     const parsedDoc = parseDoc(doc, newEdits)
+    if (!parsedDoc.metadata) throw BAD_REQUEST
+
     return {
       id: parsedDoc.metadata.id,
       rev: parsedDoc.metadata.rev,
