@@ -52,7 +52,7 @@ export default function (db, api, opts) {
 
       const filterDocs = filterDocIds
         ? dataDocs.filter(doc => filterDocIds.has(doc._id))
-        : dataDocs
+        : dataDocs.filter(doc => !doc._id.startsWith('_local'))
       if (filterDocs.length === 0) return complete(null, {results: []})
 
       const changeDocIds = [...new Set(
