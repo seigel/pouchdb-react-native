@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-adapter-asyncstorage",
-  "version": "6.1.10",
+  "version": "6.1.11",
   "description": "asyncstorage adapter for PouchDB",
   "main": "./src/index.js",
   "repository": {
@@ -32,7 +32,7 @@
     "btoa": "1.1.2",
     "buffer": "4.9.1",
     "events": "1.1.1",
-    "left-pad": "1.1.1",
+    "left-pad": "1.1.2",
     "pouchdb-adapter-utils": "6.0.5",
     "pouchdb-errors": "6.0.5",
     "pouchdb-md5": "6.0.5",
