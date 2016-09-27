@@ -30,7 +30,7 @@
     "atob": "2.0.3",
     "blob-polyfill": "1.0.20150320",
     "btoa": "1.1.2",
-    "buffer": "4.9.1",
+    "buffer": "5.0.0",
     "events": "1.1.1",
     "left-pad": "1.1.2",
     "pouchdb-adapter-utils": "6.0.5",
