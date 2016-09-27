@@ -20,4 +20,4 @@ packageContent['react-native'] = {
   './src/typedBuffer.js': './src/typedBuffer.js'
 }
 
-fs.writeFileSync(PATH, JSON.stringify(packageContent))
+fs.writeFileSync(PATH, JSON.stringify(packageContent, null, '  ') + '\n', 'utf8')
