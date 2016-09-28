@@ -39,7 +39,7 @@
     "babel-cli": "6.14.0",
     "mocha": "2.5.3",
     "react": "15.3.2",
-    "react-native": "0.34.0",
+    "react-native": "0.34.1",
     "react-native-mock": "0.2.6",
     "standard": "8.2.0"
   },
