@@ -11,7 +11,7 @@ try {
 
 packageContent['react-native'] = {
   './lib/index.js': './lib/index.js',
-  './src/base64.js': './src/base64-browser.js',
+  './src/base64.js': './src/base64.js',
   './src/base64StringToBlobOrBuffer.js': './src/base64StringToBlobOrBuffer.js',
   './src/blob.js': './src/blob.js',
   './src/binaryStringToBlobOrBuffer.js': './src/binaryStringToBlobOrBuffer.js',
