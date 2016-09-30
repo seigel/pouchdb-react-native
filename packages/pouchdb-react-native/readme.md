@@ -33,7 +33,8 @@ On Android asyncstorage has a limitation of 6 MB per default, you might want to 
 
 ```java
 // MainApplication.getPackages()
-long size = 50L * 1024L * 1024L; // 50 MB com.facebook.react.modules.storage.ReactDatabaseSupplier.getInstance(getApplicationContext()).setMaximumSize(size);
+long size = 50L * 1024L * 1024L; // 50 MB
+com.facebook.react.modules.storage.ReactDatabaseSupplier.getInstance(getApplicationContext()).setMaximumSize(size);
 ```
 
 ### Sample App
