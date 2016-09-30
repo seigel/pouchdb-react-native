@@ -70,7 +70,7 @@ export default React.createClass({
 
         localDB.post(doc)
           .then(result => console.log('save.attachment', result))
-          .catch(error => console.warn('save.attachment', error))
+          .catch(error => console.warn('save.attachment.error', error, error.message, error.stack))
       }
 
       const insertRecords = count => {

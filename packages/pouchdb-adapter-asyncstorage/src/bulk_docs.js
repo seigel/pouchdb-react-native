@@ -6,7 +6,7 @@ import {
   BAD_ARG, BAD_REQUEST, MISSING_DOC, MISSING_STUB, REV_CONFLICT } from 'pouchdb-errors'
 import { parseDoc } from 'pouchdb-adapter-utils'
 import { merge } from 'pouchdb-merge'
-import { binaryMd5 } from 'pouchdb-md5'
+import Md5 from 'spark-md5'
 
 import { forDocument, forAttachment, forMeta, forSequence } from './keys'
 
@@ -66,22 +66,21 @@ export default function (db, req, opts, callback) {
       }
 
       return new Promise((resolve, reject) => {
-        binaryMd5(binData, md5 => {
-          const meta = {
-            digest: 'md5-' + md5,
-            content_type: attachment.content_type || attachment.type,
-            length: binData.size || binData.length || 0,
-            stub: true
-          }
+        const data = global.btoa(binData)
+        const meta = {
+          digest: 'md5-' + Md5.hash(data),
+          content_type: attachment.content_type || attachment.type,
+          length: binData.size || binData.length || 0,
+          stub: true
+        }
 
-          const dbAttachment = [
-            forAttachment(meta.digest), {
-              digest: meta.digest,
-              content_type: meta.content_type,
-              data: global.btoa(binData)
-            }]
-          resolve({attachment: meta, dbAttachment})
-        })
+        const dbAttachment = [
+          forAttachment(meta.digest), {
+            digest: meta.digest,
+            content_type: meta.content_type,
+            data: data
+          }]
+        resolve({attachment: meta, dbAttachment})
       })
     }
 

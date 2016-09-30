@@ -29,10 +29,10 @@
   "homepage": "https://github.com/stockulus/pouchdb-react-native#readme",
   "dependencies": {
     "pouchdb-adapter-asyncstorage": "6.1.13",
-    "pouchdb-adapter-http": "6.0.5",
-    "pouchdb-core": "6.0.5",
-    "pouchdb-mapreduce": "6.0.5",
-    "pouchdb-replication": "6.0.5"
+    "pouchdb-adapter-http": "6.0.6",
+    "pouchdb-core": "6.0.6",
+    "pouchdb-mapreduce": "6.0.6",
+    "pouchdb-replication": "6.0.6"
   },
   "devDependencies": {},
   "peerDependencies": {},

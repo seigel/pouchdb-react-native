@@ -33,11 +33,11 @@
     "buffer": "5.0.0",
     "events": "1.1.1",
     "left-pad": "1.1.2",
-    "pouchdb-adapter-utils": "6.0.5",
-    "pouchdb-errors": "6.0.5",
-    "pouchdb-md5": "6.0.5",
-    "pouchdb-merge": "6.0.5",
-    "pouchdb-utils": "6.0.5"
+    "pouchdb-adapter-utils": "6.0.6",
+    "pouchdb-errors": "6.0.6",
+    "pouchdb-merge": "6.0.6",
+    "pouchdb-utils": "6.0.6",
+    "spark-md5": "2.0.2"
   },
   "devDependencies": {},
   "peerDependencies": {},
