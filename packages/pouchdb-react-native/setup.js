@@ -1,7 +1,7 @@
-const fs = require('fs')
+var fs = require('fs')
 
-let PATH = './node_modules/pouchdb-binary-utils/package.json'
-let packageContent
+var PATH = './node_modules/pouchdb-binary-utils/package.json'
+var packageContent
 try {
   packageContent = JSON.parse(fs.readFileSync(PATH))
 } catch (e) {
