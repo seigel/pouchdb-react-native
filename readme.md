@@ -14,7 +14,7 @@ The `pouchdb-react-native` preset contains the version of PouchDB that is design
 ```bash
 npm install pouchdb-react-native --save
 ```
-npm >= 3 / node >= 6 works best, there are some known issues with npm 2, if this matters for you, fix it, Pull Request welcome
+npm >= 3 / node >= 6 works best, there are some known issues with npm 2
 
 ```js
 import PouchDB from 'pouchdb-react-native'
