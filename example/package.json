@@ -25,7 +25,7 @@
     "pouchdb-react-native": "6.1.18",
     "react": "15.3.2",
     "react-native": "0.35.0",
-    "react-native-action-button": "2.0.8"
+    "react-native-action-button": "2.0.9"
   },
   "standard": {
     "ignore": [
