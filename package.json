@@ -41,7 +41,7 @@
     "react": "15.3.2",
     "react-native": "0.36.0",
     "react-native-mock": "0.2.7",
-    "standard": "8.4.0"
+    "standard": "8.5.0"
   },
   "standard": {
     "ignore": [
