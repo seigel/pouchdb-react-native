@@ -11,7 +11,9 @@ function createPrefix (dbName) {
 }
 
 function prepareKey (key, core) {
-  return core._prefix + key
+  return core._prefix + key.replace(/\u0002/g, '\u0002\u0002')
+    .replace(/\u0001/g, '\u0001\u0002')
+    .replace(/\u0000/g, '\u0001\u0001')
 }
 
 function AsyncStorageCore (dbName) {
@@ -28,7 +30,12 @@ AsyncStorageCore.prototype.getKeys = function (callback) {
 
     allKeys.forEach(fullKey => {
       if (fullKey.slice(0, prefixLen) === prefix) {
-        keys.push(fullKey.slice(prefixLen))
+        keys.push(
+            fullKey.slice(prefixLen)
+              .replace(/\u0001\u0001/g, '\u0000')
+              .replace(/\u0001\u0002/g, '\u0001')
+              .replace(/\u0002\u0002/g, '\u0002')
+        )
       }
     })
 
