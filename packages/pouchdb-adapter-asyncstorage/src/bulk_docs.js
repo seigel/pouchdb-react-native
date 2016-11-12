@@ -205,7 +205,12 @@ export default function (db, req, opts, callback) {
         return result
       }, {})
 
-    const promises = newDocs.map(newDoc => getChange(oldDocsObj[newDoc.id], newDoc))
+    const promises = newDocs.map(newDoc => {
+      let oldDoc = oldDocsObj[newDoc.id]
+      oldDoc = typeof oldDoc === 'function' ? undefined : oldDoc
+
+      return getChange(oldDoc, newDoc)
+    })
     Promise.all(promises)
       .then(changes => {
         if (changes.length === 0) return callback(null, {})
