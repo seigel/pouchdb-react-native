@@ -4,6 +4,7 @@ import {
   createError,
   MISSING_DOC } from 'pouchdb-errors'
 import { forDocument, forSequence } from './keys'
+import { winningRev } from 'pouchdb-merge'
 
 export default function (db, id, opts, callback) {
   db.storage.get(forDocument(id), (error, meta) => {
@@ -14,7 +15,7 @@ export default function (db, id, opts, callback) {
       return callback(createError(MISSING_DOC, 'missing-no-meta-found'))
     }
 
-    const rev = opts.rev || (meta && meta.rev)
+    const rev = opts.rev || winningRev(meta)
     if (!meta || (meta.deleted && !opts.rev) || !(rev in meta.rev_map)) {
       return callback(createError(MISSING_DOC, 'missing-rev-check'))
     }
