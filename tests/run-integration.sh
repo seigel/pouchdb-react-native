@@ -12,6 +12,7 @@ PASS=(
   pouchdb-original/tests/integration/test.node-websql.js
   pouchdb-original/tests/integration/test.replicationBackoff.js
   pouchdb-original/tests/integration/test.replication_events.js
+  pouchdb-original/tests/integration/test.revs_diff.js
   pouchdb-original/tests/integration/test.setup_global_hooks.js
   pouchdb-original/tests/integration/test.slash_id.js
   pouchdb-original/tests/integration/test.sync_events.js
