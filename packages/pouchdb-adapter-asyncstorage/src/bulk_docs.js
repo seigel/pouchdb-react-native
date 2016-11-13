@@ -5,7 +5,7 @@ import {
   generateErrorFromResponse,
   BAD_ARG, BAD_REQUEST, MISSING_DOC, MISSING_STUB, REV_CONFLICT } from 'pouchdb-errors'
 import { parseDoc } from 'pouchdb-adapter-utils'
-import { merge } from 'pouchdb-merge'
+import { merge, winningRev as computeWinningRev } from 'pouchdb-merge'
 import Md5 from 'spark-md5'
 
 import { forDocument, forAttachment, forMeta, forSequence } from './keys'
@@ -126,8 +126,8 @@ export default function (db, req, opts, callback) {
 
       newDoc.seq = ++newMeta.update_seq
       newDoc.rev_map = oldDoc.rev_map
+      newDoc.winningRev = computeWinningRev(newDoc)
       newDoc.rev_map[newDoc.rev] = newDoc.seq
-      newDoc.winningRev = newDoc.rev
 
       const data = newDoc.deleted ? {_deleted: true} : newDoc.data
       delete newDoc.data
@@ -150,7 +150,7 @@ export default function (db, req, opts, callback) {
       newDoc.seq = ++newMeta.update_seq
       newDoc.rev_map = {}
       newDoc.rev_map[newDoc.rev] = newDoc.seq
-      newDoc.winningRev = newDoc.rev
+      newDoc.winningRev = computeWinningRev(newDoc)
       if (!newDoc.deleted) newMeta.doc_count ++
 
       const data = newDoc.data

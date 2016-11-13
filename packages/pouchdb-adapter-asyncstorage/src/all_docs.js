@@ -31,7 +31,7 @@ export default function (db, opts, callback) {
       key: doc.id,
       value: {
         deleted: doc.deleted,
-        rev: doc.rev
+        rev: doc.winningRev
       }
     }
 
@@ -39,7 +39,7 @@ export default function (db, opts, callback) {
       result.doc = {
         ...doc.data,
         _id: doc.id,
-        _rev: doc.rev
+        _rev: doc.winningRev
       }
 
       if (includeConflicts) {
@@ -102,7 +102,9 @@ const getDocs = (db,
       if (skip > 0) result = result.slice(skip)
       if (limit >= 0 && result.length > limit) result = result.slice(0, limit)
 
-      let seqKeys = result.map(item => forSequence(item.seq))
+      let seqKeys = result.map(item => {
+        return forSequence(item.rev_map[item.winningRev])
+      })
       db.storage.multiGet(seqKeys, (error, dataDocs) => {
         if (error) return callback(error)
 
