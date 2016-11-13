@@ -1,7 +1,7 @@
 'use strict'
 
 /* global describe, it, PouchDB */
-describe('pouchdb-react-native issue#40', function () {
+describe('react-native.test.issue40.js', function () {
   it('similar results after syncing in different order', function () {
     const sourceDb1 = new PouchDB('sourceDb1')
     const sourceDb2 = new PouchDB('sourceDb2')
