@@ -20,4 +20,4 @@ PASS=(
   pouchdb-original/tests/integration/test.uuids.js
 )
 
-node_modules/.bin/mocha --timeout 5000 -r tests/setup.js ${PASS[@]}
+node_modules/.bin/mocha --timeout 5000 -r tests/setup.js ${PASS[@]} tests/integration/*.js
