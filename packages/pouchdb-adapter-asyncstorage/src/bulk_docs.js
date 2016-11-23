@@ -66,8 +66,7 @@ export default function (db, req, opts, callback) {
           data: binData,
           size: binData.size || binData.length || 0
         })
-
-      } else if (typeof attachment.data === 'object') {  // Support for BLOB attachments
+      } else if (typeof attachment.data === 'object') {
         resolveBinaryData = new Promise((resolve, reject) => {
           readAsArrayBuffer(attachment.data, (binData) => {
             const arrayBufferToBase64 = (buffer) => {
@@ -79,7 +78,6 @@ export default function (db, req, opts, callback) {
               }
               return binary
             }
-
             return resolve({
               data: arrayBufferToBase64(binData),
               size: attachment.data.size || attachment.data.length || 0
