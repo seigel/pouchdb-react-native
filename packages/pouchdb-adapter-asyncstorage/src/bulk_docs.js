@@ -63,11 +63,11 @@ export default function (db, req, opts, callback) {
         binData = global.Buffer.from(attachment.data, 'base64')
         binData.type = attachment.content_type
         resolveBinaryData = Promise.resolve({
-          data: global.btoa(binData),
+          data: binData,
           size: binData.size || binData.length || 0
         });
 
-      } else {  // Support for BLOB attachments
+      } else if (typeof attachment.data === 'object') {  // Support for BLOB attachments
         resolveBinaryData = new Promise((resolve, reject) => {
           readAsArrayBuffer(attachment.data, (binData) => {
             const arrayBufferToBase64 = (buffer) => {
@@ -77,7 +77,7 @@ export default function (db, req, opts, callback) {
               for (let i = 0; i < len; i++) {
                 binary += String.fromCharCode(bytes[i]);
               }
-              return global.btoa(binary);
+              return binary;
             }
 
             return resolve({
@@ -86,15 +86,21 @@ export default function (db, req, opts, callback) {
             })
           })
         })
+      } else {
+        resolveBinaryData = Promise.resolve({
+          data: attachment.data,
+          size: attachment.data.size || attachment.data.length || 0
+        });
       }
 
       return resolveBinaryData
-          .then(binData => {
+          .then(binaryData => {
             return new Promise((resolve, reject) => {
+              const data = global.btoa(binaryData.data)
               const meta = {
-                digest: 'md5-' + Md5.hash(binData.data),
+                digest: 'md5-' + Md5.hash(data),
                 content_type: attachment.content_type || attachment.type,
-                length: binData.size,
+                length: binaryData.size,
                 stub: true
               }
 
@@ -102,7 +108,7 @@ export default function (db, req, opts, callback) {
                 forAttachment(meta.digest), {
                   digest: meta.digest,
                   content_type: meta.content_type,
-                  data: binData.data
+                  data: data
                 }]
               resolve({attachment: meta, dbAttachment})
             })
