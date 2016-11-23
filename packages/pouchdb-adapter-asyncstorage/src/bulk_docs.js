@@ -7,6 +7,7 @@ import {
 import { parseDoc } from 'pouchdb-adapter-utils'
 import { merge, winningRev as computeWinningRev } from 'pouchdb-merge'
 import Md5 from 'spark-md5'
+import { readAsArrayBuffer } from 'pouchdb-binary-utils'
 
 import { forDocument, forAttachment, forMeta, forSequence } from './keys'
 
@@ -53,35 +54,59 @@ export default function (db, req, opts, callback) {
         })
       }
 
-      let binData
+      let resolveBinaryData;
       if (typeof attachment.data === 'string') {
-        binData = parseBase64(attachment.data)
+        let binData = parseBase64(attachment.data)
         if (binData.error) {
           return Promise.reject(binData.error)
         }
         binData = global.Buffer.from(attachment.data, 'base64')
         binData.type = attachment.content_type
-      } else {
-        binData = attachment.data
+        resolveBinaryData = Promise.resolve({
+          data: global.btoa(binData),
+          size: binData.size || binData.length || 0
+        });
+
+      } else {  // Support for BLOB attachments
+        resolveBinaryData = new Promise((resolve, reject) => {
+          readAsArrayBuffer(attachment.data, (binData) => {
+            const arrayBufferToBase64 = (buffer) => {
+              let binary = '';
+              const bytes = new Uint8Array(buffer);
+              const len = bytes.byteLength;
+              for (let i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+              }
+              return global.btoa(binary);
+            }
+
+            return resolve({
+              data: arrayBufferToBase64(binData),
+              size: attachment.data.size || attachment.data.length || 0
+            })
+          })
+        })
       }
 
-      return new Promise((resolve, reject) => {
-        const data = global.btoa(binData)
-        const meta = {
-          digest: 'md5-' + Md5.hash(data),
-          content_type: attachment.content_type || attachment.type,
-          length: binData.size || binData.length || 0,
-          stub: true
-        }
+      return resolveBinaryData
+          .then(binData => {
+            return new Promise((resolve, reject) => {
+              const meta = {
+                digest: 'md5-' + Md5.hash(binData.data),
+                content_type: attachment.content_type || attachment.type,
+                length: binData.size,
+                stub: true
+              }
 
-        const dbAttachment = [
-          forAttachment(meta.digest), {
-            digest: meta.digest,
-            content_type: meta.content_type,
-            data: data
-          }]
-        resolve({attachment: meta, dbAttachment})
-      })
+              const dbAttachment = [
+                forAttachment(meta.digest), {
+                  digest: meta.digest,
+                  content_type: meta.content_type,
+                  data: binData.data
+                }]
+              resolve({attachment: meta, dbAttachment})
+            })
+          })
     }
 
     if (!data._attachments) return Promise.resolve(null)
