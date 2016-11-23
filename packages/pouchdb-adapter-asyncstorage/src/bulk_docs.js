@@ -54,7 +54,7 @@ export default function (db, req, opts, callback) {
         })
       }
 
-      let resolveBinaryData;
+      let resolveBinaryData
       if (typeof attachment.data === 'string') {
         let binData = parseBase64(attachment.data)
         if (binData.error) {
@@ -65,19 +65,19 @@ export default function (db, req, opts, callback) {
         resolveBinaryData = Promise.resolve({
           data: binData,
           size: binData.size || binData.length || 0
-        });
+        })
 
       } else if (typeof attachment.data === 'object') {  // Support for BLOB attachments
         resolveBinaryData = new Promise((resolve, reject) => {
           readAsArrayBuffer(attachment.data, (binData) => {
             const arrayBufferToBase64 = (buffer) => {
-              let binary = '';
-              const bytes = new Uint8Array(buffer);
-              const len = bytes.byteLength;
+              let binary = ''
+              const bytes = new Uint8Array(buffer)
+              const len = bytes.byteLength
               for (let i = 0; i < len; i++) {
-                binary += String.fromCharCode(bytes[i]);
+                binary += String.fromCharCode(bytes[i])
               }
-              return binary;
+              return binary
             }
 
             return resolve({
@@ -90,7 +90,7 @@ export default function (db, req, opts, callback) {
         resolveBinaryData = Promise.resolve({
           data: attachment.data,
           size: attachment.data.size || attachment.data.length || 0
-        });
+        })
       }
 
       return resolveBinaryData
