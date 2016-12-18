@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "6.1.22",
+  "version": "6.1.23",
   "author": {
     "name": "Christoph Stock",
     "email": "stockulus@icloud.com",
@@ -22,9 +22,9 @@
     "postinstall": "npm run copy-packages"
   },
   "dependencies": {
-    "pouchdb-react-native": "6.1.22",
+    "pouchdb-react-native": "6.1.23",
     "react": "15.4.1",
-    "react-native": "0.39.0",
+    "react-native": "0.39.2",
     "react-native-action-button": "2.0.16"
   },
   "standard": {
