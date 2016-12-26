@@ -129,10 +129,11 @@ export default function (db, req, opts, callback) {
       newDoc.winningRev = computeWinningRev(newDoc)
       newDoc.rev_map[newDoc.rev] = newDoc.seq
 
-      const data = newDoc.deleted ? {_deleted: true} : newDoc.data
+      const data = newDoc.data
       delete newDoc.data
       data._id = newDoc.id
       data._rev = newDoc.rev
+      if (newDoc.deleted) data._deleted = true
 
       return {
         doc: [forDocument(newDoc.id), newDoc],
