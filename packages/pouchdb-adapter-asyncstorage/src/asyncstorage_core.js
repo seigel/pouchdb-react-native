@@ -8,7 +8,7 @@ import { AsyncStorage } from 'react-native'
 import {
   safeJsonParse,
   safeJsonStringify
-} from 'pouchdb-json';
+} from 'pouchdb-json'
 
 function createPrefix (dbName) {
   return dbName.replace(/!/g, '!!') + '!' // escape bangs in dbName
