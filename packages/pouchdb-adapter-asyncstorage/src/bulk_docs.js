@@ -214,7 +214,8 @@ export default function (db, req, opts, callback) {
     })
     Promise.all(promises)
       .then(changes => {
-        if (changes.length === 0) return callback(null, {})
+        changes = changes.filter(change => !!change.doc)
+        if (changes.length === 0) return callback(null, [])
 
         const dbChanges = []
         dbChanges.push([forMeta('_local_doc_count'), newMeta.doc_count])
