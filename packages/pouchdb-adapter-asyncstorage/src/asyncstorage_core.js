@@ -5,6 +5,10 @@
  */
 
 import { AsyncStorage } from 'react-native'
+import {
+  safeJsonParse,
+  safeJsonStringify
+} from 'pouchdb-json';
 
 function createPrefix (dbName) {
   return dbName.replace(/!/g, '!!') + '!' // escape bangs in dbName
@@ -48,7 +52,7 @@ const stringifyValue = value => {
   if (value === null) return ''
   if (value === undefined) return ''
 
-  return JSON.stringify(value)
+  return safeJsonStringify(value)
 }
 
 AsyncStorageCore.prototype.put = function (key, value, callback) {
@@ -64,7 +68,7 @@ AsyncStorageCore.prototype.multiPut = function (pairs, callback) {
 }
 
 const parseValue = value => {
-  if (typeof value === 'string') return JSON.parse(value)
+  if (typeof value === 'string') return safeJsonParse(value)
   return null
 }
 
