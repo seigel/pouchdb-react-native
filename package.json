@@ -36,7 +36,7 @@
   "homepage": "https://github.com/stockulus/pouchdb-react-native#readme",
   "dependencies": {},
   "devDependencies": {
-    "babel-cli": "6.18.0",
+    "babel-cli": "6.22.0",
     "mocha": "2.5.3",
     "react": "15.4.2",
     "react-native": "0.40.0",
