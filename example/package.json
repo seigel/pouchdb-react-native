@@ -24,7 +24,7 @@
   "dependencies": {
     "pouchdb-react-native": "6.1.26",
     "react": "15.4.2",
-    "react-native": "0.42.3",
+    "react-native": "0.43.0",
     "react-native-action-button": "2.6.5"
   },
   "standard": {
