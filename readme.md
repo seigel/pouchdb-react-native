@@ -63,6 +63,11 @@ long size = 50L * 1024L * 1024L; // 50 MB
 com.facebook.react.modules.storage.ReactDatabaseSupplier.getInstance(getApplicationContext()).setMaximumSize(size);
 ```
 
+### known issues
+There are still Problems with Attachments, but i did not find private time to investigate more. My Current Projects do not need attachments, and I don't get paid for this package.
+
+If you want to fix that, please go ahead, PR and help is welcome.
+
 development
 ======
 ```bash
