@@ -20,6 +20,7 @@ const ADAPTER_NAME = 'asyncstorage'
 function AsyncStoragePouch (dbOpts, constuctorCallback) {
   const api = this
 
+  api._remote = false
   api.type = () => ADAPTER_NAME
 
   api._id = callback => {
