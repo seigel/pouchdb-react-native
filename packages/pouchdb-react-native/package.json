@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-react-native",
-  "version": "6.2.0",
+  "version": "6.2.1",
   "description": "PouchDB Bundle for ReactNative",
   "main": "index.js",
   "repository": {
