@@ -51,12 +51,11 @@ export default function (db, opts, callback) {
   }
 
   getDocs(db,
-    {filterKey, startkey, endkey, skip, limit, excludeStart, inclusiveEnd, includeAttachments, binaryAttachments, includeDeleted},
+    {filterKey, startkey, endkey, skip, limit, excludeStart, inclusiveEnd, includeAttachments, binaryAttachments, includeDeleted, descending},
     (error, docs) => {
       if (error) return callback(generateErrorFromResponse(error))
 
       let rows = docs.map(docToRow)
-      if (descending) rows = rows.reverse()
 
       callback(null, {
         total_rows: db.meta.doc_count,
@@ -77,7 +76,8 @@ const getDocs = (db,
    inclusiveEnd,
    includeDeleted,
    includeAttachments,
-   binaryAttachments
+   binaryAttachments,
+   descending
  },
   callback) => {
   db.storage.getKeys((error, keys) => {
@@ -99,6 +99,7 @@ const getDocs = (db,
         ? docs
         : docs.filter(doc => !doc.deleted)
 
+      if (descending) result = result.reverse()
       if (skip > 0) result = result.slice(skip)
       if (limit >= 0 && result.length > limit) result = result.slice(0, limit)
 
