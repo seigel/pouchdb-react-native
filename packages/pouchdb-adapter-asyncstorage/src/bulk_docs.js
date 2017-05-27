@@ -45,10 +45,14 @@ export default function (db, req, opts, callback) {
         return new Promise((resolve, reject) => {
           if (!attachment.digest) return reject(createError(MISSING_STUB, 'no digest'))
 
-          db.storage.get(forAttachment(attachment.digest), (error, data) => {
+          const attachmentKey = forAttachment(attachment.digest)
+          db.storage.get(attachmentKey, (error, data) => {
             if (error) return reject(createError(MISSING_STUB, error.message))
             if (!data) return reject(createError(MISSING_STUB, 'can not find attachment'))
-            return resolve({attachment, dbAttachment: []})
+            return resolve({
+              attachment,
+              dbAttachment: [attachmentKey, data]
+            })
           })
         })
       }
