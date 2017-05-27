@@ -74,6 +74,7 @@ development
 ```bash
 git clone https://github.com/stockulus/pouchdb-react-native.git
 cd pouchdb-react-native
+git submodule update
 npm install
 npm test
 cd example
