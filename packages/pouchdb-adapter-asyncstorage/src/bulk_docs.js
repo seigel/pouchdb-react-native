@@ -6,6 +6,10 @@ import {
   BAD_ARG, BAD_REQUEST, MISSING_DOC, MISSING_STUB, REV_CONFLICT } from 'pouchdb-errors'
 import { parseDoc } from 'pouchdb-adapter-utils'
 import { merge, winningRev as computeWinningRev } from 'pouchdb-merge'
+import {
+  blobOrBufferToBase64,
+  atob as ensureB64String
+} from 'pouchdb-binary-utils'
 import Md5 from 'spark-md5'
 
 import { forDocument, forAttachment, forMeta, forSequence } from './keys'
@@ -30,16 +34,6 @@ export default function (db, req, opts, callback) {
   }
 
   const processAllAttachments = data => {
-    const parseBase64 = data => {
-      try {
-        return global.atob(data)
-      } catch (error) {
-        return {
-          error: createError(BAD_ARG, 'Attachment is not a valid base64 string')
-        }
-      }
-    }
-
     const processAttachment = attachment => {
       if (attachment.stub) {
         return new Promise((resolve, reject) => {
@@ -57,35 +51,43 @@ export default function (db, req, opts, callback) {
         })
       }
 
-      let binData
+      let resolveB64Data
       if (typeof attachment.data === 'string') {
-        binData = parseBase64(attachment.data)
-        if (binData.error) {
-          return Promise.reject(binData.error)
+        try {
+          ensureB64String(attachment.data)
+        } catch (error) {
+          return Promise.reject(
+            createError(BAD_ARG, 'Attachment is not a valid base64 string')
+          )
         }
-        binData = global.Buffer.from(attachment.data, 'base64')
-        binData.type = attachment.content_type
+        resolveB64Data = Promise.resolve(attachment.data)
       } else {
-        binData = attachment.data
+        resolveB64Data = new Promise((resolve, reject) => {
+          blobOrBufferToBase64(attachment.data, b64 => resolve(b64))
+        }).catch(() => Promise.reject(
+          createError(BAD_ARG, 'Attachment is not a valid buffer/blob')
+        ))
       }
 
-      return new Promise((resolve, reject) => {
-        const data = global.btoa(binData)
-        const meta = {
-          digest: 'md5-' + Md5.hash(data),
-          content_type: attachment.content_type || attachment.type,
-          length: binData.size || binData.length || 0,
-          stub: true
-        }
+      return resolveB64Data.then(
+        b64Data =>
+          new Promise((resolve, reject) => {
+            const meta = {
+              digest: 'md5-' + Md5.hash(b64Data),
+              content_type: attachment.content_type,
+              length: b64Data.length || 0,
+              stub: true
+            }
 
-        const dbAttachment = [
-          forAttachment(meta.digest), {
-            digest: meta.digest,
-            content_type: meta.content_type,
-            data: data
-          }]
-        resolve({attachment: meta, dbAttachment})
-      })
+            const dbAttachment = [
+              forAttachment(meta.digest), {
+                digest: meta.digest,
+                content_type: meta.content_type,
+                data: b64Data
+              }]
+            resolve({attachment: meta, dbAttachment})
+          })
+      )
     }
 
     if (!data._attachments) return Promise.resolve(null)

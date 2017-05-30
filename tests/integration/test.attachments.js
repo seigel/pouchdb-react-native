@@ -85,6 +85,15 @@ describe('attachments', function () {
         .then(() => db.get('demo', { attachments: true, binary: true }))
         .then(doc => jpegBinary.equals(doc._attachments['demo.jpeg'].data).should.equal(true))
     })
+    it('should fail on empty attachment', function () {
+      const db = new PouchDB('image/jpeg-empty')
+      return db.post({ _id: 'demo' })
+        .then(result => db.putAttachment('demo', 'demo.jpeg', result.rev, null, 'image/jpeg'))
+        .catch(error => {
+          error.reason.should.equal('Attachment is not a valid buffer/blob')
+          error.message.should.equal('Some query argument is invalid')
+        })
+    })
   })
   describe('add binary', function () {
     it('should support inline post', function () {
