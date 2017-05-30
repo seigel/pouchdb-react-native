@@ -1,5 +1,6 @@
 'use strict'
 
+import { base64StringToBlobOrBuffer } from 'pouchdb-binary-utils'
 import { forAttachment } from './keys'
 
 export default function (db, dataDocs, {binaryAttachments}, callback) {
@@ -25,10 +26,11 @@ export default function (db, dataDocs, {binaryAttachments}, callback) {
         if (newAttachment) {
           doc._attachments[key] = newAttachment
           if (binaryAttachments) {
-            doc._attachments[key].data = doc._attachments[key].data
-              ? global.Buffer.from(doc._attachments[key].data, 'base64')
-              : global.Buffer.alloc(0)
-            doc._attachments[key].data.type = doc._attachments[key].content_type
+            const contentType = doc._attachments[key].content_type
+            doc._attachments[key].data = base64StringToBlobOrBuffer(
+              doc._attachments[key].data,
+              contentType
+            )
           }
         }
       })
