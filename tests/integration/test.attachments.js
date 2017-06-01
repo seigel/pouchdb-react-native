@@ -1,6 +1,7 @@
 'use strict'
 
 import { base64StringToBlobOrBuffer } from 'pouchdb-binary-utils'
+import { couchHost } from '../utils'
 import jpegB64 from '../__mocks/test-jpeg-as-b64'
 
 const jpegBinary = base64StringToBlobOrBuffer(jpegB64, 'image/jpeg')
@@ -213,6 +214,60 @@ describe('attachments', function () {
         .then(doc => utf8db.put({ ...doc, title: 'add some new data' }))
         .then(() => utf8db.get('demo', { attachments: true }))
         .then(doc => doc._attachments['demo.txt'].data.should.equal(data))
+    })
+  })
+  describe('replication', function () {
+    it('should push local attachments to remote', function () {
+      const source = new PouchDB('pouchdb-rn-attachment')
+      const target = new PouchDB(`${couchHost()}/pouchdb-rn-attachment`)
+      return source.post(buildDocAttachment('demo.jpeg', jpegBinary, 'image/jpeg'))
+        .then(() =>
+          new Promise((resolve, reject) => {
+            PouchDB.replicate(source, target)
+              .on('complete', function (info) {
+                target.get('demo', { attachments: true })
+                  .then(doc => {
+                    doc._attachments['demo.jpeg'].data.should.equal(jpegB64)
+                    resolve(doc)
+                  })
+              }).on('error', function (error) {
+                should.not.exist(error)
+                reject(error)
+              })
+          })
+        ).then(() =>
+          new Promise((resolve, reject) => {
+            source.destroy()
+              .then(() => target.destroy().then(resolve).catch(reject))
+              .catch(reject)
+          })
+        )
+    })
+    it('should pull remote attachments to local', function () {
+      const source = new PouchDB(`${couchHost()}/pouchdb-rn-attachment`)
+      const target = new PouchDB('pouchdb-rn-attachment')
+      return source.post(buildDocAttachment('demo.jpeg', jpegBinary, 'image/jpeg'))
+        .then(() =>
+          new Promise((resolve, reject) => {
+            PouchDB.replicate(source, target)
+              .on('complete', function (info) {
+                target.get('demo', { attachments: true })
+                  .then(doc => {
+                    doc._attachments['demo.jpeg'].data.should.equal(jpegB64)
+                    resolve(doc)
+                  })
+              }).on('error', function (error) {
+                should.not.exist(error)
+                reject(error)
+              })
+          })
+        ).then(() =>
+          new Promise((resolve, reject) => {
+            source.destroy()
+              .then(() => target.destroy().then(resolve).catch(reject))
+              .catch(reject)
+          })
+        )
     })
   })
 })
