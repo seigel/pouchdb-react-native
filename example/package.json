@@ -18,12 +18,11 @@
     "android": "node ./node_modules/react-native/local-cli/cli.js run-android",
     "updtr": "updtr --save-exact",
     "clean-watchman": "watchman watch-del-all",
-    "copy-packages": "sh copy_packages.sh",
-    "postinstall": "npm run copy-packages"
+    "copy-packages": "sh copy_packages.sh"
   },
   "dependencies": {
     "pouchdb-react-native": "6.2.6",
-    "react": "15.5.4",
+    "react": "16.0.0-alpha.6",
     "react-native": "0.44.2",
     "react-native-action-button": "2.6.9"
   },
