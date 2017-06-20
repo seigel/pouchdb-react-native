@@ -14,8 +14,7 @@
     "offlinefirst"
   ],
   "scripts": {
-    "updtr": "updtr --save-exact",
-    "postinstall": "node ./setup.js"
+    "updtr": "updtr --save-exact"
   },
   "author": {
     "name": "Christoph Stock",
@@ -29,7 +28,7 @@
   "homepage": "https://github.com/stockulus/pouchdb-react-native#readme",
   "dependencies": {
     "pouchdb-adapter-asyncstorage": "6.2.4",
-    "pouchdb-adapter-http": "6.2.0",
+    "pouchdb-adapter-http-react-native": "file:../pouchdb-adapter-http-react-native",
     "pouchdb-core": "6.2.0",
     "pouchdb-mapreduce": "6.2.0",
     "pouchdb-replication": "6.2.0"

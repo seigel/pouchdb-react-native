@@ -231,6 +231,7 @@ describe('attachments', function () {
                     resolve(doc)
                   })
               }).on('error', function (error) {
+                console.log(error)
                 should.not.exist(error)
                 reject(error)
               })
@@ -257,6 +258,7 @@ describe('attachments', function () {
                     resolve(doc)
                   })
               }).on('error', function (error) {
+                console.log(error)
                 should.not.exist(error)
                 reject(error)
               })

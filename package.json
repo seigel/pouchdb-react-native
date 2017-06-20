@@ -38,6 +38,7 @@
   "devDependencies": {
     "babel-cli": "6.24.1",
     "mocha": "2.5.3",
+    "node-fetch": "^1.7.1",
     "react": "15.5.4",
     "react-native": "0.44.0",
     "react-native-mock": "0.3.1",
@@ -46,7 +47,9 @@
   "standard": {
     "ignore": [
       "node_modules/**",
-      "pouchdb-original/**"
+      "pouchdb-original/**",
+      "packages/pouchdb-fetch-react-native",
+      "packages/pouchdb-adapter-http-react-native"
     ]
   }
 }

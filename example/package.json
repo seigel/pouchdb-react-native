@@ -22,7 +22,7 @@
     "postinstall": "npm run copy-packages"
   },
   "dependencies": {
-    "pouchdb-react-native": "6.2.4",
+    "pouchdb-react-native": "file:../packages/pouchdb-react-native",
     "react": "15.5.4",
     "react-native": "0.44.0",
     "react-native-action-button": "2.6.9"

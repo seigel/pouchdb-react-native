@@ -16,7 +16,23 @@ export default function (db, docId, attachId, attachment, opts, callback) {
 
     const data = attachmentData.data
     if (opts.binary) {
-      callback(null, base64StringToBlobOrBuffer(data, type))
+      try {
+        if (typeof Blob === 'undefined') {
+          callback(null, base64StringToBlobOrBuffer(data, type))
+        } else {
+          /* global Blob */
+          const bluffer = new Blob(data, {type})
+          if (bluffer.isRNFetchBlobPolyfill) {
+            bluffer.onCreated(() => {
+              callback(null, bluffer)
+            })
+          } else {
+            callback(null, bluffer)
+          }
+        }
+      } catch (e) {
+        callback(e)
+      }
     } else {
       callback(null, data)
     }
