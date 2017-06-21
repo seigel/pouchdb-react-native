@@ -22,7 +22,7 @@
     "run-couchdb": "docker run -d -p 3000:5984 --name couchdb klaemo/couchdb:latest",
     "standard": "node ./node_modules/standard/bin/cmd.js",
     "clean": "rm -rf packages/**/node_modules && rm -rf ./example/node_modules && rm -rf ./node_modules",
-    "postinstall": "for D in ./packages/*; do cd $D; npm install; cd -; done",
+    "install": "for D in ./packages/*; do cd $D; npm install; cd -; done",
     "updtr": "updtr --save-exact --exclude mocha && cd example && updtr --save-exact && cd .. && for D in ./packages/*; do echo $D; cd $D; npm run updtr; cd -; done"
   },
   "author": {
