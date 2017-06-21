@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/stockulus/pouchdb-react-native#readme",
   "dependencies": {
-    "pouchdb-adapter-asyncstorage": "6.2.4",
+    "pouchdb-adapter-asyncstorage": "file:../pouchdb-adapter-asyncstorage",
     "pouchdb-adapter-http-react-native": "file:../pouchdb-adapter-http-react-native",
     "pouchdb-core": "6.2.0",
     "pouchdb-mapreduce": "6.2.0",
