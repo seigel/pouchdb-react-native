@@ -65,9 +65,8 @@ com.facebook.react.modules.storage.ReactDatabaseSupplier.getInstance(getApplicat
 
 ### known issues
 
-There are still Problems with Attachments, but i did not find private time to investigate more. My Current Projects do not need attachments, and I don't get paid for this package.
-
-If you want to fix that, please go ahead, PR and help is welcome.
+There are still Problems with Attachments, but currently there is work on it. See
+(https://github.com/stockulus/pouchdb-react-native/issues/68)
 
 development
 ======
