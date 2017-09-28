@@ -1,12 +1,11 @@
 {
   "name": "pouchdb-react-native-bundle",
-  "version": "6.2.4",
+  "version": "6.3.4",
   "description": "Package Bundle for PouchDB for ReactNative",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/stockulus/pouchdb-react-native.git"
   },
-  "main": "./packages/pouchdb-react-native/index.js",
   "keywords": [
     "pouchdb",
     "react-native",
@@ -15,14 +14,14 @@
   ],
   "scripts": {
     "test": "npm run standard && npm run test-unit && npm run test-integration-subset",
-    "test-unit": "mocha -r tests/setup.js",
-    "test-mapreduce": "COUCH_HOST=http://localhost:3000 mocha -r tests/setup.js",
-    "test-integration": "COUCH_HOST=http://localhost:3000 mocha -r tests/setup.js",
+    "test-unit": "mocha -r tests/setup.js pouchdb-original/tests/unit/test.*.js",
+    "test-mapreduce": "COUCH_HOST=http://localhost:3000 mocha -r tests/setup.js pouchdb-original/tests/mapreduce/test.*.js",
+    "test-integration": "COUCH_HOST=http://localhost:3000 mocha -r tests/setup.js pouchdb-original/tests/integration/test.*.js",
     "test-integration-subset": "COUCH_HOST=http://localhost:3000 ./tests/run-integration.sh",
     "run-couchdb": "docker run -d -p 3000:5984 --name couchdb klaemo/couchdb:latest",
     "standard": "node ./node_modules/standard/bin/cmd.js",
-    "clean": "rm -rf packages/**/node_modules && rm -rf ./example/node_modules && rm -rf ./node_modules",
-    "install": "for D in ./packages/*; do cd $D; npm install; cd -; done",
+    "clean": "rm -rf packages/**/node_modules && rm -rf ./example/node_modules && rm -rf ./pouchdb-original/node_modules && rm -rf ./node_modules",
+    "postinstall": "for D in ./packages/*; do cd $D; npm install; cd -; done && cd example && npm install && cd ../pouchdb-original && npm install",
     "updtr": "updtr --save-exact --exclude mocha && cd example && updtr --save-exact && cd .. && for D in ./packages/*; do echo $D; cd $D; npm run updtr; cd -; done"
   },
   "author": {
@@ -39,18 +38,15 @@
   "devDependencies": {
     "babel-cli": "6.24.1",
     "mocha": "2.5.3",
-    "node-fetch": "^1.7.1",
-    "react": "15.5.4",
-    "react-native": "0.44.0",
+    "react": "15.6.1",
+    "react-native": "0.47.1",
     "react-native-mock": "0.3.1",
-    "standard": "10.0.2"
+    "standard": "10.0.3"
   },
   "standard": {
     "ignore": [
       "node_modules/**",
-      "pouchdb-original/**",
-      "packages/pouchdb-fetch-react-native",
-      "packages/pouchdb-adapter-http-react-native"
+      "pouchdb-original/**"
     ]
   }
 }
