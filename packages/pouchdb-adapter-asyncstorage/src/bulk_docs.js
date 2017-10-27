@@ -62,16 +62,27 @@ export default function (db, req, opts, callback) {
         }
         resolveB64Data = Promise.resolve(attachment.data)
       } else {
-        resolveB64Data = new Promise((resolve, reject) => {
-          blobOrBufferToBase64(attachment.data, b64 => resolve(b64))
-        }).catch(() => Promise.reject(
-          createError(BAD_ARG, 'Attachment is not a valid buffer/blob')
-        ))
+        if (attachment.data.isRNFetchBlobPolyfill) {
+          resolveB64Data = new Promise((resolve, reject) => {
+            attachment.data.onCreated(() => {
+              attachment.data.readBlob(typeof window !== 'undefined' ? 'base64' : 'utf8').then(resolve).catch(reject)
+            })
+          })
+        } else {
+          resolveB64Data = new Promise((resolve, reject) => {
+            blobOrBufferToBase64(attachment.data, b64 => resolve(b64))
+          })
+        }
+        resolveB64Data.catch((error) => {
+          return Promise.reject(
+            createError(BAD_ARG, 'Attachment is not a valid buffer/blob' + (error.message))
+          )
+        })
       }
 
       return resolveB64Data.then(
-        b64Data =>
-          new Promise((resolve, reject) => {
+        b64Data => {
+          return new Promise((resolve, reject) => {
             const meta = {
               digest: 'md5-' + Md5.hash(b64Data),
               content_type: attachment.content_type,
@@ -87,6 +98,7 @@ export default function (db, req, opts, callback) {
               }]
             resolve({attachment: meta, dbAttachment})
           })
+        }
       )
     }
 
@@ -110,8 +122,6 @@ export default function (db, req, opts, callback) {
   const getChange = (oldDoc, newDoc) => {
     // pouchdb magic
     const rootIsMissing = doc => doc.rev_tree[0].ids[1].status === 'missing'
-    // const getAttachments = () => {}
-
     const getUpdate = () => {
       // Ignore updates to existing revisions
       if (newDoc.rev in oldDoc.rev_map) return {}

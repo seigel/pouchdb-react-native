@@ -1,0 +1,19 @@
+{
+  "name": "pouchdb-adapter-http-react-native",
+  "version": "6.2.4",
+  "description": "ReactNative: PouchDB adapter using HTTP (e.g. a remote CouchDB) as its data store. Adapted from pouchdb-adapter-http.",
+  "main": "./src/index.js",
+  "keywords": [],
+  "author": "Clint Ayres <clinton.ayres@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stockulus/pouchdb-react-native.git"
+  },
+  "dependencies": {
+    "pouchdb-fetch-react-native": "file:../pouchdb-fetch-react-native",
+    "argsarray": "0.0.1",
+    "pouchdb-utils": "6.2.0",
+    "pouchdb-binary-utils": "6.2.0"
+  }
+}

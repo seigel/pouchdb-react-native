@@ -1,0 +1,18 @@
+{
+  "name": "pouchdb-fetch-react-native",
+  "version": "6.2.4",
+  "description": "PouchDB's ajax() method, implemented using Fetch. Adapted from pouchdb-ajax",
+  "main": "./src/fetchCore.js",
+  "keywords": [],
+  "author": "Clint Ayres <clinton.ayres@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stockulus/pouchdb-react-native.git"
+  },
+  "dependencies": {
+    "pouchdb-errors": "6.2.0",
+    "pouchdb-promise": "6.2.0",
+    "pouchdb-utils": "6.2.0"
+  }
+}
