@@ -4,7 +4,6 @@ import React from 'react'
 import {
   AsyncStorage,
   ListView,
-  Navigator,
   StyleSheet,
   Text,
   TextInput,
@@ -14,6 +13,7 @@ import {
 
 import ActionButton from 'react-native-action-button'
 import PouchDB from 'pouchdb-react-native'
+import NavigationExperimental from 'react-native-deprecated-custom-components'
 
 const localDB = new PouchDB('myDB')
 console.log(localDB.adapter)
@@ -273,7 +273,7 @@ export default React.createClass({
 
     return (
       <View style={{flex: 1}}>
-        <Navigator
+        <NavigationExperimental.Navigator
           ref={navigator => { this._navigator = navigator }}
           renderScene={renderScene}
           initialRoute={{name: 'Main', render: renderMain}}
