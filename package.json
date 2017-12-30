@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-react-native-bundle",
-  "version": "6.3.4",
+  "version": "6.4.0",
   "description": "Package Bundle for PouchDB for ReactNative",
   "repository": {
     "type": "git",
