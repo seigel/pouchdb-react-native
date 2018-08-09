@@ -1,0 +1,24 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "standard",
+    "standard-jsx",
+    "prettier",
+    "prettier/react",
+    "prettier/standard"
+  ],
+  "globals": {
+    "fetch": true,
+    "it": true
+  },
+  "plugins": [
+    "prettier", "import"
+  ],
+  "settings": {
+  },
+  "rules": {
+    "prettier/prettier": "error"
+  }
+}
