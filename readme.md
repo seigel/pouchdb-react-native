@@ -1,6 +1,6 @@
 ![Logo](https://raw.githubusercontent.com/stockulus/pouchdb-react-native/master/static/pouchdb-react-native.png)
 
-[![bitHound Overall Score](https://www.bithound.io/github/stockulus/pouchdb-react-native/badges/score.svg)](https://www.bithound.io/github/stockulus/pouchdb-react-native) [![npm Package](https://img.shields.io/npm/dm/pouchdb-react-native.svg)](https://www.npmjs.com/package/pouchdb-react-native) [![npm Package](https://img.shields.io/npm/v/pouchdb-react-native.svg)](https://www.npmjs.com/package/pouchdb-react-native) [![travis-ci.org](https://travis-ci.org/stockulus/pouchdb-react-native.svg)](https://travis-ci.org/stockulus/pouchdb-react-native) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/) [![license](https://img.shields.io/npm/l/pouchdb-react-native.svg?maxAge=2592000)](https://opensource.org/licenses/MIT)
+(https://www.bithound.io/github/stockulus/pouchdb-react-native) [![npm Package](https://img.shields.io/npm/dm/pouchdb-react-native.svg)](https://www.npmjs.com/package/pouchdb-react-native) [![npm Package](https://img.shields.io/npm/v/pouchdb-react-native.svg)](https://www.npmjs.com/package/pouchdb-react-native) [![travis-ci.org](https://travis-ci.org/stockulus/pouchdb-react-native.svg)](https://travis-ci.org/stockulus/pouchdb-react-native) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/) [![license](https://img.shields.io/npm/l/pouchdb-react-native.svg?maxAge=2592000)](https://opensource.org/licenses/MIT)
 
 pouchdb-react-native
 ======
@@ -15,6 +15,13 @@ The `pouchdb-react-native` preset contains the version of PouchDB that is design
 npm install pouchdb-react-native --save
 ```
 npm >= 3 / node >= 6 works best, there are some known issues with npm 2
+
+### PouchDB 7.0
+
+```bash
+npm install pouchdb-react-native@next --save
+```
+
 
 ```js
 import PouchDB from 'pouchdb-react-native'
