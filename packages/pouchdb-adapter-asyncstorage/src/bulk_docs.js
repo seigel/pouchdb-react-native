@@ -3,7 +3,12 @@
 import {
   createError,
   generateErrorFromResponse,
-  BAD_ARG, BAD_REQUEST, MISSING_DOC, MISSING_STUB, REV_CONFLICT } from 'pouchdb-errors'
+  BAD_ARG,
+  BAD_REQUEST,
+  MISSING_DOC,
+  MISSING_STUB,
+  REV_CONFLICT
+} from 'pouchdb-errors'
 import { parseDoc } from 'pouchdb-adapter-utils'
 import { merge, winningRev as computeWinningRev } from 'pouchdb-merge'
 import {
@@ -14,11 +19,11 @@ import Md5 from 'spark-md5'
 
 import { forDocument, forAttachment, forMeta, forSequence } from './keys'
 
-export default function (db, req, opts, callback) {
+export default function(db, req, opts, callback) {
   const wasDelete = 'was_delete' in opts
   const newEdits = opts.new_edits
   const revsLimit = db.opts.revs_limit || 1000
-  const newMeta = {...db.meta}
+  const newMeta = { ...db.meta }
 
   const mapRequestDoc = doc => {
     const parsedDoc = parseDoc(doc, newEdits)
@@ -37,12 +42,16 @@ export default function (db, req, opts, callback) {
     const processAttachment = attachment => {
       if (attachment.stub) {
         return new Promise((resolve, reject) => {
-          if (!attachment.digest) return reject(createError(MISSING_STUB, 'no digest'))
+          if (!attachment.digest)
+            return reject(createError(MISSING_STUB, 'no digest'))
 
           const attachmentKey = forAttachment(attachment.digest)
           db.storage.get(attachmentKey, (error, data) => {
             if (error) return reject(createError(MISSING_STUB, error.message))
-            if (!data) return reject(createError(MISSING_STUB, 'can not find attachment'))
+            if (!data)
+              return reject(
+                createError(MISSING_STUB, 'can not find attachment')
+              )
             return resolve({
               attachment,
               dbAttachment: [attachmentKey, data]
@@ -64,9 +73,11 @@ export default function (db, req, opts, callback) {
       } else {
         resolveB64Data = new Promise((resolve, reject) => {
           blobOrBufferToBase64(attachment.data, b64 => resolve(b64))
-        }).catch(() => Promise.reject(
-          createError(BAD_ARG, 'Attachment is not a valid buffer/blob')
-        ))
+        }).catch(() =>
+          Promise.reject(
+            createError(BAD_ARG, 'Attachment is not a valid buffer/blob')
+          )
+        )
       }
 
       return resolveB64Data.then(
@@ -80,12 +91,14 @@ export default function (db, req, opts, callback) {
             }
 
             const dbAttachment = [
-              forAttachment(meta.digest), {
+              forAttachment(meta.digest),
+              {
                 digest: meta.digest,
                 content_type: meta.content_type,
                 data: b64Data
-              }]
-            resolve({attachment: meta, dbAttachment})
+              }
+            ]
+            resolve({ attachment: meta, dbAttachment })
           })
       )
     }
@@ -95,13 +108,15 @@ export default function (db, req, opts, callback) {
     const promises = Object.keys(data._attachments).map(key => {
       if (key.startsWith('_')) {
         return Promise.reject(
-          createError(BAD_REQUEST, 'Attachment name can not start with "_"'))
+          createError(BAD_REQUEST, 'Attachment name can not start with "_"')
+        )
       }
-      return processAttachment(data._attachments[key])
-        .then(({attachment, dbAttachment}) => {
+      return processAttachment(data._attachments[key]).then(
+        ({ attachment, dbAttachment }) => {
           data._attachments[key] = attachment
           return dbAttachment
-        })
+        }
+      )
     })
 
     return Promise.all(promises)
@@ -119,16 +134,20 @@ export default function (db, req, opts, callback) {
       const merged = merge(oldDoc.rev_tree, newDoc.rev_tree[0], revsLimit)
       newDoc.rev_tree = merged.tree
 
-      const inConflict = newEdits && (((oldDoc.deleted && newDoc.deleted) ||
-         (!oldDoc.deleted && merged.conflicts !== 'new_leaf') ||
-         (oldDoc.deleted && !newDoc.deleted && merged.conflicts === 'new_branch')))
+      const inConflict =
+        newEdits &&
+        ((oldDoc.deleted && newDoc.deleted) ||
+          (!oldDoc.deleted && merged.conflicts !== 'new_leaf') ||
+          (oldDoc.deleted &&
+            !newDoc.deleted &&
+            merged.conflicts === 'new_branch'))
 
       if (inConflict) {
-        return {error: createError(REV_CONFLICT)}
+        return { error: createError(REV_CONFLICT) }
       }
 
-      if (oldDoc.deleted && !newDoc.deleted) newMeta.doc_count ++
-      else if (!oldDoc.deleted && newDoc.deleted) newMeta.doc_count --
+      if (oldDoc.deleted && !newDoc.deleted) newMeta.doc_count++
+      else if (!oldDoc.deleted && newDoc.deleted) newMeta.doc_count--
 
       newDoc.seq = ++newMeta.update_seq
       newDoc.rev_map = oldDoc.rev_map
@@ -158,7 +177,7 @@ export default function (db, req, opts, callback) {
       newDoc.rev_map = {}
       newDoc.rev_map[newDoc.rev] = newDoc.seq
       newDoc.winningRev = computeWinningRev(newDoc)
-      if (!newDoc.deleted) newMeta.doc_count ++
+      if (!newDoc.deleted) newMeta.doc_count++
 
       const data = newDoc.data
       delete newDoc.data
@@ -206,11 +225,10 @@ export default function (db, req, opts, callback) {
   db.storage.multiGet(docIds, (error, oldDocs) => {
     if (error) return callback(generateErrorFromResponse(error))
 
-    const oldDocsObj = oldDocs.reduce(
-      (result, doc) => {
-        if (doc && doc.id) result[doc.id] = doc
-        return result
-      }, {})
+    const oldDocsObj = oldDocs.reduce((result, doc) => {
+      if (doc && doc.id) result[doc.id] = doc
+      return result
+    }, {})
 
     const promises = newDocs.map(newDoc => {
       let oldDoc = oldDocsObj[newDoc.id]
@@ -230,9 +248,10 @@ export default function (db, req, opts, callback) {
         changes.forEach(change => {
           dbChanges.push(change.doc)
           dbChanges.push(change.data)
-          change.attachments && change.attachments.forEach(attachment => {
-            if (attachment) dbChanges.push(attachment)
-          })
+          change.attachments &&
+            change.attachments.forEach(attachment => {
+              if (attachment) dbChanges.push(attachment)
+            })
         })
 
         db.storage.multiPut(dbChanges, error => {

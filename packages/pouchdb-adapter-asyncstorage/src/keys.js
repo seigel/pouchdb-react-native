@@ -22,10 +22,14 @@ export const toDocumentKeys = list => list.map(forDocument)
 export const toMetaKeys = list => list.map(forMeta)
 export const toSequenceKeys = list => list.map(forSequence)
 
-export const getDocumentKeys = list => list
-  .filter(key => key.startsWith(DOC_STORE) && !key.startsWith(`${DOC_STORE}_local`))
-  .map(key => key.slice(DOC_STORE_LENGTH))
+export const getDocumentKeys = list =>
+  list
+    .filter(
+      key => key.startsWith(DOC_STORE) && !key.startsWith(`${DOC_STORE}_local`)
+    )
+    .map(key => key.slice(DOC_STORE_LENGTH))
 
-export const getSequenceKeys = list => list
-  .filter(key => key.startsWith(SEQUENCE_STORE))
-  .map(key => parseInt(key.slice(SEQUENCE_STORE_LENGTH), 10))
+export const getSequenceKeys = list =>
+  list
+    .filter(key => key.startsWith(SEQUENCE_STORE))
+    .map(key => parseInt(key.slice(SEQUENCE_STORE_LENGTH), 10))

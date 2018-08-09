@@ -17,7 +17,7 @@ import { get as getDatabase, close as closeDatabase } from './databases'
 
 const ADAPTER_NAME = 'asyncstorage'
 
-function AsyncStoragePouch (dbOpts, constuctorCallback) {
+function AsyncStoragePouch(dbOpts, constuctorCallback) {
   const api = this
 
   api._remote = false
@@ -25,7 +25,9 @@ function AsyncStoragePouch (dbOpts, constuctorCallback) {
 
   api._id = callback => {
     getDatabase(dbOpts)
-      .then(database => sequence(cb => cb(null, database.meta.db_uuid), callback))
+      .then(database =>
+        sequence(cb => cb(null, database.meta.db_uuid), callback)
+      )
       .catch(callback)
   }
   api._info = callback => {
@@ -40,12 +42,19 @@ function AsyncStoragePouch (dbOpts, constuctorCallback) {
   }
   api._getAttachment = (docId, attachId, attachment, opts, callback) => {
     getDatabase(dbOpts)
-      .then(database => sequence(cb => getAttachment(database, docId, attachId, attachment, opts, cb), callback))
+      .then(database =>
+        sequence(
+          cb => getAttachment(database, docId, attachId, attachment, opts, cb),
+          callback
+        )
+      )
       .catch(callback)
   }
   api._getRevisionTree = (id, callback) => {
     getDatabase(dbOpts)
-      .then(database => sequence(cb => getRevisionTree(database, id, cb), callback))
+      .then(database =>
+        sequence(cb => getRevisionTree(database, id, cb), callback)
+      )
       .catch(callback)
   }
   api._allDocs = (opts, callback) => {
@@ -55,20 +64,26 @@ function AsyncStoragePouch (dbOpts, constuctorCallback) {
   }
   api._bulkDocs = (req, opts, callback) => {
     getDatabase(dbOpts)
-      .then(database => sequence(cb => bulkDocs(database, req, opts, cb), callback))
+      .then(database =>
+        sequence(cb => bulkDocs(database, req, opts, cb), callback)
+      )
       .catch(callback)
   }
   api._changes = opts => {
     getDatabase(dbOpts)
-      .then(database => sequence(cb => {
-        changes(database, api, opts)
-        cb()
-      }))
+      .then(database =>
+        sequence(cb => {
+          changes(database, api, opts)
+          cb()
+        })
+      )
       .catch(error => opts.complete && opts.complete(error))
   }
   api._doCompaction = (id, revs, callback) => {
     getDatabase(dbOpts)
-      .then(database => sequence(cb => doCompaction(database, id, revs, cb), callback))
+      .then(database =>
+        sequence(cb => doCompaction(database, id, revs, cb), callback)
+      )
       .catch(callback)
   }
   api._destroy = (opts, callback) => {
@@ -102,7 +117,7 @@ function AsyncStoragePouch (dbOpts, constuctorCallback) {
       })
     }
 
-    queue.push({func, callback})
+    queue.push({ func, callback })
     run()
   }
 }
@@ -117,6 +132,6 @@ AsyncStoragePouch.valid = () => {
 
 AsyncStoragePouch.use_prefix = false
 
-export default function (PouchDB) {
+export default function(PouchDB) {
   PouchDB.adapter(ADAPTER_NAME, AsyncStoragePouch, true)
 }

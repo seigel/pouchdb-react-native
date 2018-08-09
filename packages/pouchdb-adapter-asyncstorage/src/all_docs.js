@@ -5,7 +5,7 @@ import { collectConflicts } from 'pouchdb-merge'
 import { getDocumentKeys, toDocumentKeys, forSequence } from './keys'
 import inlineAttachments from './inline_attachments'
 
-export default function (db, opts, callback) {
+export default function(db, opts, callback) {
   // get options like pouchdb-adapter-indexeddb
   const filterKey = 'key' in opts ? opts.key : false
   const skip = opts.skip || 0
@@ -17,11 +17,19 @@ export default function (db, opts, callback) {
   const includeConflicts = 'conflicts' in opts ? opts.conflicts : false
   const descending = 'descending' in opts && opts.descending
   const startkey = descending
-    ? 'endkey' in opts ? opts.endkey : false
-    : 'startkey' in opts ? opts.startkey : false
+    ? 'endkey' in opts
+      ? opts.endkey
+      : false
+    : 'startkey' in opts
+      ? opts.startkey
+      : false
   const endkey = descending
-    ? 'startkey' in opts ? opts.startkey : false
-    : 'endkey' in opts ? opts.endkey : false
+    ? 'startkey' in opts
+      ? opts.startkey
+      : false
+    : 'endkey' in opts
+      ? opts.endkey
+      : false
   const excludeStart = descending && !(opts.inclusive_end !== false)
   const inclusiveEnd = descending || opts.inclusive_end !== false
 
@@ -50,8 +58,21 @@ export default function (db, opts, callback) {
     return result
   }
 
-  getDocs(db,
-    {filterKey, startkey, endkey, skip, limit, excludeStart, inclusiveEnd, includeAttachments, binaryAttachments, includeDeleted, descending},
+  getDocs(
+    db,
+    {
+      filterKey,
+      startkey,
+      endkey,
+      skip,
+      limit,
+      excludeStart,
+      inclusiveEnd,
+      includeAttachments,
+      binaryAttachments,
+      includeDeleted,
+      descending
+    },
     (error, docs) => {
       if (error) return callback(generateErrorFromResponse(error))
 
@@ -66,20 +87,23 @@ export default function (db, opts, callback) {
   )
 }
 
-const getDocs = (db,
-  {filterKey,
-   startkey,
-   endkey,
-   skip,
-   limit,
-   excludeStart,
-   inclusiveEnd,
-   includeDeleted,
-   includeAttachments,
-   binaryAttachments,
-   descending
- },
-  callback) => {
+const getDocs = (
+  db,
+  {
+    filterKey,
+    startkey,
+    endkey,
+    skip,
+    limit,
+    excludeStart,
+    inclusiveEnd,
+    includeDeleted,
+    includeAttachments,
+    binaryAttachments,
+    descending
+  },
+  callback
+) => {
   db.storage.getKeys((error, keys) => {
     if (error) return callback(error)
 
@@ -95,9 +119,7 @@ const getDocs = (db,
     db.storage.multiGet(toDocumentKeys(filterKeys), (error, docs) => {
       if (error) return callback(error)
 
-      let result = includeDeleted
-        ? docs
-        : docs.filter(doc => !doc.deleted)
+      let result = includeDeleted ? docs : docs.filter(doc => !doc.deleted)
 
       if (descending) result = result.reverse()
       if (skip > 0) result = result.slice(skip)
@@ -109,26 +131,31 @@ const getDocs = (db,
       db.storage.multiGet(seqKeys, (error, dataDocs) => {
         if (error) return callback(error)
 
-        const dataObj = dataDocs.reduce(
-          (res, data) => {
-            if (data) res[data._id] = data
-            return res
-          }, {})
+        const dataObj = dataDocs.reduce((res, data) => {
+          if (data) res[data._id] = data
+          return res
+        }, {})
 
         if (!includeAttachments) {
-          return callback(null, result.map(item => {
-            item.data = dataObj[item.id]
-            return item
-          }))
+          return callback(
+            null,
+            result.map(item => {
+              item.data = dataObj[item.id]
+              return item
+            })
+          )
         }
 
-        inlineAttachments(db, dataDocs, {binaryAttachments}, (error) => {
+        inlineAttachments(db, dataDocs, { binaryAttachments }, error => {
           if (error) return callback(error)
 
-          return callback(null, result.map(item => {
-            item.data = dataObj[item.id]
-            return item
-          }))
+          return callback(
+            null,
+            result.map(item => {
+              item.data = dataObj[item.id]
+              return item
+            })
+          )
         })
       })
     })

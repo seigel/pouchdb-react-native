@@ -1,15 +1,15 @@
 'use strict'
 
-import {
-  createError,
-  MISSING_DOC } from 'pouchdb-errors'
+import { createError, MISSING_DOC } from 'pouchdb-errors'
 import { forDocument, forSequence } from './keys'
 import { winningRev } from 'pouchdb-merge'
 
-export default function (db, id, opts, callback) {
+export default function(db, id, opts, callback) {
   db.storage.get(forDocument(id), (error, meta) => {
     if (error) {
-      return callback(createError(MISSING_DOC, error.message || 'missing-read-error'))
+      return callback(
+        createError(MISSING_DOC, error.message || 'missing-read-error')
+      )
     }
     if (meta === null) {
       return callback(createError(MISSING_DOC, 'missing-no-meta-found'))
@@ -22,11 +22,12 @@ export default function (db, id, opts, callback) {
 
     db.storage.get(forSequence(meta.rev_map[rev]), (error, doc) => {
       if (error) {
-        return callback(createError(
-          MISSING_DOC, error.message || 'missing-read-error'))
+        return callback(
+          createError(MISSING_DOC, error.message || 'missing-read-error')
+        )
       }
 
-      return callback(null, {doc, metadata: meta})
+      return callback(null, { doc, metadata: meta })
     })
   })
 }

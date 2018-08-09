@@ -4,7 +4,7 @@ import { uuid, filterChange } from 'pouchdb-utils'
 import { forDocument, getSequenceKeys, toSequenceKeys } from './keys'
 import inlineAttachments from './inline_attachments'
 
-export default function (db, api, opts) {
+export default function(db, api, opts) {
   const continuous = opts.continuous
 
   if (continuous) {
@@ -12,23 +12,22 @@ export default function (db, api, opts) {
     db.changes.addListener(db.opts.name, id, api, opts)
     db.changes.notify(db.opts.name)
     return {
-      cancel () {
+      cancel() {
         db.changes.removeListener(db.opts.name, id)
       }
     }
   }
 
-//  const descending = opts.descending
+  //  const descending = opts.descending
   const lastSeq = opts.since || 0
-  const limit = ('limit' in opts && opts.limit >= 0)
-    ? opts.limit
-    : -1
+  const limit = 'limit' in opts && opts.limit >= 0 ? opts.limit : -1
   const filterDocIds = opts.doc_ids && new Set(opts.doc_ids)
-  const returnDocs = ('return_docs' in opts)
-    ? opts.return_docs
-    : 'returnDocs' in opts
-      ? opts.returnDocs
-      : true
+  const returnDocs =
+    'return_docs' in opts
+      ? opts.return_docs
+      : 'returnDocs' in opts
+        ? opts.returnDocs
+        : true
   const includeAttachments = 'attachments' in opts ? opts.attachments : false
   const binaryAttachments = 'binary' in opts ? opts.binary : false
   const filter = filterChange(opts)
@@ -45,7 +44,8 @@ export default function (db, api, opts) {
       return true
     })
 
-    if (filterSeqs.length === 0) return complete(null, {last_seq: lastSeq, results: []})
+    if (filterSeqs.length === 0)
+      return complete(null, { last_seq: lastSeq, results: [] })
 
     db.storage.multiGet(toSequenceKeys(filterSeqs), (error, dataDocs) => {
       if (error) return complete(error)
@@ -53,17 +53,18 @@ export default function (db, api, opts) {
       const filterDocs = filterDocIds
         ? dataDocs.filter(doc => filterDocIds.has(doc._id))
         : dataDocs.filter(doc => !doc._id.startsWith('_local'))
-      if (filterDocs.length === 0) return complete(null, {last_seq: lastSeq, results: []})
+      if (filterDocs.length === 0)
+        return complete(null, { last_seq: lastSeq, results: [] })
 
-      const changeDocIds = [...new Set(
-        filterDocs.map(data => forDocument(data._id)))]
+      const changeDocIds = [
+        ...new Set(filterDocs.map(data => forDocument(data._id)))
+      ]
       db.storage.multiGet(changeDocIds, (error, docs) => {
         const processChanges = () => {
-          const dataObj = filterDocs.reduce(
-            (res, data) => {
-              if (data) res[data._id] = data
-              return res
-            }, {})
+          const dataObj = filterDocs.reduce((res, data) => {
+            if (data) res[data._id] = data
+            return res
+          }, {})
 
           const results = []
           let lastChangeSeq
@@ -102,7 +103,7 @@ export default function (db, api, opts) {
 
         if (!includeAttachments) return processChanges()
 
-        inlineAttachments(db, dataDocs, {binaryAttachments}, error => {
+        inlineAttachments(db, dataDocs, { binaryAttachments }, error => {
           if (error) return complete(error)
 
           processChanges()
