@@ -24,6 +24,11 @@ db.get('4711')
 
 ```
 
+### Memory
+
+Be careful when using this with other AsyncStorage data or multiple databases as it loads *all* keys in your store into memory. You can use [react-native-async-storage-rocks](https://github.com/tradle/react-native-async-storage-rocks) if this is an issue for you (see below).
+
+
 ### Android limit
 
 On Android asyncstorage has a limitation of 6 MB per default, you might want to increase it
@@ -33,6 +38,11 @@ On Android asyncstorage has a limitation of 6 MB per default, you might want to 
 long size = 50L * 1024L * 1024L; // 50 MB
 com.facebook.react.modules.storage.ReactDatabaseSupplier.getInstance(getApplicationContext()).setMaximumSize(size);
 ```
+
+### RocksDB
+
+If you are using [react-native-async-storage-rocks](https://github.com/tradle/react-native-async-storage-rocks) then pouchdb-adapter-asyncstorage will detect and use the native `getKeysWithPrefix` method for memory-efficient key lookups.
+
 
 For full API documentation and guides on PouchDB, see [PouchDB.com](http://pouchdb.com/). For details on PouchDB sub-packages, see the [Custom Builds documentation](http://pouchdb.com/custom.html).
 
