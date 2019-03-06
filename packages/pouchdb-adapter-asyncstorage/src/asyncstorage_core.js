@@ -7,18 +7,43 @@
 import { AsyncStorage } from 'react-native'
 import { safeJsonParse, safeJsonStringify } from 'pouchdb-json'
 
+
+let AsyncStorageRocksDB
+try {
+  AsyncStorageRocksDB = require('react-native-async-storage-rocks').default
+} finally {
+  // Fall back to regular AsyncStorage
+}
+
+
 function createPrefix(dbName) {
   return dbName.replace(/!/g, '!!') + '!' // escape bangs in dbName
 }
 
 function prepareKey(key, core) {
-  return (
-    core._prefix +
-    key
-      .replace(/\u0002/g, '\u0002\u0002')
-      .replace(/\u0001/g, '\u0001\u0002')
-      .replace(/\u0000/g, '\u0001\u0001')
-  )
+  key = key
+    .replace(/\u0002/g, '\u0002\u0002')
+    .replace(/\u0001/g, '\u0001\u0002')
+    .replace(/\u0000/g, '\u0001\u0001')
+
+  if (AsyncStorageRocksDB) {
+    key = key.replace(/ÿ/g, '\u0003') // RocksDB can't handle ÿ
+  }
+
+  return core._prefix + key
+}
+
+function unescapeKey(key) {
+  key = key
+    .replace(/\u0001\u0001/g, '\u0000')
+    .replace(/\u0001\u0002/g, '\u0001')
+    .replace(/\u0002\u0002/g, '\u0002')
+
+  if (AsyncStorageRocksDB) {
+    key = key.replace(/\u0003/g, 'ÿ')
+  }
+
+  return key
 }
 
 function AsyncStorageCore(dbName) {
@@ -30,24 +55,32 @@ AsyncStorageCore.prototype.getKeys = function(callback) {
   const prefix = this._prefix
   const prefixLen = prefix.length
 
-  AsyncStorage.getAllKeys((error, allKeys) => {
-    if (error) return callback(error)
+  if (AsyncStorageRocksDB) {
 
-    allKeys.forEach(fullKey => {
-      if (fullKey.slice(0, prefixLen) === prefix) {
-        keys.push(
-          fullKey
-            .slice(prefixLen)
-            .replace(/\u0001\u0001/g, '\u0000')
-            .replace(/\u0001\u0002/g, '\u0001')
-            .replace(/\u0002\u0002/g, '\u0002')
-        )
-      }
+    // getAllKeysWithPrefix is dramatically more memory efficient if there are other items
+    // stored that are not part of the current database (eg other databases or app data).
+    // getAllKeys causes memory to increase linearly with the total number of keys.
+    AsyncStorageRocksDB.getAllKeysWithPrefix(prefix, (error, allKeys) => {
+      if (error) return callback(error)
+
+      allKeys.forEach(fullKey => keys.push(unescapeKey(fullKey)))
     })
 
-    keys.sort()
-    callback(null, keys)
-  })
+  } else {
+
+    AsyncStorage.getAllKeys((error, allKeys) => {
+      if (error) return callback(error)
+
+      allKeys.forEach(fullKey => {
+        if (fullKey.slice(0, prefixLen) === prefix) {
+          keys.push(unescapeKey(fullKey.slice(prefixLen)))
+        }
+      })
+    })
+  }
+  
+  keys.sort()
+  callback(null, keys)
 }
 
 const stringifyValue = value => {
