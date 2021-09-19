@@ -2,6 +2,17 @@
 
 [![npm Package](https://img.shields.io/npm/dm/pouchdb-react-native.svg)](https://www.npmjs.com/package/pouchdb-react-native) [![npm Package](https://img.shields.io/npm/v/pouchdb-react-native.svg)](https://www.npmjs.com/package/pouchdb-react-native) [![travis-ci.org](https://travis-ci.org/seigel/pouchdb-react-native.svg)](https://travis-ci.org/seigel/pouchdb-react-native) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/) [![license](https://img.shields.io/npm/l/pouchdb-react-native.svg?maxAge=2592000)](https://opensource.org/licenses/MIT)
 
+
+
+NEWS
+======
+Hello!  Welcome to pouchdb-react-native.  I am James and have been lucky enough to been entrusted with the care and feeding
+of this repository.  I am going to work on getting it functional again with the latest pouchdb AND react native versions using
+a little help from @craftzdog's work to fill the the gaps.  Please be patient and offer bug reports and patches through 
+the Issues system here.  I am just getting my feet settled.  Looking forward to working with you.
+
+Cheers
+
 pouchdb-react-native
 ======
 
