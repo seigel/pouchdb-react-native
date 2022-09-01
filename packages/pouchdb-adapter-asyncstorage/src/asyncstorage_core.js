@@ -4,7 +4,7 @@
  * Adapted from https://github.com/tradle/asyncstorage-down
  */
 
-import { AsyncStorage } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { safeJsonParse, safeJsonStringify } from 'pouchdb-json'
 
 function createPrefix(dbName) {
@@ -114,4 +114,4 @@ AsyncStorageCore.destroy = function(dbName, callback) {
   })
 }
 
-module.exports = AsyncStorageCore
+export default AsyncStorageCore
