@@ -13,7 +13,7 @@
     "offlinefirst"
   ],
   "scripts": {
-    "test": "echo 'have to repear test'",
+    "test": "echo 'have to repair the tests'",
     "test-unit": "mocha -r tests/setup.js pouchdb-original/tests/unit/test.*.js",
     "test-mapreduce": "COUCH_HOST=http://localhost:3000 mocha -r tests/setup.js pouchdb-original/tests/mapreduce/test.*.js",
     "test-integration": "COUCH_HOST=http://localhost:3000 mocha -r tests/setup.js pouchdb-original/tests/integration/test.*.js",
