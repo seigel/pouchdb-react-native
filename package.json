@@ -48,10 +48,10 @@
     "eslint-plugin-promise": "3.8.0",
     "eslint-plugin-react": "7.10.0",
     "eslint-plugin-standard": "3.1.0",
-    "mocha": "5.2.0",
+    "mocha": "10.2.0",
     "prettier": "1.14.2",
     "react": "16.4.2",
-    "react-native": "0.57.6",
+    "react-native": "0.71.3",
     "react-native-mock": "0.3.1",
     "updtr": "2.0.0"
   },
